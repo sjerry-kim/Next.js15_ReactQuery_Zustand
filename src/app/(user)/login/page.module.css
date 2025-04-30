@@ -1,0 +1,52 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  width: 35%;
+  min-width: 320px;
+  list-style-type: none;
+}
+
+.loginForm > li {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px 20px 5px 20px;
+}
+
+.loginForm > li > input {
+  width: 70%;
+  min-width: 150px;
+}
+
+.loginForm > p {
+  margin: 0;
+  height: 12px;
+}
+
+.errorInput {
+  border: 2px solid red;
+}
+
+.errorMessage {
+  position: relative;
+  left: 30%;
+  width: fit-content;
+  color: red;
+  font-size: 12px;
+}

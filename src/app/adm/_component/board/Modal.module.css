@@ -1,0 +1,39 @@
+.modalBackground {
+  width: 100vw;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+@media (prefers-color-scheme: dark) {
+  .modalBackground {
+    background-color: rgba(91, 112, 131, 0.4);
+  }
+}
+.modal {
+  /* background-color: rgb(var(--background-end-rgb)); */
+  background-color: white;
+  position: relative;
+  top: 25%;
+  max-width: 80vw;
+  min-width: 600px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  height: 550px;
+}
+
+@media all and (min-width: 687px) {
+  .modal {
+    top: 25%;
+    min-width: 600px;
+    max-width: 600px;
+    height: 550px;
+    padding: 0;
+  }
+}

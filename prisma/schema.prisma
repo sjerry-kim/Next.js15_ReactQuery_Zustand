@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL") // 직접 연결 (포트 5432)
+}
+
+model board {
+  id         Int       @id @default(autoincrement())
+  content    String
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  updated_at DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  password     String
+  name         String
+  refreshToken String? // Refresh Token 저장 (optional)
+  createdAt    DateTime @default(now())
+  nationality  String? // 국적
+  countryCode  String? // 국가번호
+  phone        String? // 전화번호
+  address      String? // 주소
+  gender       String? // 성별
+  bio          String? // 자기소개글
+}
