@@ -1,5 +1,9 @@
+"use client"
+
 import { ReactNode } from 'react';
 import styles from '@/adm/page.module.css';
+import AdmLayout from '@/adm/_component/common/AdmLayout';
+
 
 type Props = {
   children: ReactNode;
@@ -10,9 +14,11 @@ type Props = {
 export default function Layout({ children, nav, modal }: Props) {
   return (
     <div className={styles.container}>
-      {nav}
+      {/*{nav}*/}
+      <AdmLayout>{children}</AdmLayout>
+
       {modal}
-      {children}
+      {/*{children}*/}
     </div>
   );
 }

@@ -13,6 +13,10 @@
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^41.4.2",
     "@ckeditor/ckeditor5-react": "^9.5.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^6.4.7",
+    "@mui/material": "^6.4.7",
     "@prisma/client": "^6.7.0",
     "@supabase/supabase-js": "^2.47.10",
     "@tanstack/react-query": "^5.62.15",
