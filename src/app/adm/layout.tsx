@@ -8,18 +8,14 @@ import AdmLayout from '@/adm/_component/common/AdmLayout';
 
 type Props = {
   children: ReactNode;
-  nav: ReactNode;
   modal: ReactNode;
 };
 
-export default function Layout({ children, nav, modal }: Props) {
+export default function Layout({ children, modal }: Props) {
   return (
     <div className={styles.container}>
-      {/*{nav}*/}
       <AdmLayout>{children}</AdmLayout>
-
       {modal}
-      {/*{children}*/}
     </div>
   );
-}
+};

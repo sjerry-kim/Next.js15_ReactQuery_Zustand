@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { board } from '@prisma/client';
-import styles from './Modal.module.css';
+import styles from './Modify.module.css';
 import { getBoard } from '@/lib/boardQuery';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import onTextChange from '@/utils/onTextChange';

@@ -16,6 +16,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import EditNoteIcon from '@mui/icons-material/EditNote';
+import CardTravelIcon from '@mui/icons-material/CardTravel';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -47,7 +48,15 @@ const DrawerContent = ({ open, isMobile }: DrawerContentProps) => {
   const router: AppRouterInstance = useRouter();
   const topMenuList = [
     {idx: 1, title: "게시판", path: "/adm/board", icon: <EditNoteIcon />},
+    {idx: 2, title: "상품", path: "/adm/gds", icon: <CardTravelIcon />},
   ]
+  const [currentMenu, setCurrentMenu] = useState(topMenuList[0]);
+
+  const handleSideNavigation = (menu) => {
+    router.push(menu.path);
+    setCurrentMenu(menu);
+  }
+
   return (
     <>
       <Divider />
@@ -60,20 +69,24 @@ const DrawerContent = ({ open, isMobile }: DrawerContentProps) => {
                 justifyContent: isMobile || open ? 'initial' : 'center',
                 px: 2.5,
               }}
-              onClick={() => router.push(item.path)}
+              onClick={() => handleSideNavigation(item)}
             >
               <ListItemIcon
                 sx={{
                   minWidth: 0,
                   mr: isMobile || open ? 3 : 'auto',
                   justifyContent: 'center',
+                  color: currentMenu.idx === item.idx ? "#A5B4FC" : ""
                 }}
               >
                 {item.icon}
               </ListItemIcon>
               <ListItemText
                 primary={item.title}
-                sx={{ opacity: isMobile || open ? 1 : 0 }}
+                sx={{
+                  opacity: isMobile || open ? 1 : 0,
+                  color: currentMenu.idx === item.idx ? "#A5B4FC" : ""
+              }}
               />
             </ListItemButton>
           </ListItem>
@@ -180,7 +193,7 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
                   edge="start"
                   sx={{
                     margin: 'auto', // 가운데 정렬 또는 필요에 맞게 조정
-                    display: open ? 'none' : 'block',
+                    // display: open ? 'none' : 'block',
                   }}
                 >
                   <MenuIcon />
