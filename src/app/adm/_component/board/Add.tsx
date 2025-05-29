@@ -7,7 +7,7 @@ import onTextChange from '@/utils/onTextChange';
 import dynamic from 'next/dynamic';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { board } from '@prisma/client';
-import { getBoardList } from '@/lib/boardQuery';
+import { getBoardList } from '@/lib/queries/boardQuery';
 import { Board } from '@/types/board';
 
 import CloseIcon from '@mui/icons-material/Close';
