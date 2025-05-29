@@ -9,6 +9,10 @@ import React, { Fragment } from 'react';
 import { Board } from '@/types/board';
 import styles from "./List.module.css"
 
+import { LuSearch } from "react-icons/lu";
+import { MdOutlineReplay } from "react-icons/md";
+import SearchIcon from '@mui/icons-material/Search';
+
 export default function Page() {
   const router: AppRouterInstance = useRouter();
   const { data, isLoading, error } = useQuery<Board[]>({
@@ -30,12 +34,32 @@ export default function Page() {
   return (
     <main>
       <section className={styles.top_wrapper}>
-        <button
-          className={styles.add_btn}
-          onClick={() => router.push('/adm/board/add')}
-        >
-          글쓰기
-        </button>
+        <div className={styles.status_container}>
+          <ul className={styles.status_box}>
+            <li>전체</li>
+            <li>대기</li>
+            <li>예약</li>
+            <li>구매</li>
+            <li>취소</li>
+          </ul>
+          <div className={styles.gradient_overlay}></div>
+        </div>
+
+        <div className={styles.search_container}>
+          <select>
+            <option>전체</option>
+            <option>상품코드</option>
+            <option>상품명</option>
+            <option>등록일</option>
+          </select>
+          <div className={styles.searchbar_box}>
+            <input />
+            <LuSearch />
+          </div>
+          <div className={styles.search_reset_box}>
+            <MdOutlineReplay />
+          </div>
+        </div>
       </section>
       <section className={styles.table_wrapper}>
         <table className={styles.table}>
@@ -71,9 +95,13 @@ export default function Page() {
           </tbody>
         </table>
       </section>
-      {/*<section className={styles.bottom_wrapper}>*/}
-      {/*  <button onClick={() => console.log('')}>Modify the List !</button>*/}
-      {/*</section>*/}
+      <section className={styles.bottom_wrapper}>
+        <button
+          className={styles.add_btn}
+          onClick={() => router.push('/adm/board/add')}
+        >
+          글쓰기
+        </button>      </section>
     </main>
   );
 }

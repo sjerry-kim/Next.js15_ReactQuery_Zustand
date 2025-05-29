@@ -46,13 +46,29 @@ button {
 input {
   padding: 10px 12px;
   border: 1px solid #D1D1D1 ;
-  /*border-radius: 8px;*/
   font-size: .8125rem;
   resize: none;
   transition: all 0.3s ease-in-out;
 }
-input:focus {
+select {
+  background-color: #FFF;
+  border: 1px solid #D0D4DA;
+  padding: 10px 12px;
+  font-size: 14px;
+  letter-spacing: -0.35px;
+  color: #333;
+  cursor: pointer;
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M12 6L8 10L4 6' stroke='%23414651' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+
+  padding-right: 36px; /* 오른쪽 여백 확보 */
+}
+select:hover, input:hover, textarea:hover, select:focus, input:focus, textarea:focus {
   border: 1px solid #A5B4FC  ;
+  transition: all 0.3s ease-in-out;
 }
 
 /* ck-editor custom */
