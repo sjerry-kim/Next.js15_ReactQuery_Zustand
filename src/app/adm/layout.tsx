@@ -1,6 +1,7 @@
 "use client"
 
 import { ReactNode } from 'react';
+import './adm.css'
 import styles from '@/adm/page.module.css';
 import AdmLayout from '@/adm/_component/common/AdmLayout';
 

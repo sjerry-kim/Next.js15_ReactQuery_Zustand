@@ -1,0 +1,164 @@
+/* top */
+.top_wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 12px;
+  width: 100%;
+  height: fit-content;
+}
+
+.top_wrapper .add_btn {
+  border: 1px solid #D0D4DA;
+}
+
+.top_wrapper .add_btn:hover {
+  background-color: #F5F5F5;
+}
+
+/* table */
+.table_wrapper {
+  border: 1px solid #D0D4DA;
+  border-radius: 13px;
+  overflow: hidden;
+}
+
+.table {
+  font-size: 0.8125rem;
+  text-align: center;
+}
+
+.table thead {
+  border-bottom: 1px solid #D0D4DA;
+}
+
+.table thead th {
+  padding: 13px 15px;
+  position: relative;
+}
+
+.table thead th:after {
+  position: absolute;
+  content: "";
+  background-color: #D0D4DA;
+  width: 1px;
+  height: calc(100% - 30px);
+  right: 0;
+  top: 16px;
+}
+
+.table thead th:last-child:after {
+  display: none;
+}
+
+.table tbody {
+  background: #fff;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid #D0D4DA;
+  cursor: pointer;
+}
+
+.table tbody tr:last-child {
+  border-bottom: 0;
+}
+
+.table tbody td {
+  padding: 11px 15px;
+  transition: background 0.3s ease-in-out;
+  min-width: 50px;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table tbody tr:hover td {
+  background: #F5F5F5;
+}
+
+.table .need_left {
+  text-align: left;
+}
+
+.table .need_right {
+  text-align: right;
+}
+
+/* bottom */
+
+@media (max-width: 1280px) {
+  /* table */
+  .table_wrapper {
+    position: relative;
+    overflow-x: auto;
+  }
+
+  .table {
+    width: 130%;
+    min-width: 840px; /* 다음 media query max-width */
+  }
+
+  .table thead th {
+    /*padding: 동일하게 */
+  }
+
+  .table tbody td {
+    /*padding: 동일하게 */
+  }
+
+  .table thead th:first-child {
+    position: sticky;
+    width: 60px;
+    left: 0;
+    background-color: #f7f8f9;
+    z-index: 1;
+  }
+
+  .table tbody td:first-child {
+    position: sticky;
+    width: 60px;
+    left: 0;
+    background-color: #fff;
+    z-index: 1;
+  }
+
+  .table thead th:nth-child(2) {
+    position: sticky;
+    width: 80px;
+    left: 60px;
+    background-color: #f7f8f9;
+    z-index: 1;
+  }
+
+  .table thead th:nth-child(2):after {
+    height: 100%;
+    top: 0;
+    background-color: #f7f8f9;
+    border-right: 1px dashed #E5E8EC;
+  }
+
+  .table tbody td:nth-child(2) {
+    position: sticky;
+    width: 80px;
+    left: 60px;
+    background-color: #fff;
+    z-index: 1;
+  }
+
+  .table tbody td:nth-child(2):after {
+    position: absolute;
+    content: "";
+    width: 1px;
+    height: 100%;
+    top: 0;
+    right: 0;
+    background-color: #fff;
+    border-right: 1px dashed #E5E8EC;
+  }
+}
+
+@media (max-width: 840px) {
+}

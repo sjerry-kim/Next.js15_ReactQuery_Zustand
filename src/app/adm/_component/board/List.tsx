@@ -1,12 +1,13 @@
 'use client';
 
-import { AppRouterInstance } from '../../../../../../node_modules/next/dist/shared/lib/app-router-context.shared-runtime';
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { useRouter } from 'next/navigation';
 import { board } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
 import { getBoardList } from '@/lib/boardQuery';
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Board } from '@/types/board';
+import styles from "./List.module.css"
 
 export default function Page() {
   const router: AppRouterInstance = useRouter();
@@ -27,45 +28,52 @@ export default function Page() {
   }
 
   return (
-    <>
-      <div>
-        <button onClick={() => router.push('/adm/board/add')}>Add New List :)</button>
-      </div>
-      <section>
-        <table>
+    <main>
+      <section className={styles.top_wrapper}>
+        <button
+          className={styles.add_btn}
+          onClick={() => router.push('/adm/board/add')}
+        >
+          글쓰기
+        </button>
+      </section>
+      <section className={styles.table_wrapper}>
+        <table className={styles.table}>
           <thead>
             <tr>
               <th>No.</th>
               <th>ID</th>
               <th>제목</th>
+              <th>금액</th>
               <th>작성일</th>
               <th>수정일</th>
             </tr>
           </thead>
           <tbody>
-            {!isLoading ? (
-              data?.map((item: Board , index: number) => (
-                <tr key={index} style={{ cursor: 'pointer' }} onClick={() => router.push(`/adm/board/${item.id}`)}>
-                  <td>{item.rn}</td>
-                  <td>{item.id}</td>
-                  <td>{item.content}</td>
-                  <td>{item.created_at?.toString()}</td>
-                  <td>{item.updated_at ? item.updated_at?.toString() : '-'}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={5}>
-                  <h1>로딩중...</h1>
-                </td>
+          {!isLoading ? (
+            data?.map((item: Board, index: number) => (
+              <tr key={index} style={{ cursor: 'pointer' }} onClick={() => router.push(`/adm/board/${item.id}`)}>
+                <td>{item.rn}</td>
+                <td>{item.id}</td>
+                <td>{item.content}</td>
+                <td className={styles.need_right}>10,000원</td>
+                <td>{item.created_at?.toString()}</td>
+                <td>{item.updated_at ? item.updated_at?.toString() : '-'}</td>
               </tr>
-            )}
+            ))
+          ) : (
+            <tr>
+              <td colSpan={6}>
+                <h1>로딩중...</h1>
+              </td>
+            </tr>
+          )}
           </tbody>
         </table>
       </section>
-      <div>
-        <button onClick={() => console.log('')}>Modify the List !</button>
-      </div>
-    </>
+      {/*<section className={styles.bottom_wrapper}>*/}
+      {/*  <button onClick={() => console.log('')}>Modify the List !</button>*/}
+      {/*</section>*/}
+    </main>
   );
 }
