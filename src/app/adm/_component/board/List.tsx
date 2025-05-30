@@ -18,11 +18,13 @@ export default function BoardListPage() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
+
   const getPageFromUrl = useCallback(() => {
     const pageParam = searchParams.get('page');
     const page = parseInt(pageParam || '1', 10);
     return isNaN(page) || page < 1 ? 1 : page;
   }, [searchParams]);
+
   const [currentPage, setCurrentPage] = useState<number>(getPageFromUrl);
 
   // Board List GET React Query
@@ -41,6 +43,11 @@ export default function BoardListPage() {
     placeholderData: (previousData) => previousData, // 이전 데이터 유지 (v5+)
     enabled: typeof currentPage === 'number' && !isNaN(currentPage) && currentPage > 0, // currentPage가 유효한 양의 정수일 때만 쿼리를 실행
   });
+
+  // 렌더링할 데이터 준비
+  const boardsToDisplay = paginatedData?.boards || [];
+  const totalPages = paginatedData?.totalPages || 0;
+  const totalItems = paginatedData?.totalItems;
 
   // Pagination의 onChangePage
   const handlePageChange = useCallback((newPage: number) => {
@@ -62,9 +69,9 @@ export default function BoardListPage() {
   }, [getPageFromUrl, currentPage]);
 
   // 다음 페이지 데이터 미리 가져오기 (Prefetching)
-  // "react-query가 (미리 가져온 데이터를) 가지고 있다가
+  // react-query가 (미리 가져온 데이터를) 가지고 있다가
   // 동일한 매개변수(정확히는 useQuery가 동일한 queryKey)로 호출될 때
-  // 미리 프리패칭한 것을 가져온다"는 것
+  // 미리 프리패칭한 것을 가져옴
   useEffect(() => {
     if (
       paginatedData &&
@@ -88,11 +95,6 @@ export default function BoardListPage() {
     return <div>데이터를 불러오는데 실패했습니다. 나중에 다시 시도해주세요.</div>;
   }
 
-  // 렌더링할 데이터 준비
-  const boardsToDisplay = paginatedData?.boards || [];
-  const totalPages = paginatedData?.totalPages || 0;
-  const totalItems = paginatedData?.totalItems;
-
   return (
     <main>
       <section className={styles.top_wrapper}>
@@ -115,17 +117,16 @@ export default function BoardListPage() {
             <option>등록일</option>
           </select>
           <div className={styles.searchbar_box}>
-            <input placeholder="검색어를 입력하세요"/> {/* Added placeholder */}
+            <input placeholder="검색어를 입력하세요"/>
             <LuSearch />
           </div>
-          <div className={styles.search_reset_box}>
+          <div title={"초기화"} className={styles.search_reset_box}>
             <MdOutlineReplay />
           </div>
         </div>
       </section>
 
       <section className={styles.table_wrapper}>
-        {/* Optional: Show a loading indicator when fetching new page data over previous data */}
         {isFetching && isPlaceholderData && <div className={styles.fetching_indicator}>페이지 로딩중...</div>}
 
         <table className={styles.table}>
@@ -173,6 +174,12 @@ export default function BoardListPage() {
       </section>
 
       <section className={styles.bottom_wrapper}>
+        <button
+          className={styles.add_btn}
+          onClick={() => router.push('/adm/board/add')} // Ensure this route exists
+        >
+          글쓰기
+        </button>
         {totalPages > 0 && (
           <Pagination
             currentPage={currentPage}
@@ -181,12 +188,6 @@ export default function BoardListPage() {
             totalItems={totalItems}
           />
         )}
-        <button
-          className={styles.add_btn}
-          onClick={() => router.push('/adm/board/add')} // Ensure this route exists
-        >
-          글쓰기
-        </button>
       </section>
     </main>
   );

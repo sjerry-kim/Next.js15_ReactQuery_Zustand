@@ -82,14 +82,7 @@ export default function Pagination({
   }
 
   return (
-    <section className={styles.func_wrap}>
-      {totalItems !== undefined && (
-        <div className={styles.pager}>
-          <p>
-            Total {totalItems} | Page {currentPage} / {totalPages}
-          </p>
-        </div>
-      )}
+    <div className={styles.pagination_container}>
       <div className={styles.pagination}>
         <button
           disabled={currentPage === 1}
@@ -127,6 +120,11 @@ export default function Pagination({
           <LuChevronLast />
         </button>
       </div>
-    </section>
+      {totalItems !== undefined && (
+        <div className={styles.pager}>
+          <p><span>Page</span> {currentPage} / {totalPages} <span>|</span> <span>Total</span> {totalItems} </p>
+        </div>
+      )}
+    </div>
   );
 }

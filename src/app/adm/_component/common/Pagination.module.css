@@ -1,58 +1,80 @@
-.func_wrap {
-  gap: 15px;
+.pagination_container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
   justify-content: center;
+  align-items: center;
+  gap: 15px;
   margin-top: 5px;
+  width: fit-content;
+  height: 100%;
 }
 
 .pager {
-  align-self: flex-end;
-  margin-right: 3px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  /*align-self: flex-end;*/
   color: #566471;
   font-size: 0.8125rem;
+}
+
+.pager span {
+  font-weight: 500;
 }
 
 /* paging */
 .pagination {
   display: flex;
   justify-content: center;
+  align-items: center;
   width: fit-content;
   flex-wrap: wrap;
-  border: 1px solid #e1e1e1;
-  border-radius: 6px;
+  /*border: 1px solid #e1e1e1;*/
+  /*border-radius: 6px;*/
   overflow: hidden;
 }
 
 .pagination > button {
-  display: block;
-  width: 32px;
-  height: 32px;
-  color: #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  color: #6d6d6d;
   text-align: center;
   line-height: 30px;
   font-size: 0.875rem;
   font-weight: 500;
   transition: 0.3s;
-  background-color: #fff;
-  border-right: 1px solid #e1e1e1;
+  /*background-color: #fff;*/
+  /*border-right: 1px solid #e1e1e1;*/
+  border: none;
+  border-radius: 100%;
 }
 
-.pagination > button:last-child {
-  border-right: none;
-}
-
+/* disable 버튼 */
 .pagination > button[disabled]:not(.on) {
-  background: #eaeaea!important;
-  border-color: #e1e1e1!important;
+  /*background: #eaeaea!important;*/
+  /*border-color: #EAEAEA!important;*/
   color: #aaa!important;
   cursor: inherit!important;
 }
 
+.pagination > button[disabled]:not(.on) svg {
+  /*background: #eaeaea!important;*/
+  /*border-color: #EAEAEA!important;*/
+  color: #D0D4DA!important;
+  cursor: inherit!important;
+}
+
+/* 현재 페이지 버튼 */
 .pagination > button.on {
-  background-color: #5D74EF;
-  color: #fff!important;
+  /*background-color: #A5B4FC;*/
+  /*border: 1px solid #A5B4FC;*/
+  font-weight: 500;
+  color: #A5B4FC!important;
   cursor: inherit!important;
 }
 /*.pagination > button:hover:not([disabled]) {*/
@@ -62,21 +84,15 @@
 /*}*/
 /*.pagination > button:hover:not([disabled]) svg { color: #7B5FC4; }*/
 .pagination svg {
-  color: #c4cdd5;
+  color: #6d6d6d;
   font-size: 1.25rem;
-  margin-bottom: 3px;
+  /*margin-bottom: 3px;*/
 }
 
 .left { padding-right: 1px; }
 .right { padding-left: 1px; }
 
 @media screen and (max-width: 640px) {
-  /* .pagination { gap: 5px; } */
-  /* .pagination > button {
-      width: 28px;
-      height: 28px;
-      line-height: 26px;
-  } */
   .pager {
     font-size: 0.75rem;
   }
