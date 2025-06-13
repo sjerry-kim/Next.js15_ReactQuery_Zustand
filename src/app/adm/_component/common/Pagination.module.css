@@ -3,10 +3,10 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 15px;
   margin-top: 5px;
   width: fit-content;
   height: 100%;
+  @apply gap-4;
 }
 
 .pager {
@@ -14,13 +14,11 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  /*align-self: flex-end;*/
-  color: #566471;
-  font-size: 0.8125rem;
+  @apply text-neutral-700 text-md;
 }
 
 .pager span {
-  font-weight: 500;
+  @apply font-medium;
 }
 
 /* paging */
@@ -30,8 +28,6 @@
   align-items: center;
   width: fit-content;
   flex-wrap: wrap;
-  /*border: 1px solid #e1e1e1;*/
-  /*border-radius: 6px;*/
   overflow: hidden;
 }
 
@@ -42,51 +38,36 @@
   padding: 0;
   width: 30px;
   height: 30px;
-  color: #6d6d6d;
   text-align: center;
-  line-height: 30px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: 0.3s;
-  /*background-color: #fff;*/
-  /*border-right: 1px solid #e1e1e1;*/
-  border: none;
-  border-radius: 100%;
+  @apply text-neutral-700 text-md font-medium leading-normal tracking-tighter
+  transition duration-300;
 }
 
 /* disable 버튼 */
-.pagination > button[disabled]:not(.on) {
-  /*background: #eaeaea!important;*/
-  /*border-color: #EAEAEA!important;*/
-  color: #aaa!important;
-  cursor: inherit!important;
+.pagination > button[disabled]:not(.on):hover {
+  @apply text-neutral-400 cursor-default;
 }
-
 .pagination > button[disabled]:not(.on) svg {
-  /*background: #eaeaea!important;*/
-  /*border-color: #EAEAEA!important;*/
-  color: #D0D4DA!important;
-  cursor: inherit!important;
+  @apply text-neutral-250 cursor-default;
 }
 
 /* 현재 페이지 버튼 */
 .pagination > button.on {
-  /*background-color: #A5B4FC;*/
-  /*border: 1px solid #A5B4FC;*/
-  font-weight: 500;
-  color: #A5B4FC!important;
-  cursor: inherit!important;
+  @apply font-medium text-primary bg-primary-light
+  rounded-md cursor-pointer transition duration-300 bg-opacity-30;
 }
-/*.pagination > button:hover:not([disabled]) {*/
-/*    background-color: #7B5FC4;*/
-/*    border-color: rgba(123, 95, 196, 0.75);*/
-/*    color: #fff;*/
-/*}*/
-/*.pagination > button:hover:not([disabled]) svg { color: #7B5FC4; }*/
+
+/* 다른 페이지 버튼 hover */
+.pagination > button:hover:not([disabled]) {
+  @apply font-medium text-neutral-700 bg-neutral-300
+  rounded-md cursor-pointer transition duration-300 bg-opacity-30;
+}
+.pagination > button:hover:not([disabled]) svg {
+  @apply font-medium text-neutral-700 ;
+}
+
 .pagination svg {
-  color: #6d6d6d;
-  font-size: 1.25rem;
-  /*margin-bottom: 3px;*/
+  @apply text-lg text-neutral-700;
 }
 
 .left { padding-right: 1px; }
@@ -99,10 +80,10 @@
 }
 
 @media screen and (max-width: 340px) {
-  .pagination { gap: 3px; }
+  .pagination { @apply gap-1 }
   .pagination > button {
     width: 26px;
     height: 26px;
-    line-height: 24px;
+    @apply leading-normal;
   }
 }
