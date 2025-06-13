@@ -6,3 +6,28 @@
 /* reset */
 @import './_reset.css';
 
+h1, h2, h3, h4 {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: bold;
+  line-height: 150%;
+  letter-spacing: -0.35px;
+}
+h1 {
+  font-size: 24px;
+}
+h2 {
+  font-size: 22px;
+}
+h3 {
+  font-size: 20px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 18px;
+  font-weight: normal;
+}
+p {
+  font-size: 14px;
+}

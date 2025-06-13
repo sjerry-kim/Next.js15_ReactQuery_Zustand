@@ -1,10 +1,9 @@
 .pagination_container {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  margin-top: 5px;
-  width: fit-content;
+  width: 100%;
   height: 100%;
   @apply gap-4;
 }
@@ -14,11 +13,15 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  @apply text-neutral-700 text-md;
+  @apply text-neutral-700;
+}
+
+.pager p {
+  @apply text-md text-neutral-700 leading-normal tracking-tight;
 }
 
 .pager span {
-  @apply font-medium;
+  @apply text-md text-neutral-700 font-medium leading-normal tracking-tight;
 }
 
 /* paging */
@@ -29,6 +32,7 @@
   width: fit-content;
   flex-wrap: wrap;
   overflow: hidden;
+  @apply gap-1;
 }
 
 .pagination > button {
@@ -73,9 +77,26 @@
 .left { padding-right: 1px; }
 .right { padding-left: 1px; }
 
-@media screen and (max-width: 640px) {
-  .pager {
-    font-size: 0.75rem;
+.empty_box {
+  width: 128px;
+}
+
+@media screen and (max-width: 767px) {
+  .pager p {
+    @apply text-sm text-neutral-700 leading-normal tracking-tight;
+  }
+
+  .pager span {
+    @apply text-sm text-neutral-700 font-medium leading-normal tracking-tight;
+  }
+
+  .pagination {
+    @apply gap-0;
+  }
+
+  .pagination > button {
+    width: 25px;
+    height: 25px;
   }
 }
 

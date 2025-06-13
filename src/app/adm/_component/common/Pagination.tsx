@@ -9,6 +9,7 @@ import {
   LuChevronLeft,
   LuChevronRight,
 } from 'react-icons/lu';
+import useWindowSize from '@/hooks/useWindowSize.';
 
 interface PaginationProps {
   currentPage: number;
@@ -31,17 +32,34 @@ export default function Pagination({
   const router = useRouter();
   const pathname = usePathname();
   const currentSearchParams = useSearchParams();
-  let startPage = Math.max(1, currentPage - Math.floor(pageNumbersToShow / 2));
-  let endPage = Math.min(totalPages, startPage + pageNumbersToShow - 1);
+  const { isMobile } = useWindowSize(); // isLaptop은 현재 사용되지 않으므로 제거해도 무방
 
-  // endPage가 마지막 페이지에 도달했을 경우 startPage 조정
-  if (endPage === totalPages) {
-    startPage = Math.max(1, totalPages - pageNumbersToShow + 1);
-  }
+  // 1. 슬라이딩 윈도우 페이지네이션 (구글 등) - 한 칸씩 넘어가는 버튼이 있음
+  // let startPage = Math.max(1, currentPage - Math.floor(pageNumbersToShow / 2));
+  // let endPage = Math.min(totalPages, startPage + pageNumbersToShow - 1);
 
-  // startPage가 1일 경우 endPage 조정 (페이지 개수가 부족한 경우)
-  if (startPage === 1 && (endPage - startPage + 1) < pageNumbersToShow) {
-    endPage = Math.min(totalPages, startPage + pageNumbersToShow - 1);
+  // // endPage가 마지막 페이지에 도달했을 경우 startPage 조정
+  // if (endPage === totalPages) {
+  //   startPage = Math.max(1, totalPages - pageNumbersToShow + 1);
+  // }
+  //
+  // // startPage가 1일 경우 endPage 조정 (페이지 개수가 부족한 경우)
+  // if (startPage === 1 && (endPage - startPage + 1) < pageNumbersToShow) {
+  //   endPage = Math.min(totalPages, startPage + pageNumbersToShow - 1);
+  // }
+
+  // 2. 블록(Block) 단위 페이지네이션 - 블록으로 넘어가는 버튼이 있음
+  const totalBlocks = Math.ceil(totalPages / pageNumbersToShow);
+  const currentBlock = Math.ceil(currentPage / pageNumbersToShow);
+  let startPage;
+  let endPage;
+
+  if (currentBlock < totalBlocks) { // 마지막 블록이 아닐 경우
+    startPage = (currentBlock - 1) * pageNumbersToShow + 1;
+    endPage = startPage + pageNumbersToShow - 1;
+  } else { // 마지막 블록일 경우
+    startPage = (currentBlock - 1) * pageNumbersToShow + 1;
+    endPage = totalPages; // 끝 페이지를 전체 페이지 수로 설정
   }
 
   const handlePageClick = (page: number) => {
@@ -80,6 +98,11 @@ export default function Pagination({
 
   return (
     <div className={styles.pagination_container}>
+      {totalItems !== undefined && (
+        <div className={styles.pager}>
+          <p><span>Page</span> {currentPage} / {totalPages} <span>|</span> <span>Total</span> {totalItems} </p>
+        </div>
+      )}
       <div className={styles.pagination}>
         <button
           disabled={currentPage === 1}
@@ -90,9 +113,9 @@ export default function Pagination({
           <LuChevronFirst />
         </button>
         <button
-          disabled={startPage === 1} // 이전 페이지 이동을 고려하면: disabled={currentPage === 1}
+          disabled={startPage === 1} // 1. 슬라이딩 윈도우를 고려하면: disabled={currentPage === 1}
           title="이전 블록으로 이동"
-          onClick={() => handlePageClick(Math.max(1, startPage - pageNumbersToShow))} // 이전 페이지 이동을 고려하면: handlePageClick(currentPage - 1)
+          onClick={() => handlePageClick(Math.max(1, startPage - pageNumbersToShow))} // 1. 슬라이딩 윈도우를 고려하면: handlePageClick(currentPage - 1)
           aria-label="이전 블록으로 이동"
         >
           <LuChevronLeft className={styles.left} />
@@ -101,9 +124,9 @@ export default function Pagination({
         {pageButtons}
 
         <button
-          disabled={endPage >= totalPages} // 다음 페이지 이동을 고려하면: disabled={currentPage === totalPages}
+          disabled={endPage >= totalPages} // 1. 슬라이딩 윈도우를 고려하면: disabled={currentPage === totalPages}
           title="다음 블록으로 이동"
-          onClick={() => handlePageClick(Math.min(totalPages, endPage + 1))} // 다음 페이지 이동을 고려하면: handlePageClick(currentPage + 1)
+          onClick={() => handlePageClick(Math.min(totalPages, endPage + 1))} // 1. 슬라이딩 윈도우를 고려하면: handlePageClick(currentPage + 1)
           aria-label="다음 블록으로 이동"
         >
           <LuChevronRight className={styles.right} />
@@ -117,11 +140,9 @@ export default function Pagination({
           <LuChevronLast />
         </button>
       </div>
-      {totalItems !== undefined && (
-        <div className={styles.pager}>
-          <p><span>Page</span> {currentPage} / {totalPages} <span>|</span> <span>Total</span> {totalItems} </p>
-        </div>
-      )}
+      {
+        !isMobile && <div className={styles.empty_box}></div>
+      }
     </div>
   );
 }

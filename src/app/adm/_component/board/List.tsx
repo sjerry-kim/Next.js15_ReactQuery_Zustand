@@ -12,12 +12,14 @@ import { ITEMS_PER_PAGE } from '@/adm/_component/common/Pagination';
 import styles from "./List.module.css";
 import { LuSearch } from "react-icons/lu";
 import { MdOutlineReplay } from "react-icons/md";
+import useWindowSize from '@/hooks/useWindowSize.';
 
 export default function BoardListPage() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
+  const { isMobile } = useWindowSize(); // isLaptop은 현재 사용되지 않으므로 제거해도 무방
 
   const getPageFromUrl = useCallback(() => {
     const pageParam = searchParams.get('page');
@@ -122,6 +124,9 @@ export default function BoardListPage() {
             <li>예약</li>
             <li>구매</li>
             <li>취소</li>
+            <li>취소</li>
+            <li>취소</li>
+            <li>취소</li>
           </ul>
           <div className={styles.gradient_overlay}></div>
         </div>
@@ -191,20 +196,22 @@ export default function BoardListPage() {
       </section>
 
       <section className={styles.bottom_wrapper}>
-        <button
-          className={styles.add_btn}
-          onClick={() => handleAddClick()}
-        >
-          글쓰기
-        </button>
         {totalPages > 0 && (
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={handlePageChange}
             totalItems={totalItems}
+            pageNumbersToShow={isMobile ? 3 : 5}
           />
         )}
+
+        <button
+          className={styles.add_btn}
+          onClick={() => handleAddClick()}
+        >
+          글쓰기
+        </button>
       </section>
     </main>
   );

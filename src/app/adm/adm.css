@@ -2,34 +2,9 @@ main {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  padding: 24px 40px;
+  padding: 24px 30px;
   width: 100%;
   height: calc(100dvh - 64px);
-}
-h1, h2, h3, h4 {
-  font-family: 'Pretendard', sans-serif;
-  font-weight: bold;
-  line-height: 150%;
-  letter-spacing: -0.35px;
-}
-h1 {
-  font-size: 24px;
-}
-h2 {
-  font-size: 22px;
-}
-h3 {
-  font-size: 20px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 18px;
-  font-weight: normal;
-}
-p {
-  font-size: 14px;
 }
 button {
   display: flex;
@@ -67,8 +42,8 @@ select {
   padding-right: 36px; /* 오른쪽 여백 확보 */
 }
 select:hover, input:hover, textarea:hover, select:focus, input:focus, textarea:focus {
-  border: 1px solid #A5B4FC  ;
-  transition: all 0.3s ease-in-out;
+  border: 1px solid;
+  @apply border-primary-light transition duration-300;
 }
 
 /* ck-editor custom */
