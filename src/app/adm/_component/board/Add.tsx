@@ -30,10 +30,6 @@ interface Tab {
 export default function Page({}) {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { data } = useQuery({
-    queryKey: ['boardList'],
-    queryFn: getBoardList,
-  });
   const [jsonData, setJsonData] = useState({
     content: '',
   });

@@ -12,7 +12,10 @@ export default async function Page({ searchParams }: any) {
   //    - queryFn: () => getBoardList(1, 10) => getBoardList 함수를 호출하여
   //                                            첫 번째 페이지의 데이터 10개를 가져옵니다.
   //    - await: 데이터 prefetch가 완료될 때까지 기다립니다.
-  await queryClient.prefetchQuery({ queryKey: ['boardList'], queryFn: () => getBoardList(1, 10) });
+  await queryClient.prefetchQuery({
+    queryKey: ['boardList'],
+    queryFn: () => getBoardList(1, 10) }
+  );
   // 3. prefetch된 데이터와 QueryClient의 현재 상태를 "탈수(dehydrate)"합니다.
   //    이는 서버에서 가져온 데이터를 클라이언트로 전송 가능한 직렬화된 형태로 만드는 과정입니다.
   const dehydratedState = dehydrate(queryClient);

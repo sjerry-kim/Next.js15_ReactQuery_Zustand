@@ -58,6 +58,23 @@ export default function BoardListPage() {
     router.push(`${pathname}?${newSearchParams.toString()}`, { scroll: false });
   }, [currentPage, pathname, router, searchParams]);
 
+  // 상세/수정 모달 handler
+  const handleRowClick = (itemId: number) => {
+    const currentParamsString = searchParams.toString();
+    const destination = `/adm/board/${itemId}?${currentParamsString}`;
+    router.push(destination);
+  };
+
+// 글쓰기 모달 handler
+  const handleAddClick = () => {
+    const currentParamsString = searchParams.toString();
+
+    console.log(currentParamsString);
+
+    const destination = `/adm/board/add?${currentParamsString}`;
+    router.push(destination);
+  };
+
   // URL(searchParams)이 변경될 때 currentPage 상태를 업데이트하는 이펙트
   useEffect(() => {
     const pageFromUrl = getPageFromUrl();
@@ -152,7 +169,7 @@ export default function BoardListPage() {
               <tr
                 key={item.id.toString()}
                 style={{ cursor: 'pointer' }}
-                onClick={() => router.push(`/adm/board/${item.id}`)}
+                onClick={() => handleRowClick(item.id)}
               >
                 <td>{item.rn}</td>
                 <td>{item.id.toString()}</td>
@@ -176,7 +193,7 @@ export default function BoardListPage() {
       <section className={styles.bottom_wrapper}>
         <button
           className={styles.add_btn}
-          onClick={() => router.push('/adm/board/add')} // Ensure this route exists
+          onClick={() => handleAddClick()}
         >
           글쓰기
         </button>
