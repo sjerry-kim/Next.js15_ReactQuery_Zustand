@@ -187,7 +187,7 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
 
       {/* 데스크탑 Drawer */}
       {!isMobile && (
-        <DesktopStyledDrawer variant="permanent" open={open}>
+        <DesktopStyledDrawer variant="permanent" open={open} sx={{zIndex: "150"}}>
           <DrawerHeaderStyled>
             {
               open ?

@@ -281,8 +281,8 @@ module.exports = {
         '120': '120',
         '130': '130',
         '140': '140',
-        '150': '150',
-        'max': '9999',    // 최상위 레이어용
+        '150': '150',   // modal
+        'max': '9999',  // alert, snackbar 등
       },
 
       // transitionProperty: transition-
