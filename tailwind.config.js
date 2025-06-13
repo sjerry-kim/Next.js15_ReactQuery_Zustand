@@ -14,10 +14,11 @@ module.exports = {
         mono: ['Menlo', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
 
-      // fontSize
+      // fontSize: text-
       fontSize: {
         'xs': '0.65rem', // 기본보다 좀 작게
-        'sm': '0.85rem',
+        'sm': '0.75rem', // ✅
+        'md': '0.8125rem', // ✅
         'base': '1rem',
         'lg': '1.15rem',
         'xl': '1.3rem',
@@ -65,7 +66,7 @@ module.exports = {
       colors: {
         primary: {
           DEFAULT: '#6366F1',  // ex) bg-primary, text-primary
-          light: '#A5B4FC',     // ex) bg-primary-light
+          light: '#A5B4FC',     // ✅ ex) bg-primary-light
           dark: '#4F46E5',      // ex) bg-primary-dark
         },
         secondary: {
@@ -74,7 +75,7 @@ module.exports = {
           dark: '#D4C79E',
         },
         background: {
-          DEFAULT: '#F9FAFB',
+          DEFAULT: '#FFFFFF',
           light: '#FFFFFF',
           dark: '#E5E7EB',
         },
@@ -85,7 +86,9 @@ module.exports = {
         },
         neutral: {
           100: '#FFFFFF',
-          200: '#E0E0E0',
+          150: '#F5F5F5', // ✅ td-hover
+          200: '#E0E0E0', // ✅ dashed-border
+          250: '#D0D4DA', // ✅ common border
           300: '#C2C2C2',
           400: '#9E9E9E',
           500: '#7E7E7E',
@@ -295,6 +298,9 @@ module.exports = {
         'gradient-radial-at-t': 'radial-gradient(circle at top, var(--tw-gradient-stops))',       // 위쪽 중심
         'gradient-radial-at-b': 'radial-gradient(circle at bottom, var(--tw-gradient-stops))',    // 아래쪽 중심
         'gradient-conic-from-0': 'conic-gradient(from 0deg at 50% 50%, var(--tw-gradient-stops))', // 원뿔형 시작 각도 0도
+
+        // overlay용 그라데이션
+        'overlay-transparent-right': 'linear-gradient(to right, transparent 50%, #FFF 100%)', // 상태 버튼 overlay
       },
 
       // boxShadow: shadow-
@@ -346,6 +352,11 @@ module.exports = {
         height: 'height',                     // 높이 변화 전환
         spacing: 'margin, padding',           // 마진, 패딩 변화 전환
         width: 'width',                       // 너비 변화 전환
+      },
+
+      transitionDuration: {
+        300: '300ms',
+        500: '500ms',
       },
 
       // animation & keyframe: animate-

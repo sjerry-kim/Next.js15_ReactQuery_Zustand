@@ -40,7 +40,7 @@
   width: 40px;
   height: 100%;
   pointer-events: none;
-  background: linear-gradient(to right, transparent 50%, #FFF 100%);
+  @apply bg-overlay-transparent-right;
 }
 
 .status_box li {
@@ -49,13 +49,10 @@
   align-items: center;
   padding: 10px 12px;
   min-width: 47px;
-  font-size: 0.75rem;
-  border: 1px solid #D0D4DA;
-  border-radius: 6px;
-  line-height: 150%;
-  letter-spacing: -0.35px;
-  cursor: pointer;
+  border: 1px solid;
   white-space: nowrap; /* 줄바꿈 방지 */
+  @apply text-sm text-neutral-700 rounded-md
+  leading-normal tracking-tight border-neutral-250 cursor-pointer;
 }
 
 .search_container {
@@ -63,27 +60,24 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  gap: 8px;
-  height: 37px;
+  height: 36px;
+  @apply gap-2;
 }
 
 .search_container select {
-  height: 36px;
-  border-radius: 6px;
-  font-size: 0.75rem
+  height: 100%;
+  font-size: 0.75rem;
+  @apply text-sm text-neutral-700
+  leading-relaxed tracking-tight rounded-lg ;
 }
 
 .search_container svg {
-  margin-bottom: 1px;
-  color: #6d6d6d;
-  font-size: 1.125rem;
-  transition: color 0.3s ease-in-out;
-  cursor: pointer;
+  @apply text-lg text-neutral-500
+  transition duration-300 cursor-pointer;
 }
 
 .search_container svg:hover {
-  color: #A5B4FC;
-  transition: all 0.3s ease-in-out;
+  @apply text-primary-light transition duration-300;
 }
 
 .searchbar_box {
@@ -91,22 +85,20 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 5px;
   padding: 0 10px 0 15px;
   height: 36px;
-  border: 1px solid #D0D4DA;
-  border-radius: 6px;
+  border: 1px solid;
+  @apply gap-1 rounded-md border-neutral-250;
 }
 
 .searchbar_box:hover {
-  border: 1px solid #A5B4FC;
-  transition: all 0.3s ease-in-out;
+  @apply border-primary-light transition duration-300;
 }
 
 .searchbar_box input {
   padding: 10px 0;
-  border: none;
-  font-size: 0.75rem
+  height: 100%;
+  @apply text-sm text-neutral-700 border-none;
 }
 
 .search_reset_box {
@@ -116,45 +108,45 @@
   align-items: center;
   width: 36px;
   height: 36px;
-  border: 1px solid #D0D4DA;
-  border-radius: 6px;
-  cursor: pointer;
+  border: 1px solid;
+  @apply rounded-md cursor-auto border-neutral-250;
 }
 
 .search_reset_box:hover {
-  border: 1px solid #A5B4FC;
-  transition: all 0.3s ease-in-out;
+  @apply border-primary-light transition duration-300;
 }
 
 /* table */
 .table_wrapper {
-  border: 1px solid #D0D4DA;
-  border-radius: 13px;
+  border: 1px solid;
   overflow: hidden;
+  @apply border-neutral-250 rounded-xl
 }
 
 .table {
-  font-size: 0.8125rem;
   text-align: center;
+  @apply text-md text-neutral-700;
 }
 
 .table thead {
-  border-bottom: 1px solid #D0D4DA;
+  border-bottom: 1px solid;
+  @apply border-neutral-250;
 }
 
 .table thead th {
   padding: 13px 15px;
   position: relative;
+  @apply text-neutral-700;
 }
 
 .table thead th:after {
   position: absolute;
   content: "";
-  background-color: #D0D4DA;
   width: 1px;
   height: calc(100% - 30px);
   right: 0;
   top: 16px;
+  @apply bg-neutral-250
 }
 
 .table thead th:last-child:after {
@@ -162,12 +154,12 @@
 }
 
 .table tbody {
-  background: #fff;
+  @apply bg-background;
 }
 
 .table tbody tr {
-  border-bottom: 1px solid #D0D4DA;
-  cursor: pointer;
+  border-bottom: 1px solid;
+  @apply border-neutral-250 cursor-pointer;
 }
 
 .table tbody tr:last-child {
@@ -176,16 +168,17 @@
 
 .table tbody td {
   padding: 11px 15px;
-  transition: background 0.3s ease-in-out;
+  /*transition: background 0.3s ease-in-out;*/
   min-width: 50px;
   max-width: 200px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  @apply transition duration-300;
 }
 
 .table tbody tr:hover td {
-  background: #F5F5F5;
+  @apply bg-neutral-150;
 }
 
 .table .need_left {
@@ -208,11 +201,13 @@
 }
 
 .bottom_wrapper .add_btn {
-  border: 1px solid #D0D4DA;
+  border: 1px solid;
+  @apply text-sm text-neutral-700
+  leading-relaxed tracking-tight border-neutral-250;
 }
 
 .bottom_wrapper .add_btn:hover {
-  background-color: #F5F5F5;
+  @apply bg-neutral-150;
 }
 
 @media (max-width: 1280px) {
@@ -227,51 +222,38 @@
     min-width: 840px; /* 다음 media query max-width */
   }
 
-  .table thead th {
-    /*padding: 동일하게 */
-  }
-
-  .table tbody td {
-    /*padding: 동일하게 */
-  }
-
   .table thead th:first-child {
     position: sticky;
     width: 60px;
     left: 0;
-    background-color: #f7f8f9;
-    z-index: 1;
+    @apply bg-neutral-150 z-10;
   }
 
   .table tbody td:first-child {
     position: sticky;
     width: 60px;
     left: 0;
-    background-color: #fff;
-    z-index: 1;
+    @apply bg-neutral-100 z-10;
   }
 
   .table thead th:nth-child(2) {
     position: sticky;
     width: 80px;
     left: 60px;
-    background-color: #f7f8f9;
-    z-index: 1;
+    @apply bg-neutral-150 z-10;
   }
 
   .table thead th:nth-child(2):after {
     height: 100%;
     top: 0;
-    background-color: #f7f8f9;
-    border-right: 1px dashed #E5E8EC;
+    @apply bg-gray-100 border-neutral-150;
   }
 
   .table tbody td:nth-child(2) {
     position: sticky;
     width: 80px;
     left: 60px;
-    background-color: #fff;
-    z-index: 1;
+    @apply bg-neutral-100 z-10;
   }
 
   .table tbody td:nth-child(2):after {
@@ -281,8 +263,8 @@
     height: 100%;
     top: 0;
     right: 0;
-    background-color: #fff;
-    border-right: 1px dashed #E5E8EC;
+    border-right: 1px dashed;
+    @apply bg-neutral-100 border-neutral-200;
   }
 }
 
