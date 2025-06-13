@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 
 // Styles
-import '@/_reset.css';
-import '@/ckEditor.css'
-import '@/ckContentStyles.css'
+import '@/Styles/globals.css';
+import '@/Styles/ckEditor.css'
+import '@/Styles/ckContentStyles.css'
 
 // React-Query
 import ReactQueryProviders from '@/providers/ReactQueryProvider';
