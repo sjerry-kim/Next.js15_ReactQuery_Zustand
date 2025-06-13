@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const { COLORS } = require('./src/app/Styles/colorConstants');
+
 module.exports = {
   content: [
     './app/**/*.{js,ts,jsx,tsx}',   // App Router
@@ -16,17 +18,17 @@ module.exports = {
 
       // fontSize: text-
       fontSize: {
-        'xs': '0.65rem', // 기본보다 좀 작게
-        'sm': '0.75rem', // ✅
-        'md': '0.8125rem', // ✅
-        'base': '1rem',
-        'lg': '1.15rem',
-        'xl': '1.3rem',
-        '2xl': '1.8rem',
-        '3xl': '2.2rem',
-        '4xl': '2.8rem',
-        '5xl': '3.5rem',
-        '6xl': '4.5rem',
+        'xs': '0.65rem',        // 10.4px
+        'sm': '0.75rem',        // 12px ✅
+        'md': '0.8125rem',      // 13px ✅
+        'base': '1rem',         // 16px
+        'lg': '1.15rem',        // 18.4px
+        'xl': '1.3rem',         // 20.8px
+        '2xl': '1.8rem',        // 28.8px
+        '3xl': '2.2rem',        // 35.2px
+        '4xl': '2.8rem',        // 44.8px
+        '5xl': '3.5rem',        // 56px
+        '6xl': '4.5rem',        // 	72px
         'custom-xl': '1.35rem', // 내가 추가한 커스텀 사이즈
       },
 
@@ -63,61 +65,7 @@ module.exports = {
       },
 
       // colors: bg-, text-, border-, placeholder-, ring-, divide-, outline-
-      colors: {
-        primary: {
-          DEFAULT: '#6366F1',  // ex) bg-primary, text-primary
-          light: '#A5B4FC',     // ✅ ex) bg-primary-light
-          dark: '#4F46E5',      // ex) bg-primary-dark
-        },
-        secondary: {
-          DEFAULT: '#E9DCC3',
-          light: '#F4EBD6',
-          dark: '#D4C79E',
-        },
-        background: {
-          DEFAULT: '#FFFFFF',
-          light: '#FFFFFF',
-          dark: '#E5E7EB',
-        },
-        surface: {
-          DEFAULT: '#FFFFFF',
-          light: '#F3F4F6',
-          dark: '#D1D5DB',
-        },
-        neutral: {
-          100: '#FFFFFF',
-          150: '#F5F5F5', // ✅ td-hover
-          200: '#E0E0E0', // ✅ dashed-border
-          250: '#D0D4DA', // ✅ common border
-          300: '#C2C2C2',
-          400: '#9E9E9E',
-          500: '#7E7E7E',
-          600: '#626262',
-          700: '#4B4B4B',
-          800: '#333333',
-          900: '#1A1A1A',
-        },
-        info: {
-          DEFAULT: '#2D9CDB',
-          bg: '#E3F2FA',
-          text: '#1F6F99',
-        },
-        danger: {
-          DEFAULT: '#EB5757',
-          bg: '#F9E3E3',
-          text: '#9B3D3D',
-        },
-        warn: {
-          DEFAULT: '#F2994A',
-          bg: '#FDE9D6',
-          text: '#9B5E13',
-        },
-        success: {
-          DEFAULT: '#27AE60',
-          bg: '#E3F7E8',
-          text: '#1B6F3F',
-        },
-      },
+      colors: COLORS,
 
       // spacing - p-, pt-, pr-, pb-, pl-, px-, py-, m-, mt-, mr-, mb-, ml-, mx-, my-, gap-, row-gap-, col-gap-
       spacing: {

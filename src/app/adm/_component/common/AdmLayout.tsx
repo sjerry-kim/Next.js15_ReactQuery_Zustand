@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, ReactNode } from 'react';
+import { ReactElement } from 'react';
 import { useRouter } from 'next/navigation';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import useWindowSize from '@/hooks/useWindowSize.';
@@ -22,10 +23,23 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import CssBaseline from '@mui/material/CssBaseline';
-import { SwipeableDrawer } from '@mui/material';
+import { SvgIconProps, SwipeableDrawer } from '@mui/material';
+import { COLORS } from '@/Styles/colorConstants';
 
 interface AdmLayoutProps {
   children: ReactNode;
+}
+
+interface DrawerContentProps {
+  open: boolean; // 데스크탑 Drawer의 아이콘/텍스트 표시 여부 제어
+  isMobile?: boolean;
+}
+
+type topMenu = {
+  idx: number;
+  title: string;
+  path: string;
+  icon: ReactElement<SvgIconProps>;
 }
 
 const drawerWidth = 240;
@@ -38,21 +52,16 @@ const DrawerHeaderStyled = styled('div')(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-interface DrawerContentProps {
-  open: boolean; // 데스크탑 Drawer의 아이콘/텍스트 표시 여부 제어
-  isMobile?: boolean;
-}
-
 // Nav Drawer Content
 const DrawerContent = ({ open, isMobile }: DrawerContentProps) => {
   const router: AppRouterInstance = useRouter();
-  const topMenuList = [
+  const topMenuList : topMenu[] = [
     {idx: 1, title: "게시판", path: "/adm/board", icon: <EditNoteIcon />},
     {idx: 2, title: "상품", path: "/adm/gds", icon: <CardTravelIcon />},
   ]
   const [currentMenu, setCurrentMenu] = useState(topMenuList[0]);
 
-  const handleSideNavigation = (menu) => {
+  const handleSideNavigation = (menu: topMenu) => {
     router.push(menu.path);
     setCurrentMenu(menu);
   }
@@ -76,7 +85,7 @@ const DrawerContent = ({ open, isMobile }: DrawerContentProps) => {
                   minWidth: 0,
                   mr: isMobile || open ? 3 : 'auto',
                   justifyContent: 'center',
-                  color: currentMenu.idx === item.idx ? "#A5B4FC" : ""
+                  color: currentMenu.idx === item.idx ? COLORS.primary.light: ""
                 }}
               >
                 {item.icon}
@@ -85,7 +94,7 @@ const DrawerContent = ({ open, isMobile }: DrawerContentProps) => {
                 primary={item.title}
                 sx={{
                   opacity: isMobile || open ? 1 : 0,
-                  color: currentMenu.idx === item.idx ? "#A5B4FC" : ""
+                  color: currentMenu.idx === item.idx ? COLORS.primary.light : ""
               }}
               />
             </ListItemButton>
