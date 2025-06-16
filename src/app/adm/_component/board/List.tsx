@@ -124,9 +124,6 @@ export default function BoardListPage() {
             <li>예약</li>
             <li>구매</li>
             <li>취소</li>
-            <li>취소</li>
-            <li>취소</li>
-            <li>취소</li>
           </ul>
           <div className={styles.gradient_overlay}></div>
         </div>
