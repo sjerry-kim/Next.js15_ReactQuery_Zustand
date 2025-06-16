@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, ReactNode } from 'react';
+import { useState, ReactNode, useEffect, useRef } from 'react';
 import { ReactElement } from 'react';
 import { useRouter } from 'next/navigation';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
@@ -13,17 +13,27 @@ import MuiDrawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import EditNoteIcon from '@mui/icons-material/EditNote';
-import CardTravelIcon from '@mui/icons-material/CardTravel';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import CssBaseline from '@mui/material/CssBaseline';
-import { SvgIconProps, SwipeableDrawer } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import EditNoteIcon from '@mui/icons-material/EditNote';
+import CardTravelIcon from '@mui/icons-material/CardTravel';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import {
+  ClickAwayListener,
+  Grow,
+  MenuItem,
+  MenuList,
+  Paper,
+  Popper,
+  SvgIconProps,
+  SwipeableDrawer,
+} from '@mui/material';
 import { COLORS } from '@/Styles/colorConstants';
 
 interface AdmLayoutProps {
@@ -31,7 +41,8 @@ interface AdmLayoutProps {
 }
 
 interface DrawerContentProps {
-  open: boolean; // 데스크탑 Drawer의 아이콘/텍스트 표시 여부 제어
+  drawerOpen: boolean; // 데스크탑 Drawer의 아이콘/텍스트 표시 여부 제어
+  setDrawerOpen: (drawerOpen: boolean) => void;
   isMobile?: boolean;
 }
 
@@ -52,17 +63,18 @@ const DrawerHeaderStyled = styled('div')(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-// Nav Drawer Content
-const DrawerContent = ({ open, isMobile }: DrawerContentProps) => {
+// Nav Drawer 메뉴 컨텐츠
+const DrawerContent = ({ drawerOpen, setDrawerOpen, isMobile }: DrawerContentProps) => {
   const router: AppRouterInstance = useRouter();
   const topMenuList : topMenu[] = [
-    {idx: 1, title: "게시판", path: "/adm/board", icon: <EditNoteIcon />},
-    {idx: 2, title: "상품", path: "/adm/gds", icon: <CardTravelIcon />},
+    {idx: 1, title: "게시판", path: "/adm/board", icon: <EditNoteIcon sx={{width: 22}} />},
+    {idx: 2, title: "상품", path: "/adm/gds", icon: <CardTravelIcon sx={{width: 22}} />},
   ]
   const [currentMenu, setCurrentMenu] = useState(topMenuList[0]);
 
   const handleSideNavigation = (menu: topMenu) => {
     router.push(menu.path);
+    if (isMobile) setDrawerOpen(false);
     setCurrentMenu(menu);
   }
 
@@ -75,7 +87,7 @@ const DrawerContent = ({ open, isMobile }: DrawerContentProps) => {
             <ListItemButton
               sx={{
                 minHeight: 48,
-                justifyContent: isMobile || open ? 'initial' : 'center',
+                justifyContent: isMobile || drawerOpen ? 'initial' : 'center',
                 px: 2.5,
               }}
               onClick={() => handleSideNavigation(item)}
@@ -83,7 +95,7 @@ const DrawerContent = ({ open, isMobile }: DrawerContentProps) => {
               <ListItemIcon
                 sx={{
                   minWidth: 0,
-                  mr: isMobile || open ? 3 : 'auto',
+                  mr: isMobile || drawerOpen ? 3 : 'auto',
                   justifyContent: 'center',
                   color: currentMenu.idx === item.idx ? COLORS.primary.light: ""
                 }}
@@ -93,7 +105,7 @@ const DrawerContent = ({ open, isMobile }: DrawerContentProps) => {
               <ListItemText
                 primary={item.title}
                 sx={{
-                  opacity: isMobile || open ? 1 : 0,
+                  opacity: isMobile || drawerOpen ? 1 : 0,
                   color: currentMenu.idx === item.idx ? COLORS.primary.light : ""
               }}
               />
@@ -101,50 +113,60 @@ const DrawerContent = ({ open, isMobile }: DrawerContentProps) => {
           </ListItem>
         ))}
       </List>
-      {/*<Divider />*/}
-      {/*<List>*/}
-      {/*  {['All mail', 'Trash', 'Spam'].map((text, index) => (*/}
-      {/*    <ListItem key={text} disablePadding sx={{ display: 'block' }}>*/}
-      {/*      <ListItemButton*/}
-      {/*        sx={{*/}
-      {/*          minHeight: 48,*/}
-      {/*          justifyContent: isMobile || open ? 'initial' : 'center',*/}
-      {/*          px: 2.5,*/}
-      {/*        }}*/}
-      {/*      >*/}
-      {/*        <ListItemIcon*/}
-      {/*          sx={{*/}
-      {/*            minWidth: 0,*/}
-      {/*            mr: isMobile || open ? 3 : 'auto',*/}
-      {/*            justifyContent: 'center',*/}
-      {/*          }}*/}
-      {/*        >*/}
-      {/*          {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}*/}
-      {/*        </ListItemIcon>*/}
-      {/*        <ListItemText*/}
-      {/*          primary={text}*/}
-      {/*          sx={{ opacity: isMobile || open ? 1 : 0 }}*/}
-      {/*        />*/}
-      {/*      </ListItemButton>*/}
-      {/*    </ListItem>*/}
-      {/*  ))}*/}
-      {/*</List>*/}
     </>
   );
 };
 
+// 레이아웃
 export default function AdmLayout({ children }: AdmLayoutProps) {
   const theme = useTheme();
-  const [open, setOpen] = useState(false); // 모바일, 데스크탑 공통으로 Drawer 열림 상태 관리
+  const [drawerOpen, setDrawerOpen] = useState(false); // Drawer
+  const [toggleOpen, setToggleOpen] = useState(false); // Drawer
+  const anchorRef = useRef<HTMLButtonElement>(null);
+  const prevOpen = useRef(toggleOpen);
   const { isMobile } = useWindowSize(); // isLaptop은 현재 사용되지 않으므로 제거해도 무방
 
   const handleDrawerOpen = () => {
-    setOpen(true);
+    setDrawerOpen(true);
   };
 
   const handleDrawerClose = () => {
-    setOpen(false);
+    setDrawerOpen(false);
   };
+
+  const handleToggle = () => {
+    setToggleOpen((prevOpen) => !prevOpen);
+  };
+
+
+  const handleClose = (event: Event | React.SyntheticEvent) => {
+    if (
+      anchorRef.current &&
+      anchorRef.current.contains(event.target as HTMLElement)
+    ) {
+      return;
+    }
+
+    setToggleOpen(false);
+  };
+
+  function handleListKeyDown(event: React.KeyboardEvent) {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      setToggleOpen(false);
+    } else if (event.key === 'Escape') {
+      setToggleOpen(false);
+    }
+  }
+
+  // return focus to the button when we transitioned from !open -> open
+  useEffect(() => {
+    if (prevOpen.current === true && toggleOpen === false) {
+      anchorRef.current!.focus();
+    }
+
+    prevOpen.current = toggleOpen;
+  }, [toggleOpen]);
 
   // useWindowSize가 초기 로딩 중일 때
   if (isMobile === undefined) {
@@ -159,7 +181,7 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
       {isMobile && (
         <SwipeableDrawer
           anchor="left"
-          open={open}
+          open={drawerOpen}
           onClose={handleDrawerClose}
           onOpen={handleDrawerOpen}
           ModalProps={{
@@ -174,23 +196,23 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
         >
           <DrawerHeaderStyled>
             {
-              open ? (
+              drawerOpen ? (
                 <IconButton onClick={handleDrawerClose}>
                   {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
                 </IconButton>
               ) : null
             }
           </DrawerHeaderStyled>
-          <DrawerContent open={true} isMobile={true} />
+          <DrawerContent drawerOpen={true} setDrawerOpen={setDrawerOpen} isMobile={true} />
         </SwipeableDrawer>
       )}
 
       {/* 데스크탑 Drawer */}
       {!isMobile && (
-        <DesktopStyledDrawer variant="permanent" open={open} sx={{zIndex: "150"}}>
+        <DesktopStyledDrawer variant="permanent" open={drawerOpen} sx={{zIndex: "150"}}>
           <DrawerHeaderStyled>
             {
-              open ?
+              drawerOpen ?
                 <IconButton onClick={handleDrawerClose}>
                   {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
                 </IconButton>
@@ -202,14 +224,14 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
                   edge="start"
                   sx={{
                     margin: 'auto', // 가운데 정렬 또는 필요에 맞게 조정
-                    // display: open ? 'none' : 'block',
+                    // display: drawerOpen ? 'none' : 'block',
                   }}
                 >
                   <MenuIcon />
                 </IconButton>
             }
           </DrawerHeaderStyled>
-          <DrawerContent open={open} isMobile={false}/>
+          <DrawerContent drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} isMobile={false}/>
         </DesktopStyledDrawer>
       )}
 
@@ -225,14 +247,53 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
                 onClick={handleDrawerOpen}
                 sx={{ mr: 2, display: isMobile ? 'block' : 'none' }} // 모바일일 때만 보이도록
               >
-                <MenuIcon />
+                <MenuIcon sx={{display: "block"}} />
               </IconButton>
               :
               <h2>Administrator Page</h2>
           }
 
           {/*{ isMobile && <h2>Administrator Page</h2> }*/}
-          <p style={{marginLeft: isMobile ? 'auto' : 0}}>안녕하세요 관리자님!</p> {/* 간단한 정렬 */}
+          <div className={styles.header_right}>
+            <p style={{marginLeft: isMobile ? 'auto' : 0}}>안녕하세요 관리자님!</p> {/* 간단한 정렬 */}
+            <IconButton   ref={anchorRef} onClick={handleToggle}>
+              <MoreVertIcon sx={{width: 22}}/>
+            </IconButton >
+            <Popper
+              open={toggleOpen}
+              anchorEl={anchorRef.current}
+              role={undefined}
+              placement="bottom-start"
+              transition
+              disablePortal
+              sx={{inset: "0px 19px auto auto !important", zIndex: 120}}
+            >
+              {({ TransitionProps, placement }) => (
+                <Grow
+                  {...TransitionProps}
+                  style={{
+                    transformOrigin:
+                      placement === 'bottom-start' ? 'left top' : 'left bottom',
+                  }}
+                >
+                  <Paper>
+                    <ClickAwayListener onClickAway={handleClose}>
+                      <MenuList
+                        autoFocusItem={toggleOpen}
+                        id="composition-menu"
+                        aria-labelledby="composition-button"
+                        onKeyDown={handleListKeyDown}
+                      >
+                        <MenuItem onClick={handleClose}>홈으로 이동</MenuItem>
+                        <MenuItem onClick={handleClose}>마이페이지</MenuItem>
+                        <MenuItem onClick={handleClose}>로그아웃</MenuItem>
+                      </MenuList>
+                    </ClickAwayListener>
+                  </Paper>
+                </Grow>
+              )}
+            </Popper>
+          </div>
         </header>
         {/*<Box*/}
         {/*  component="main"*/}

@@ -18,6 +18,18 @@
   box-sizing: border-box;
 }
 
-.header p {
+.header_right {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  @apply gap-1
+}
+
+.header_right p {
   white-space: nowrap;
+}
+
+.header_right button{
+  @apply cursor-pointer;
 }
