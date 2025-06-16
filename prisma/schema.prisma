@@ -4,8 +4,8 @@ generator client {
 
 datasource db {
   provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_DATABASE_URL") // 직접 연결 (포트 5432)
+  url       = env("TEST_DATABASE_URL")
+  directUrl = env("TEST_DIRECT_URL") // 직접 연결 (포트 5432)
 }
 
 model board {

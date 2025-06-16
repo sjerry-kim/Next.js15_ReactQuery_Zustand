@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, ReactNode, useEffect, useRef } from 'react';
+import { useState, ReactNode, useEffect, useRef, useMemo } from 'react';
 import { ReactElement } from 'react';
-import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { usePathname, useRouter } from 'next/navigation';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import useWindowSize from '@/hooks/useWindowSize.';
 import styles from '@/adm/_component/common/AdmLayout.module.css';
+import { Menu } from '@/types/next-auth';
 
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -21,14 +23,9 @@ import CssBaseline from '@mui/material/CssBaseline';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import EditNoteIcon from '@mui/icons-material/EditNote';
-import CardTravelIcon from '@mui/icons-material/CardTravel';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import FaceIcon from '@mui/icons-material/Face';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import DashboardIcon from '@mui/icons-material/Dashboard';
 import {
-  ClickAwayListener,
+  ClickAwayListener, Collapse,
   Grow,
   MenuItem,
   MenuList,
@@ -38,6 +35,8 @@ import {
   SwipeableDrawer,
 } from '@mui/material';
 import { COLORS } from '@/Styles/colorConstants';
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import { ADMIN_MENUS, getAuthorizedMenus } from '@/lib/auth/auth-config';
 
 interface AdmLayoutProps {
   children: ReactNode;
@@ -67,57 +66,165 @@ const DrawerHeaderStyled = styled('div')(({ theme }) => ({
 }));
 
 // Nav Drawer 메뉴 컨텐츠
+// const DrawerContent = ({ drawerOpen, setDrawerOpen, isMobile }: DrawerContentProps) => {
+//   const router: AppRouterInstance = useRouter();
+//   const topMenuList : topMenu[] = [
+//     {idx: 0, title: "대시보드", path: "/adm", icon: <DashboardIcon sx={{width: 22}} />},
+//     {idx: 1, title: "게시판", path: "/adm/board", icon: <EditNoteIcon sx={{width: 22}} />},
+//     {idx: 2, title: "상품", path: "/adm/gds", icon: <CardTravelIcon sx={{width: 22}} />},
+//     {idx: 3, title: "회원관리", path: "/adm/member", icon: <FaceIcon sx={{width: 22}} />},
+//     {idx: 4, title: "마이페이지", path: "/adm", icon: <ManageAccountsIcon sx={{width: 22}} />},
+//   ]
+//   const [currentMenu, setCurrentMenu] = useState(topMenuList[0]);
+//
+//   const handleSideNavigation = (menu: topMenu) => {
+//     router.push(menu.path);
+//     if (isMobile) setDrawerOpen(false);
+//     setCurrentMenu(menu);
+//   }
+//
+//   return (
+//     <>
+//       <Divider />
+//       <List>
+//         {topMenuList.map((item, index) => (
+//           <ListItem key={index} disablePadding sx={{ display: 'block' }}>
+//             <ListItemButton
+//               sx={{
+//                 minHeight: 48,
+//                 justifyContent: isMobile || drawerOpen ? 'initial' : 'center',
+//                 px: 2.5,
+//               }}
+//               onClick={() => handleSideNavigation(item)}
+//             >
+//               <ListItemIcon
+//                 sx={{
+//                   minWidth: 0,
+//                   mr: isMobile || drawerOpen ? 3 : 'auto',
+//                   justifyContent: 'center',
+//                   color: currentMenu.idx === item.idx ? COLORS.primary.light: ""
+//                 }}
+//               >
+//                 {item.icon}
+//               </ListItemIcon>
+//               <ListItemText
+//                 primary={item.title}
+//                 sx={{
+//                   opacity: isMobile || drawerOpen ? 1 : 0,
+//                   color: currentMenu.idx === item.idx ? COLORS.primary.light : ""
+//               }}
+//               />
+//             </ListItemButton>
+//           </ListItem>
+//         ))}
+//       </List>
+//     </>
+//   );
+// };
+
+// Nav Drawer 메뉴 컨텐츠
 const DrawerContent = ({ drawerOpen, setDrawerOpen, isMobile }: DrawerContentProps) => {
   const router: AppRouterInstance = useRouter();
-  const topMenuList : topMenu[] = [
-    {idx: 0, title: "대시보드", path: "/adm", icon: <DashboardIcon sx={{width: 22}} />},
-    {idx: 1, title: "게시판", path: "/adm/board", icon: <EditNoteIcon sx={{width: 22}} />},
-    {idx: 2, title: "상품", path: "/adm/gds", icon: <CardTravelIcon sx={{width: 22}} />},
-    {idx: 3, title: "회원관리", path: "/adm/member", icon: <FaceIcon sx={{width: 22}} />},
-    {idx: 4, title: "The quick", path: "/adm", icon: <ManageAccountsIcon sx={{width: 22}} />},
-  ]
-  const [currentMenu, setCurrentMenu] = useState(topMenuList[0]);
+  const pathname = usePathname();
+  const { data: session, status } = useSession();
+  const userRole = session?.user?.role;
 
-  const handleSideNavigation = (menu: topMenu) => {
-    router.push(menu.path);
+  const authorizedMenus = useMemo(
+    () => getAuthorizedMenus(userRole, ADMIN_MENUS),
+    [userRole]
+  );
+
+  const [openMenuIdx, setOpenMenuIdx] = useState<number | null>(() => {
+    const activeParent = authorizedMenus.find(item =>
+      item.children?.some(child => pathname.startsWith(child.path))
+    );
+    return activeParent ? activeParent.idx : null;
+  });
+
+  const handleMenuClick = (menu: Menu) => {
+    if (menu.children) {
+      setOpenMenuIdx(openMenuIdx === menu.idx ? null : menu.idx);
+    } else if (menu.path) {
+      router.push(menu.path);
+      if (isMobile) setDrawerOpen(false);
+    }
+  };
+
+  const handleSubMenuClick = (path: string) => {
+    router.push(path);
     if (isMobile) setDrawerOpen(false);
-    setCurrentMenu(menu);
+  };
+
+  if (status === "loading") {
+    return <List><ListItem><ListItemText primary="메뉴 로딩중..." /></ListItem></List>;
   }
 
   return (
     <>
       <Divider />
       <List>
-        {topMenuList.map((item, index) => (
-          <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: isMobile || drawerOpen ? 'initial' : 'center',
-                px: 2.5,
-              }}
-              onClick={() => handleSideNavigation(item)}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: isMobile || drawerOpen ? 3 : 'auto',
-                  justifyContent: 'center',
-                  color: currentMenu.idx === item.idx ? COLORS.primary.light: ""
-                }}
-              >
-                {item.icon}
-              </ListItemIcon>
-              <ListItemText
-                primary={item.title}
-                sx={{
-                  opacity: isMobile || drawerOpen ? 1 : 0,
-                  color: currentMenu.idx === item.idx ? COLORS.primary.light : ""
-              }}
-              />
-            </ListItemButton>
-          </ListItem>
-        ))}
+        {authorizedMenus.map((item) => {
+          // 1. 상위 메뉴가 활성화될 조건: 현재 경로가 하위 메뉴 경로 중 하나로 시작하는 경우
+          const isParentActive = item.children ?
+            item.children.some(child => pathname.startsWith(child.path)) :
+            (item.path ? pathname.startsWith(item.path) : false);
+
+          return (
+            <div key={item.idx}>
+              <ListItem disablePadding sx={{ display: 'block' }}>
+                <ListItemButton
+                  sx={{ minHeight: 48, justifyContent: isMobile || drawerOpen ? 'initial' : 'center', px: 2.5 }}
+                  onClick={() => handleMenuClick(item)}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: isMobile || drawerOpen ? 3 : 'auto',
+                      justifyContent: 'center',
+                      color: isParentActive ? COLORS.primary.light : "" // 상위 메뉴 활성화 색상
+                    }}
+                  >
+                    {item.icon}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={item.title}
+                    sx={{
+                      opacity: isMobile || drawerOpen ? 1 : 0,
+                      color: isParentActive ? COLORS.primary.light : "" // 상위 메뉴 활성화 색상
+                    }}
+                  />
+                  {(isMobile || drawerOpen) && item.children && (
+                    openMenuIdx === item.idx ? <ExpandLess /> : <ExpandMore />
+                  )}
+                </ListItemButton>
+              </ListItem>
+
+              {item.children && (
+                <Collapse in={openMenuIdx === item.idx} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    {item.children.map((child) => {
+                      // 2. 하위 메뉴가 활성화될 조건: 현재 경로가 하위 메뉴 경로와 정확히 일치하는 경우
+                      const isChildActive = pathname === child.path;
+
+                      return (
+                        <ListItemButton
+                          key={child.path}
+                          sx={{ pl: 4 }}
+                          onClick={() => handleSubMenuClick(child.path)}
+                        >
+                          <ListItemText
+                            primary={child.title}
+                            sx={{ color: isChildActive ? COLORS.primary.light : "" }} // 하위 메뉴 활성화 색상
+                          />
+                        </ListItemButton>
+                      );
+                    })}
+                  </List>
+                </Collapse>
+              )}
+            </div>
+          );
+        })}
       </List>
     </>
   );

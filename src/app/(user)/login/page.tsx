@@ -36,18 +36,43 @@ export default function Page() {
 
   const handleLogin = async () => {
     try {
-      await fetch(`${process.env.PUBLIC_URL}/api/auth/login`, {
+      const res = await fetch('/api/auth/login', {
         method: 'POST',
-        cache: 'no-store',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(jsonData),
       });
-    } catch (err) {
-      console.log(err);
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || '로그인 실패');
+      }
+
+      const {
+        accessToken,
+        refreshToken,
+        expiresIn,
+        user,
+      } = await res.json();
+
+      // 1. accessToken → sessionStorage (페이지 이동 시 유지)
+      sessionStorage.setItem('accessToken', accessToken);
+
+      // 2. refreshToken → localStorage (자동 로그인용, 유효기간 3개월 가정)
+      localStorage.setItem('refreshToken', refreshToken);
+
+      // (선택) expiresIn 도 필요하면 같이 저장 가능
+      const expiresAt = Date.now() + expiresIn * 1000;
+      localStorage.setItem('accessTokenExpiresAt', expiresAt.toString());
+
+      console.log('로그인 성공:', user);
+    } catch (error) {
+      console.error('로그인 에러:', error);
     }
   };
+
+
 
   return (
     <main className={styles.main}>

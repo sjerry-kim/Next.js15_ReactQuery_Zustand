@@ -41,7 +41,7 @@ export default function Page() {
 
   const handleCreate = async () => {
     try {
-      await fetch(`${process.env.PUBLIC_URL}/api/auth/register`, {
+      const res = await fetch(`${process.env.PUBLIC_URL}/api/auth/signup`, {
         method: 'POST',
         cache: 'no-store',
         headers: {
@@ -49,6 +49,8 @@ export default function Page() {
         },
         body: JSON.stringify(jsonData),
       });
+
+      console.log(res);
     } catch (err) {
       console.log(err);
     }

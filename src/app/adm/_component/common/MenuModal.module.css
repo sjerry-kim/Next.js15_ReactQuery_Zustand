@@ -8,8 +8,6 @@
   left: 0;
   right: 0;
   bottom: 0;
-  /*background-color: rgba(0, 0, 0, 0.3);*/
-  /*z-index: 10000;*/
   @apply bg-neutral-700 bg-opacity-45 z-150;
 }
 
