@@ -24,6 +24,9 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import CardTravelIcon from '@mui/icons-material/CardTravel';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import FaceIcon from '@mui/icons-material/Face';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import {
   ClickAwayListener,
   Grow,
@@ -67,8 +70,11 @@ const DrawerHeaderStyled = styled('div')(({ theme }) => ({
 const DrawerContent = ({ drawerOpen, setDrawerOpen, isMobile }: DrawerContentProps) => {
   const router: AppRouterInstance = useRouter();
   const topMenuList : topMenu[] = [
+    {idx: 0, title: "대시보드", path: "/adm", icon: <DashboardIcon sx={{width: 22}} />},
     {idx: 1, title: "게시판", path: "/adm/board", icon: <EditNoteIcon sx={{width: 22}} />},
     {idx: 2, title: "상품", path: "/adm/gds", icon: <CardTravelIcon sx={{width: 22}} />},
+    {idx: 3, title: "회원관리", path: "/adm/member", icon: <FaceIcon sx={{width: 22}} />},
+    {idx: 4, title: "The quick", path: "/adm", icon: <ManageAccountsIcon sx={{width: 22}} />},
   ]
   const [currentMenu, setCurrentMenu] = useState(topMenuList[0]);
 

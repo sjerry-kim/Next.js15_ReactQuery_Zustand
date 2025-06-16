@@ -12,7 +12,7 @@ html, body {
   overflow-x: hidden; /* 가로 스크롤 방지 */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: var(--font-pretendard-variable); /* ⚠️ 해당 프로젝트의 폰트로 수정 */
+  /*font-family: ⚠️ globals.css & tailwind.config.js에서 설정중 *!*/
   font-size: 1rem;
   font-weight: 400;
   color: #000;
@@ -38,7 +38,7 @@ html:focus-within {
 
 /* 기본 텍스트 요소 초기화 */
 body, div, ul, ol, li, dl, dt, dd, p, input, textarea, select, h1, h2, h3, h4, h5, em, address, fieldset, form, iframe, object, menu, button {
-  font-family: var(--font-pretendard-variable);  /* ⚠️ 해당 프로젝트의 폰트로 수정 */
+  /*font-family: ⚠️ globals.css & tailwind.config.js에서 설정중 *!*/
 }
 
 /* 리스트 스타일 제거 */
@@ -145,7 +145,6 @@ abbr[title] {
 }
 
 code, pre {
-  font-family: monospace;
   background: #f5f5f5;
   padding: 0.2em 0.4em;
   border-radius: 4px;

@@ -11,7 +11,7 @@ module.exports = {
     extend: {
       // fontFamily: font-
       fontFamily: {
-        sans: ['Pretendard', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans: ['Poppins', 'Pretendard Variable', 'sans-serif'],
         serif: ['Georgia', 'ui-serif', 'serif'],
         mono: ['Menlo', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },

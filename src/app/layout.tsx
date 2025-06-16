@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import localFont from 'next/font/local';
 
 // Styles
 import '@/Styles/globals.css';
@@ -8,25 +7,7 @@ import '@/Styles/ckContentStyles.css'
 
 // React-Query
 import ReactQueryProviders from '@/providers/ReactQueryProvider';
-
-const poppinsBold = localFont({
-  src: './fonts/Poppins-Bold.woff2', // public/fonts/Poppins-Bold.woff2
-  variable: '--font-poppins-bold', // CSS 변수 이름
-  weight: '700', // Poppins-Bold의 경우 보통 700이기 때문에 설정
-});
-
-const poppinsMedium = localFont({
-  src: './fonts/Poppins-Medium.woff2', // public/fonts/Poppins-Medium.woff2
-  variable: '--font-poppins-medium', // CSS 변수 이름
-  weight: '500', // Poppins-Medium의 경우 보통 500이기 때문에 설정
-});
-
-// Pretendard Variable 폰트 적용
-const pretendardVariable = localFont({
-  src: './fonts/PretendardVariable.woff2',
-  variable: '--font-pretendard-variable',
-  weight: '100 900', // Pretendard는 가변 폰트이므로 여러 가중치를 지원
-});
+import MuiThemeRegistry from './Styles/MuiThemeRegistry';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -39,9 +20,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${pretendardVariable.variable}`}>
-        <ReactQueryProviders>{children}</ReactQueryProviders>
+    <html lang="ko">
+      <body>
+      <MuiThemeRegistry>
+        <ReactQueryProviders>
+          {children}
+        </ReactQueryProviders>
+      </MuiThemeRegistry>
       </body>
     </html>
   );
