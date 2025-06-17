@@ -10,6 +10,7 @@ export default function Page() {
     name: '',
     email: '',
     password: '',
+    role: "user",
   });
   const {handleChange} = onTextChange(jsonData, setJsonData);
   const validationRules = {
@@ -29,6 +30,13 @@ export default function Page() {
     },
   };
   const { errors, validate } = useValidation(jsonData, validationRules);
+
+  const handleTempAdminRole = () => {
+    setJsonData((prevState) => ({
+      ...prevState,
+      role: "super_admin"
+    }))
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,6 +90,7 @@ export default function Page() {
 
         <button onClick={handleSubmit}>회원가입</button>
       </section>
+      <button onClick={handleTempAdminRole}>관리자로 회원가입</button>
     </main>
   );
 }

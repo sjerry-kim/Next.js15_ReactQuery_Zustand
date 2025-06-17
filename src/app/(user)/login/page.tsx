@@ -4,8 +4,11 @@ import { useState } from 'react';
 import useValidation from '@/hooks/useValidation';
 import styles from './page.module.css';
 import onTextChange from '@/utils/onTextChange';
+import { useUserStore } from '@/zustand/userStore';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
+  const router = useRouter();
   const [jsonData, setJsonData] = useState({
     name: '',
     email: '',
@@ -51,28 +54,21 @@ export default function Page() {
 
       const {
         accessToken,
-        refreshToken,
-        expiresIn,
+        expiresAt,
         user,
       } = await res.json();
 
-      // 1. accessToken → sessionStorage (페이지 이동 시 유지)
-      sessionStorage.setItem('accessToken', accessToken);
-
-      // 2. refreshToken → localStorage (자동 로그인용, 유효기간 3개월 가정)
-      localStorage.setItem('refreshToken', refreshToken);
-
-      // (선택) expiresIn 도 필요하면 같이 저장 가능
-      const expiresAt = Date.now() + expiresIn * 1000;
+      localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('accessTokenExpiresAt', expiresAt.toString());
+      useUserStore.getState().setUser(user);
+      // todo: 로그아웃 ui 생성 시 아래 코드 추가 필요
+      //   useUserStore.getState().clearUser();
 
-      console.log('로그인 성공:', user);
+      router.push('/');
     } catch (error) {
-      console.error('로그인 에러:', error);
+      console.error('로그인 에러:');
     }
   };
-
-
 
   return (
     <main className={styles.main}>
