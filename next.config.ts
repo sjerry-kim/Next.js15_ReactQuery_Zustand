@@ -5,7 +5,7 @@ const isDevelopment = process.env.NODE_ENV === "development";
 
 const nextConfig: NextConfig = {
   env: {
-    PUBLIC_URL: isDevelopment ? "http://localhost:3000" : "배포URL",
+    PUBLIC_URL: isDevelopment ? "http://localhost:3001" : "배포URL",
   },
   // Webpack 설정을 추가하여 Turbopack 비활성화
   webpack(config, { isServer }) {
