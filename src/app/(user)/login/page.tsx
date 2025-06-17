@@ -59,7 +59,7 @@ export default function Page() {
       } = await res.json();
 
       localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('accessTokenExpiresAt', expiresAt.toString());
+      // localStorage.setItem('accessTokenExpiresAt', expiresAt.toString());
       useUserStore.getState().setUser(user);
       // todo: 로그아웃 ui 생성 시 아래 코드 추가 필요
       //   useUserStore.getState().clearUser();

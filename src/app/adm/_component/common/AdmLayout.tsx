@@ -2,7 +2,6 @@
 
 import { useState, ReactNode, useEffect, useRef, useMemo } from 'react';
 import { ReactElement } from 'react';
-import { useSession } from 'next-auth/react';
 import { usePathname, useRouter } from 'next/navigation';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import useWindowSize from '@/hooks/useWindowSize.';
@@ -38,6 +37,7 @@ import { COLORS } from '@/Styles/colorConstants';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { ADMIN_MENUS, getAuthorizedMenus } from '@/lib/auth/auth-config';
 import { useUserStore } from '@/zustand/userStore';
+// import { clearAccessToken } from '@/utils/apiFetch';
 
 interface AdmLayoutProps {
   children: ReactNode;
@@ -127,14 +127,11 @@ const DrawerHeaderStyled = styled('div')(({ theme }) => ({
 const DrawerContent = ({ drawerOpen, setDrawerOpen, isMobile }: DrawerContentProps) => {
   const router: AppRouterInstance = useRouter();
   const pathname = usePathname();
-  const { data: session, status } = useSession();
-  const userRole = session?.user?.role;
   const user = useUserStore((state) => state.user);
-
 
   const authorizedMenus = useMemo(
     () => getAuthorizedMenus(user?.role, ADMIN_MENUS),
-    [userRole]
+    [user?.role]
   );
 
   const [openMenuIdx, setOpenMenuIdx] = useState<number | null>(() => {
@@ -235,6 +232,7 @@ const DrawerContent = ({ drawerOpen, setDrawerOpen, isMobile }: DrawerContentPro
 
 // 레이아웃
 export default function AdmLayout({ children }: AdmLayoutProps) {
+  const router = useRouter();
   const theme = useTheme();
   const [drawerOpen, setDrawerOpen] = useState(false); // Drawer
   const [toggleOpen, setToggleOpen] = useState(false); // Drawer
@@ -254,6 +252,34 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
     setToggleOpen((prevOpen) => !prevOpen);
   };
 
+  const handleLogout = async () => {
+    try {
+      const res = await fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // refreshToken 쿠키 삭제용
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || '로그아웃 실패');
+      }
+
+      // ✅ 클라이언트 상태 정리
+      // clearAccessToken(); // localStorage accessToken 제거
+      useUserStore.getState().clearUser(); // 유저 정보 초기화
+
+      // 필요 시 React Query 캐시도 초기화
+      // queryClient.clear();
+
+      // ✅ 라우팅
+      router.push('/');
+    } catch (error) {
+      console.error('로그아웃 에러:', error);
+    }
+  };
 
   const handleClose = (event: Event | React.SyntheticEvent) => {
     if (

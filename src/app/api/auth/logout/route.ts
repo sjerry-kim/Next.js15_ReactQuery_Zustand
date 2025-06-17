@@ -1,11 +1,7 @@
-// api/auth/logout/route.ts
-
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { verifyRefreshToken, TokenPayload } from '@/utils/jwt';
-import { PrismaClient } from '@prisma/client'; // ✅ 구조: 중앙 관리되는 함수 사용
-
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 export async function POST() {
   try {

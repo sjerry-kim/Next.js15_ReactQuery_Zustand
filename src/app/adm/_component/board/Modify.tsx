@@ -31,7 +31,7 @@ export default function Page({ id }: PageProps) {
 
   const updateMutation = useMutation<ApiResponse<Board>, Error>({
     mutationFn: async () => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/board/${data?.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/protected/board/${data?.id}`, {
         method: 'PATCH',
         cache: 'no-store',
         headers: {
@@ -74,7 +74,7 @@ export default function Page({ id }: PageProps) {
 
   const deleteMutation = useMutation<ApiResponse<Board>, Error>({
     mutationFn: async () => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/board/${data?.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/protected/board/${data?.id}`, {
         method: 'DELETE',
         cache: 'no-store',
         headers: {

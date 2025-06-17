@@ -1,4 +1,6 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import { NextRequest } from 'next/server';
+import { jwtVerify } from 'jose';
 
 /**
  * .env 파일에서 시크릿 키를 불러옵니다.
@@ -13,7 +15,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 const ACCESS_SECRET = process.env.ACCESS_TOKEN_SECRET!;
 const REFRESH_SECRET = process.env.REFRESH_TOKEN_SECRET!;
 
-// ✅ 개선 제안: payload 타입을 명확하게 정의하면 타입 안정성을 높일 수 있습니다.
+// 개선 제안: payload 타입을 명확하게 정의하면 타입 안정성을 높일 수 있습니다.
 // 예를 들어, 토큰에 userId를 담는 경우 다음과 같이 인터페이스를 정의할 수 있습니다.
 export interface TokenPayload extends JwtPayload {
   userId: string;
@@ -26,7 +28,8 @@ export interface TokenPayload extends JwtPayload {
  * @returns 생성된 Access Token (유효기간: 5분)
  */
 export function generateAccessToken(payload: TokenPayload) {
-  return jwt.sign(payload, ACCESS_SECRET, { expiresIn: '5m' });
+  // return jwt.sign(payload, ACCESS_SECRET, { expiresIn: '5m' });
+  return jwt.sign(payload, ACCESS_SECRET, { expiresIn: '30s' });
 }
 
 /**
@@ -37,18 +40,36 @@ export function generateAccessToken(payload: TokenPayload) {
 export function generateRefreshToken(payload: TokenPayload) {
   // 사용자의 요구사항: 3개월(90일) 유효기간
   return jwt.sign(payload, REFRESH_SECRET, { expiresIn: '90d' });
+  // return jwt.sign(payload, REFRESH_SECRET, { expiresIn: '1m' });
 }
 
 /**
+ * middleware에서사용하기 때문에 'jose' 사용
  * Access Token의 유효성을 검증합니다.
  * @param token 검증할 Access Token
  * @returns 검증 성공 시 디코딩된 payload, 실패 시 에러 발생
  * @throws {JsonWebTokenError | TokenExpiredError} 토큰이 유효하지 않거나 만료된 경우 에러 발생
  */
-export function verifyAccessToken(token: string) {
-  // jwt.verify 함수는 검증 실패 시 에러를 throw 하므로,
-  // 이 함수를 호출하는 곳에서 try-catch 문으로 처리해야 합니다.
-  return jwt.verify(token, ACCESS_SECRET) as TokenPayload;
+
+export async function verifyAccessTokenFromRequest(req: NextRequest): Promise<TokenPayload> {
+  const authHeader = req.headers.get('Authorization');
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    throw new Error('Authorization 헤더가 없습니다.');
+  }
+  
+  const token = authHeader.split(' ')[1];
+  const secret = new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET!);
+
+  try {
+    const { payload } = await jwtVerify(token, secret, {
+      algorithms: ['HS256'],
+    });
+    return payload as TokenPayload;
+  } catch (err) {
+    console.error('[미들웨어] JWT 검증 실패:', err);
+    throw new Error('유효하지 않은 access token입니다.');
+  }
 }
 
 /**

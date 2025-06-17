@@ -6,9 +6,8 @@ import {
   generateRefreshToken,
   TokenPayload,
 } from '@/utils/jwt';
-import { PrismaClient } from '@prisma/client';
+import prisma from '@/lib/prisma';
 
-const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
   try {
@@ -81,6 +80,8 @@ export async function POST(req: Request) {
       createdAt: user.created_at,
       ...profileResult, // name, role 포함
     };
+
+    console.log("토큰결과",tokenResult);
 
     // 최종 응답 생성
     const response = NextResponse.json({
