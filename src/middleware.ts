@@ -2,11 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifyAccessTokenFromRequest } from '@/utils/jwt';
 
 export const config = {
-  /*
-   * /api/protected/ 로 시작하는 모든 경로에서만 미들웨어를 실행합니다.
-   * 이렇게 하면 /api/auth/... 나 /api/public/... 경로는
-   * 이 미들웨어의 영향을 전혀 받지 않게 됩니다.
-   */
   matcher: '/api/protected/:path*',
 };
 

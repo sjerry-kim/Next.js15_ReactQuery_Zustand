@@ -39,8 +39,8 @@ export function generateAccessToken(payload: TokenPayload) {
  */
 export function generateRefreshToken(payload: TokenPayload) {
   // 사용자의 요구사항: 3개월(90일) 유효기간
-  return jwt.sign(payload, REFRESH_SECRET, { expiresIn: '90d' });
-  // return jwt.sign(payload, REFRESH_SECRET, { expiresIn: '1m' });
+  // return jwt.sign(payload, REFRESH_SECRET, { expiresIn: '90d' });
+  return jwt.sign(payload, REFRESH_SECRET, { expiresIn: '1m' });
 }
 
 /**
@@ -65,9 +65,12 @@ export async function verifyAccessTokenFromRequest(req: NextRequest): Promise<To
     const { payload } = await jwtVerify(token, secret, {
       algorithms: ['HS256'],
     });
+
+    console.log("어세스토큰 인증 완료!");
+
     return payload as TokenPayload;
   } catch (err) {
-    console.error('[미들웨어] JWT 검증 실패:', err);
+    // console.error('[미들웨어] JWT 검증 실패:', err);
     throw new Error('유효하지 않은 access token입니다.');
   }
 }
