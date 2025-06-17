@@ -24,39 +24,39 @@ export const ADMIN_MENUS: Menu[] = [
     title: "대시보드",
     path: "/adm",
     icon: <DashboardIcon sx={{ width: 22 }} />,
-    roles: [], // 모든 역할이 접근 가능
+    roles: [ROLES.SUPER_ADMIN],
   },
   {
     idx: 1,
     title: "게시판",
     path: "/adm/board",
     icon: <EditNoteIcon sx={{ width: 22 }} />,
-    roles: [], // 관리자와 에디터만 접근 가능
+    roles: [ROLES.SUPER_ADMIN],
   },
   {
     idx: 2,
     title: "상품",
     path: "/adm/gds",
     icon: <CardTravelIcon sx={{ width: 22 }} />,
-    roles: [], // 관리자와 에디터만 접근 가능
+    roles: [ROLES.SUPER_ADMIN],
   },
   {
     idx: 3,
     title: "회원관리",
     path: "/adm/member",
     icon: <FaceIcon sx={{ width: 22 }} />,
-    roles: [], // 관리자만 접근 가능하도록 설정
+    roles: [ROLES.SUPER_ADMIN],
     children: [
-      { title: "일반 회원", path: "/adm/member/active", roles: [] },
-      { title: "탈퇴 회원", path: "/adm/member/withdrawn", roles: [] },
+      { title: "일반 회원", path: "/adm/member/active", roles: [ROLES.SUPER_ADMIN] },
+      { title: "탈퇴 회원", path: "/adm/member/withdrawn", roles: [ROLES.SUPER_ADMIN] },
     ]
   },
   {
     idx: 4,
     title: "마이페이지",
-    path: "/adm", // 경로는 필요에 맞게 수정하세요.
+    path: "/adm",
     icon: <ManageAccountsIcon sx={{ width: 22 }} />,
-    roles: [], // 모든 역할이 접근 가능
+    roles: [ROLES.SUPER_ADMIN], // 모든 역할이 접근 가능
   },
 ];
 

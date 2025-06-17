@@ -37,6 +37,7 @@ import {
 import { COLORS } from '@/Styles/colorConstants';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { ADMIN_MENUS, getAuthorizedMenus } from '@/lib/auth/auth-config';
+import { useUserStore } from '@/zustand/userStore';
 
 interface AdmLayoutProps {
   children: ReactNode;
@@ -128,9 +129,11 @@ const DrawerContent = ({ drawerOpen, setDrawerOpen, isMobile }: DrawerContentPro
   const pathname = usePathname();
   const { data: session, status } = useSession();
   const userRole = session?.user?.role;
+  const user = useUserStore((state) => state.user);
+
 
   const authorizedMenus = useMemo(
-    () => getAuthorizedMenus(userRole, ADMIN_MENUS),
+    () => getAuthorizedMenus(user?.role, ADMIN_MENUS),
     [userRole]
   );
 
