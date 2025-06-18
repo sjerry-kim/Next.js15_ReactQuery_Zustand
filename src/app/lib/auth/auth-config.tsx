@@ -73,7 +73,7 @@ export const getAuthorizedMenus = (
     }
     if (menu.children) {
       const authorizedChildren = menu.children.filter(child =>
-        child.roles.includes(userRole)
+        child.roles!.includes(userRole)
       );
       return authorizedChildren.length > 0 ? { ...menu, children: authorizedChildren } : null;
     }

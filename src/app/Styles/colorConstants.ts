@@ -36,20 +36,24 @@ export const COLORS = {
     DEFAULT: '#2D9CDB',
     bg: '#E3F2FA',
     text: '#1F6F99',
+    dark: '#238AC7', // hover용으로 dark 추가
   },
   danger: {
     DEFAULT: '#EB5757',
     bg: '#F9E3E3',
     text: '#9B3D3D',
+    dark: '#D94C4C', // hover용으로 dark 추가
   },
   warn: {
     DEFAULT: '#F2994A',
     bg: '#FDE9D6',
     text: '#9B5E13',
+    dark: '#E08A3B', // hover용으로 dark 추가
   },
   success: {
     DEFAULT: '#27AE60',
     bg: '#E3F7E8',
     text: '#1B6F3F',
+    dark: '#219D54', // hover용으로 dark 추가
   },
 } as const;

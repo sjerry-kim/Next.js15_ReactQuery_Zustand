@@ -72,40 +72,40 @@ export default function Page({}) {
 
   return (
 
-    // <CommonModal
-    //   modalTitle="글쓰기"
-    //   submitText="등록"
-    //   showSubmit={true}
-    //   onClose={() => router.back()}
-    //   onSubmit={() => createMutation.mutate()}
-    // >
-    //   <ul className={styles.content_box}>
-    //     <li>
-    //       <label>제목</label>
-    //       <input/>
-    //     </li>
-    //     <li>
-    //       <label>내용</label>
-    //       <Editor
-    //         name="content"
-    //         value={jsonData.content}
-    //         onChange={handleCustomChange}
-    //       />
-    //     </li>
-    //   </ul>
-    // </CommonModal>
-
-    <MenuModal
-      modalTitle="설정"
+    <CommonModal
+      modalTitle="글쓰기"
+      submitText="등록"
+      showSubmit={true}
       onClose={() => router.back()}
       onSubmit={() => createMutation.mutate()}
-      tabs={tabs}
-      onTabChange={(key) => setCurrentTab(key)}
     >
-      {currentTab === 'info' && <>info</>}
-      {currentTab === 'option' && <>option</>}
-      {currentTab === 'confirm' && <>confirm</>}
-    </MenuModal>
+      <ul className={styles.content_box}>
+        <li>
+          <label>제목</label>
+          <input/>
+        </li>
+        <li>
+          <label>내용</label>
+          <Editor
+            name="content"
+            value={jsonData.content}
+            onChange={handleCustomChange}
+          />
+        </li>
+      </ul>
+    </CommonModal>
+
+    // <MenuModal
+    //   modalTitle="설정"
+    //   onClose={() => router.back()}
+    //   onSubmit={() => createMutation.mutate()}
+    //   tabs={tabs}
+    //   onTabChange={(key) => setCurrentTab(key)}
+    // >
+    //   {currentTab === 'info' && <>info</>}
+    //   {currentTab === 'option' && <>option</>}
+    //   {currentTab === 'confirm' && <>confirm</>}
+    // </MenuModal>
 
   );
 }

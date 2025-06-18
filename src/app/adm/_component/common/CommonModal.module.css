@@ -79,6 +79,7 @@
   width: 100%;
   height: 65px;
   border-top: 1px solid #E5E8EC;
+  @apply gap-2;
 }
 
 .bottom_container .submit_btn {
@@ -89,4 +90,57 @@
 
 .bottom_container .submit_btn:hover {
   background-color: #F5F5F5;
+}
+
+/* bottom 버튼 공통 스타일 */
+.button {
+  height: 36px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  @apply rounded-md text-md font-normal cursor-pointer transition duration-300;
+}
+
+/* Primary */
+.contained.primary {
+  background-color: #1976d2;
+  color: white;
+  border: 1px solid #1976d2;
+}
+.contained.primary:hover {
+  background-color: #1565c0;
+}
+
+/* todo 업무는 여기서부터!  */
+/* Danger */
+.contained.danger {
+  @apply bg-danger text-neutral-100
+}
+.contained.danger:hover {
+  @apply bg-danger-dark
+}
+
+/* --- Variant: Outlined (테두리만) --- */
+.outlined {
+  background-color: #ffffff; /* 기본 배경은 흰색 */
+}
+
+/* Secondary (기본) 버튼 (보내주신 스타일) */
+.outlined.white {
+  color: #333; /* 적절한 기본 텍스트 색상 */
+  border: 1px solid #D0D4DA; /* 보내주신 테두리 색상 적용 */
+}
+.outlined.white:hover {
+  background-color: #F5F5F5; /* 보내주신 hover 색상 적용 */
+}
+
+/* Outlined Primary 버튼 */
+.outlined.primary {
+  color: #1976d2;
+  border: 1px solid #1976d2;
+}
+.outlined.primary:hover {
+  background-color: rgba(25, 118, 210, 0.04);
 }
