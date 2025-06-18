@@ -48,7 +48,7 @@ export async function POST() {
     } catch (error) {
       // 토큰이 만료되었거나 유효하지 않은 경우, DB 삭제는 건너뜁니다.
       // 어차피 유효하지 않은 토큰이므로 문제가 되지 않으며, 사용자는 이미 로그아웃 처리되었습니다.
-      console.log('로그아웃 처리 중 유효하지 않은 토큰 확인:', (error as Error).message);
+      console.error('로그아웃 처리 중 유효하지 않은 토큰 확인:', (error as Error).message);
     }
 
     // 5. 최종적으로 쿠키가 삭제된 응답을 반환합니다.

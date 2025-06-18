@@ -58,9 +58,8 @@ export default function Page() {
         body: JSON.stringify(jsonData),
       });
 
-      console.log(res);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 

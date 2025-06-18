@@ -12,7 +12,6 @@ export default function SessionManager() {
   // 이 함수는 서버에 조용히 토큰 재발급을 요청합니다.
   // 성공하면 브라우저의 쿠키가 자동으로 갱신되고, 실패해도 아무 일도 일어나지 않습니다.
   const refreshSession = async () => {
-    // console.log('Proactively refreshing session...');
     await fetch('/api/auth/refresh', { method: 'POST' });
   };
 

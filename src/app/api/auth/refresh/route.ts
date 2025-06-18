@@ -43,7 +43,7 @@ export async function POST() {
     // ✅ 응답 생성: 본문 없이, 오직 쿠키만 설정하여 보냅니다.
     const response = NextResponse.json({ message: 'Tokens refreshed successfully' });
 
-    console.log("토큰 재발급 성공!")
+    // console.log("토큰 재발급 성공!")
 
     // 새로운 Access Token을 쿠키에 설정
     response.cookies.set('access_token', newAccessToken, {

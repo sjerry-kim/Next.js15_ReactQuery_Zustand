@@ -17,8 +17,6 @@ export const config = {
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  console.log(pathname);
-
   try {
     // ✅ 헤더 대신, 요청에 자동으로 포함된 쿠키에서 토큰을 가져옵니다.
     const token = req.cookies.get('access_token')?.value;
@@ -31,7 +29,8 @@ export async function middleware(req: NextRequest) {
     const payload = await verifyAccessToken(token);
     const { role } = payload;
 
-    // ✅ 사용자님의 정교한 역할 기반 권한 확인 로직은 그대로 유지합니다.
+    // 토큰에서 추출한 role에 따라 페이지 접근 권한 부여
+    // '/api/protected'는 로그인 인증이 필요한 경로로, 페이지 접근과 관련없으므로 로그인한 유저라면 NextResponse.next()로 넘김
     if (pathname.startsWith('/api/protected')) {
       const allowedRoles = ['user', 'admin', 'super_admin'];
       if (!allowedRoles.includes(role)) {
@@ -40,14 +39,16 @@ export async function middleware(req: NextRequest) {
       return NextResponse.next();
     }
 
-    const matchedPath = PROTECTED_PATHS.find(({ path }) => pathname === path);
+    // 1. 경로를 길이 순으로 정렬하여, 가장 구체적인 경로가 먼저 오게 합니다.
+    // 예: ['/adm/board', '/adm'] 순서로 바뀝니다.
+    const sortedProtectedPaths = [...PROTECTED_PATHS].sort((a, b) => b.path.length - a.path.length);
+
+    // 2. 'startsWith'로 검사하여 "해당 경로로 시작하는가?" 만을 명확하게 확인합니다.
+    const matchedPath = sortedProtectedPaths.find(({ path }) => pathname.startsWith(path));
+
     if (matchedPath && !matchedPath.roles.includes(role)) {
       return NextResponse.redirect(new URL('/403', req.url));
     }
-
-    console.log(matchedPath)
-    // @ts-ignore
-    console.log(matchedPath.roles.includes(role))
 
     return NextResponse.next();
 

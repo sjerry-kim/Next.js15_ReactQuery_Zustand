@@ -53,7 +53,7 @@ export async function verifyAccessToken(token: string): Promise<TokenPayload> {
   try {
     const { payload } = await jose.jwtVerify(token, ACCESS_SECRET);
     
-    console.log("access token 인증 성공");
+    // console.log("access token 인증 성공");
     
     return payload as TokenPayload;
   } catch (error) {
@@ -72,7 +72,7 @@ export async function verifyRefreshToken(token: string): Promise<TokenPayload> {
   try {
     const { payload } = await jose.jwtVerify(token, REFRESH_SECRET);
 
-    console.log("refresh token 인증 성공");
+    // console.log("refresh token 인증 성공");
 
     return payload as TokenPayload;
   } catch (error) {
