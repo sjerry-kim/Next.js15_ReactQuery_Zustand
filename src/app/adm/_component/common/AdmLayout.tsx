@@ -74,8 +74,8 @@ const DrawerContent = ({ drawerOpen, setDrawerOpen, isMobile }: DrawerContentPro
 
   // --- 활성화 메뉴를 찾는 새로운 로직 ---
   const { activeMenuItem, activeParentItem } = useMemo(() => {
-    // bestMatch의 타입을 Menu | null로 수정하여 모든 경우를 포괄하도록 합니다.
-    let bestMatch: Menu | null = null;
+    // bestMatch가 Menu 또는 SubMenu, 또는 null이 될 수 있음을 명시합니다.
+    let bestMatch: Menu | SubMenu | null = null;
     let parentOfBestMatch: Menu | null = null;
     let maxLength = -1;
 
@@ -84,7 +84,7 @@ const DrawerContent = ({ drawerOpen, setDrawerOpen, isMobile }: DrawerContentPro
       if (!parentMenu.children && parentMenu.path && pathname.startsWith(parentMenu.path)) {
         if (parentMenu.path.length > maxLength) {
           maxLength = parentMenu.path.length;
-          bestMatch = parentMenu; // Menu 타입을 할당 (이제 문제 없음)
+          bestMatch = parentMenu;
           parentOfBestMatch = parentMenu;
         }
       }
@@ -95,7 +95,7 @@ const DrawerContent = ({ drawerOpen, setDrawerOpen, isMobile }: DrawerContentPro
           if (childMenu.path && pathname.startsWith(childMenu.path)) {
             if (childMenu.path.length > maxLength) {
               maxLength = childMenu.path.length;
-              bestMatch = childMenu; // 하위 메뉴(Menu 타입)를 할당 (문제 없음)
+              bestMatch = childMenu; // 이제 SubMenu 타입을 할당해도 문제가 없습니다.
               parentOfBestMatch = parentMenu;
             }
           }

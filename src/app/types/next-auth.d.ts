@@ -37,7 +37,6 @@ export type Role = typeof ROLES[keyof typeof ROLES];
 interface SubMenu {
   title: string;
   path: string;
-  roles: Role[]; // roles는 필수입니다.
 }
 
 interface Menu {
