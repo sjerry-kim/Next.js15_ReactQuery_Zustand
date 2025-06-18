@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, ReactNode, useEffect, useRef, useMemo } from 'react';
+import { useState, ReactNode, useEffect, useRef, useMemo, useCallback } from 'react';
 import { ReactElement } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import useWindowSize from '@/hooks/useWindowSize.';
 import styles from '@/adm/_component/common/AdmLayout.module.css';
-import { Menu } from '@/types/next-auth';
+import { Menu, SubMenu } from '@/types/next-auth';
 
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -45,16 +45,9 @@ interface AdmLayoutProps {
 }
 
 interface DrawerContentProps {
-  drawerOpen: boolean; // 데스크탑 Drawer의 아이콘/텍스트 표시 여부 제어
+  drawerOpen: boolean;
   setDrawerOpen: (drawerOpen: boolean) => void;
   isMobile?: boolean;
-}
-
-type topMenu = {
-  idx: number;
-  title: string;
-  path: string;
-  icon: ReactElement<SvgIconProps>;
 }
 
 const drawerWidth = 240;
@@ -67,82 +60,86 @@ const DrawerHeaderStyled = styled('div')(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-// Nav Drawer 메뉴 컨텐츠
-// const DrawerContent = ({ drawerOpen, setDrawerOpen, isMobile }: DrawerContentProps) => {
-//   const router: AppRouterInstance = useRouter();
-//   const topMenuList : topMenu[] = [
-//     {idx: 0, title: "대시보드", path: "/adm", icon: <DashboardIcon sx={{width: 22}} />},
-//     {idx: 1, title: "게시판", path: "/adm/board", icon: <EditNoteIcon sx={{width: 22}} />},
-//     {idx: 2, title: "상품", path: "/adm/gds", icon: <CardTravelIcon sx={{width: 22}} />},
-//     {idx: 3, title: "회원관리", path: "/adm/member", icon: <FaceIcon sx={{width: 22}} />},
-//     {idx: 4, title: "마이페이지", path: "/adm", icon: <ManageAccountsIcon sx={{width: 22}} />},
-//   ]
-//   const [currentMenu, setCurrentMenu] = useState(topMenuList[0]);
-//
-//   const handleSideNavigation = (menu: topMenu) => {
-//     router.push(menu.path);
-//     if (isMobile) setDrawerOpen(false);
-//     setCurrentMenu(menu);
-//   }
-//
-//   return (
-//     <>
-//       <Divider />
-//       <List>
-//         {topMenuList.map((item, index) => (
-//           <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-//             <ListItemButton
-//               sx={{
-//                 minHeight: 48,
-//                 justifyContent: isMobile || drawerOpen ? 'initial' : 'center',
-//                 px: 2.5,
-//               }}
-//               onClick={() => handleSideNavigation(item)}
-//             >
-//               <ListItemIcon
-//                 sx={{
-//                   minWidth: 0,
-//                   mr: isMobile || drawerOpen ? 3 : 'auto',
-//                   justifyContent: 'center',
-//                   color: currentMenu.idx === item.idx ? COLORS.primary.light: ""
-//                 }}
-//               >
-//                 {item.icon}
-//               </ListItemIcon>
-//               <ListItemText
-//                 primary={item.title}
-//                 sx={{
-//                   opacity: isMobile || drawerOpen ? 1 : 0,
-//                   color: currentMenu.idx === item.idx ? COLORS.primary.light : ""
-//               }}
-//               />
-//             </ListItemButton>
-//           </ListItem>
-//         ))}
-//       </List>
-//     </>
-//   );
-// };
-
-// Nav Drawer 메뉴 컨텐츠
+// Nav Drawer 메뉴 컨텐츠 (활성화 로직 개선 최종안)
 const DrawerContent = ({ drawerOpen, setDrawerOpen, isMobile }: DrawerContentProps) => {
   const router: AppRouterInstance = useRouter();
   const pathname = usePathname();
   const user = useUserStore((state) => state.user);
+  const openedByMenuClick = useRef(false);
 
   const authorizedMenus = useMemo(
     () => getAuthorizedMenus(user?.role, ADMIN_MENUS),
     [user?.role]
   );
 
-  const [openMenuIdx, setOpenMenuIdx] = useState<number | null>(() => {
-    const activeParent = authorizedMenus.find(item =>
-      item.children?.some(child => pathname.startsWith(child.path))
-    );
-    return activeParent ? activeParent.idx : null;
-  });
+  // --- 활성화 메뉴를 찾는 새로운 로직 ---
+  const { activeMenuItem, activeParentItem } = useMemo(() => {
+    // bestMatch의 타입을 Menu | null로 수정하여 모든 경우를 포괄하도록 합니다.
+    let bestMatch: Menu | null = null;
+    let parentOfBestMatch: Menu | null = null;
+    let maxLength = -1;
+
+    for (const parentMenu of authorizedMenus) {
+      // 하위 메뉴가 없는 단일 메뉴 확인
+      if (!parentMenu.children && parentMenu.path && pathname.startsWith(parentMenu.path)) {
+        if (parentMenu.path.length > maxLength) {
+          maxLength = parentMenu.path.length;
+          bestMatch = parentMenu; // Menu 타입을 할당 (이제 문제 없음)
+          parentOfBestMatch = parentMenu;
+        }
+      }
+
+      // 하위 메뉴 확인
+      if (parentMenu.children) {
+        for (const childMenu of parentMenu.children) {
+          if (childMenu.path && pathname.startsWith(childMenu.path)) {
+            if (childMenu.path.length > maxLength) {
+              maxLength = childMenu.path.length;
+              bestMatch = childMenu; // 하위 메뉴(Menu 타입)를 할당 (문제 없음)
+              parentOfBestMatch = parentMenu;
+            }
+          }
+        }
+      }
+    }
+    return { activeMenuItem: bestMatch, activeParentItem: parentOfBestMatch };
+  }, [pathname, authorizedMenus]);
+
+
+  const findActiveParentIndex = useCallback(() => {
+    return activeParentItem ? activeParentItem.idx : null;
+  }, [activeParentItem]);
+
+
+  const [openMenuIdx, setOpenMenuIdx] = useState<number | null>(findActiveParentIndex);
+
+  useEffect(() => {
+    if (!isMobile) {
+      if (!drawerOpen) {
+        setOpenMenuIdx(null);
+      } else {
+        if (openedByMenuClick.current) {
+          openedByMenuClick.current = false;
+        } else {
+          setOpenMenuIdx(findActiveParentIndex());
+        }
+      }
+    }
+  }, [drawerOpen, isMobile, findActiveParentIndex]);
+
 
   const handleMenuClick = (menu: Menu) => {
+    if (!isMobile && !drawerOpen) {
+      if (menu.children) {
+        openedByMenuClick.current = true;
+        setDrawerOpen(true);
+        setOpenMenuIdx(menu.idx);
+      } else if (menu.path) {
+        router.push(menu.path);
+      }
+      return;
+    }
+
     if (menu.children) {
       setOpenMenuIdx(openMenuIdx === menu.idx ? null : menu.idx);
     } else if (menu.path) {
@@ -156,19 +153,13 @@ const DrawerContent = ({ drawerOpen, setDrawerOpen, isMobile }: DrawerContentPro
     if (isMobile) setDrawerOpen(false);
   };
 
-  if (status === "loading") {
-    return <List><ListItem><ListItemText primary="메뉴 로딩중..." /></ListItem></List>;
-  }
-
   return (
     <>
       <Divider />
       <List>
         {authorizedMenus.map((item) => {
-          // 1. 상위 메뉴가 활성화될 조건: 현재 경로가 하위 메뉴 경로 중 하나로 시작하는 경우
-          const isParentActive = item.children ?
-            item.children.some(child => pathname.startsWith(child.path)) :
-            (item.path ? pathname.startsWith(item.path) : false);
+          // 상위 메뉴 활성화 여부는 위에서 계산한 activeParentItem과 현재 아이템(item)을 비교
+          const isParentActive = activeParentItem?.idx === item.idx;
 
           return (
             <div key={item.idx}>
@@ -182,7 +173,7 @@ const DrawerContent = ({ drawerOpen, setDrawerOpen, isMobile }: DrawerContentPro
                       minWidth: 0,
                       mr: isMobile || drawerOpen ? 3 : 'auto',
                       justifyContent: 'center',
-                      color: isParentActive ? COLORS.primary.light : "" // 상위 메뉴 활성화 색상
+                      color: isParentActive ? COLORS.primary.light : 'inherit'
                     }}
                   >
                     {item.icon}
@@ -191,7 +182,7 @@ const DrawerContent = ({ drawerOpen, setDrawerOpen, isMobile }: DrawerContentPro
                     primary={item.title}
                     sx={{
                       opacity: isMobile || drawerOpen ? 1 : 0,
-                      color: isParentActive ? COLORS.primary.light : "" // 상위 메뉴 활성화 색상
+                      color: isParentActive ? COLORS.primary.light : 'inherit'
                     }}
                   />
                   {(isMobile || drawerOpen) && item.children && (
@@ -204,18 +195,21 @@ const DrawerContent = ({ drawerOpen, setDrawerOpen, isMobile }: DrawerContentPro
                 <Collapse in={openMenuIdx === item.idx} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding>
                     {item.children.map((child) => {
-                      // 2. 하위 메뉴가 활성화될 조건: 현재 경로가 하위 메뉴 경로와 정확히 일치하는 경우
-                      const isChildActive = pathname === child.path;
+                      // 하위 메뉴 활성화 여부는 activeMenuItem과 현재 하위 메뉴(child)를 비교
+                      const isChildActive = activeMenuItem?.path === child.path;
 
                       return (
                         <ListItemButton
                           key={child.path}
                           sx={{ pl: 4 }}
                           onClick={() => handleSubMenuClick(child.path)}
+                          selected={isChildActive}
                         >
                           <ListItemText
                             primary={child.title}
-                            sx={{ color: isChildActive ? COLORS.primary.light : "" }} // 하위 메뉴 활성화 색상
+                            sx={{
+                              color: isChildActive ? COLORS.primary.light : 'inherit'
+                            }}
                           />
                         </ListItemButton>
                       );
@@ -231,7 +225,8 @@ const DrawerContent = ({ drawerOpen, setDrawerOpen, isMobile }: DrawerContentPro
   );
 };
 
-// 레이아웃
+
+// 레이아웃 (이하 코드는 변경 없음)
 export default function AdmLayout({ children }: AdmLayoutProps) {
   const router = useRouter();
   const theme = useTheme();
@@ -438,20 +433,6 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
             </Popper>
           </div>
         </header>
-        {/*<Box*/}
-        {/*  component="main"*/}
-        {/*  sx={{*/}
-        {/*    display: 'flex',*/}
-        {/*    flexDirection: 'column',*/}
-        {/*    flexGrow: 1,*/}
-        {/*    py: 3,*/}
-        {/*    px: 5,*/}
-        {/*    width: "100%",*/}
-        {/*    height: 'calc(100dvh - 64px)',*/}
-        {/*  }}*/}
-        {/*>*/}
-        {/*  {children}*/}
-        {/*</Box>*/}
         {children}
       </Box>
     </Box>
