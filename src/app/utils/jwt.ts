@@ -28,8 +28,8 @@ export interface TokenPayload extends JwtPayload {
  * @returns 생성된 Access Token (유효기간: 5분)
  */
 export function generateAccessToken(payload: TokenPayload) {
-  // return jwt.sign(payload, ACCESS_SECRET, { expiresIn: '5m' });
-  return jwt.sign(payload, ACCESS_SECRET, { expiresIn: '30s' });
+  return jwt.sign(payload, ACCESS_SECRET, { expiresIn: '5m' });
+  // return jwt.sign(payload, ACCESS_SECRET, { expiresIn: '30s' });
 }
 
 /**
@@ -39,8 +39,8 @@ export function generateAccessToken(payload: TokenPayload) {
  */
 export function generateRefreshToken(payload: TokenPayload) {
   // 사용자의 요구사항: 3개월(90일) 유효기간
-  // return jwt.sign(payload, REFRESH_SECRET, { expiresIn: '90d' });
-  return jwt.sign(payload, REFRESH_SECRET, { expiresIn: '1m' });
+  return jwt.sign(payload, REFRESH_SECRET, { expiresIn: '90d' });
+  // return jwt.sign(payload, REFRESH_SECRET, { expiresIn: '1m' });
 }
 
 /**
