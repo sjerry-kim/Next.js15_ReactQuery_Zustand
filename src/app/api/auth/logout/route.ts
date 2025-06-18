@@ -38,7 +38,7 @@ export async function POST() {
     // 💡 로직 개선: 이 과정이 실패하더라도 클라이언트의 쿠키는 이미 위에서 삭제 처리되었으므로
     // 사용자는 로그아웃됩니다. 이 부분은 서버의 데이터를 깔끔하게 정리하는 역할입니다.
     try {
-      const payload = verifyRefreshToken(refreshToken) as TokenPayload;
+      const payload = await verifyRefreshToken(refreshToken) as TokenPayload;
 
       // 해당 유저의 토큰 정보를 DB에서 삭제합니다.
       await prisma.user_tokens.delete({

@@ -12,13 +12,6 @@ export async function POST(req: Request) {
   try {
     const { email, password } = await req.json();
 
-    if (!email || !password) {
-      return NextResponse.json(
-        { error: '이메일과 비밀번호를 입력해주세요.' },
-        { status: 400 }
-      );
-    }
-
     // 1. Supabase를 통한 사용자 인증
     const { data: authData, error: authError } =
       await supabase.auth.signInWithPassword({ email, password });
@@ -81,7 +74,6 @@ export async function POST(req: Request) {
     };
 
     // 7. 최종 응답 생성
-    // 💡 Access Token은 이제 쿠키로 전달되므로, 본문에서는 제외합니다.
     const response = NextResponse.json({
       message: '로그인 성공',
       user: userData,
@@ -90,18 +82,22 @@ export async function POST(req: Request) {
     // 8. 두 토큰을 모두 안전한 HttpOnly 쿠키에 설정
     response.cookies.set('access_token', accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      // secure: process.env.NODE_ENV === 'production' ? true : false, // <- 개발환경에선 false
       path: '/',
-      maxAge: 60 * 5, // 5분
-      sameSite: 'strict',
+      // maxAge: 60 * 5, // 5분
+      maxAge: 60 * 1, // 1분
+      // sameSite: 'strict',
+      sameSite: 'lax',
     });
 
     response.cookies.set('refresh_token', refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      // secure: process.env.NODE_ENV === 'production' ? true : false, // <- 개발환경에선 false
       path: '/',
       maxAge: 60 * 60 * 24 * 90, // 90일
-      sameSite: 'strict',
+      // maxAge: 60 * 1.5, // 1분 30초
+      // sameSite: 'strict',
+      sameSite: 'lax',
     });
 
     return response;

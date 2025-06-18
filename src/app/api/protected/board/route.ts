@@ -1,7 +1,6 @@
 import { board } from '@prisma/client';
 import { Board, PaginatedBoardResponse } from '@/types/board';
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAccessTokenFromRequest } from '@/utils/jwt';
 import prisma from '@/lib/prisma';
 
 export async function GET(request: NextRequest): Promise<NextResponse<PaginatedBoardResponse | { error: string }>> {

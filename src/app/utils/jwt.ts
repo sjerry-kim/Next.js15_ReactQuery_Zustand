@@ -1,11 +1,10 @@
 import * as jose from 'jose';
-import { NextRequest } from 'next/server';
 
-// --- 타입 정의 ---
 export interface TokenPayload {
   userId: string;
   email: string;
   role: string;
+  [key: string]: unknown; // 추가!
 }
 
 // --- 시크릿 키 준비 ---
@@ -27,7 +26,8 @@ export async function generateAccessToken(payload: TokenPayload) {
   return new jose.SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' }) // 사용할 알고리즘
     .setIssuedAt() // 토큰 발급 시간
-    .setExpirationTime('5m') // 토큰 만료 시간
+    // .setExpirationTime('5m') // 토큰 만료 시간
+    .setExpirationTime('1m') // 토큰 만료 시간
     .sign(ACCESS_SECRET); // 시크릿 키로 서명
 }
 
@@ -40,7 +40,8 @@ export async function generateRefreshToken(payload: TokenPayload) {
   return new jose.SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
-    .setExpirationTime('90d')
+    // .setExpirationTime('90d')
+    .setExpirationTime('90s')
     .sign(REFRESH_SECRET);
 }
 
@@ -53,13 +54,14 @@ export async function verifyAccessToken(token: string): Promise<TokenPayload> {
   try {
     const { payload } = await jose.jwtVerify(token, ACCESS_SECRET);
     
-    // console.log("access token 인증 성공");
+    console.log("Accesstoken 검증 성공:", payload);
     
     return payload as TokenPayload;
   } catch (error) {
-    // jose의 에러는 더 구체적이므로, 여기서 로그를 남기면 디버깅에 좋습니다.
-    console.error('Access Token 검증 실패:', error);
-    throw new Error('유효하지 않은 Access Token입니다.');
+    if (error instanceof jose.errors.JWTExpired) {
+      throw new Error('Accesstoken이 만료되었습니다.');
+    }
+    throw new Error('유효하지 않은 Accesstoken이입니다.');
   }
 }
 
@@ -72,11 +74,13 @@ export async function verifyRefreshToken(token: string): Promise<TokenPayload> {
   try {
     const { payload } = await jose.jwtVerify(token, REFRESH_SECRET);
 
-    // console.log("refresh token 인증 성공");
+    console.log("refresh token 인증 성공");
 
     return payload as TokenPayload;
   } catch (error) {
-    console.error('Refresh Token 검증 실패:', error);
-    throw new Error('유효하지 않은 Refresh Token입니다.');
+    if (error instanceof jose.errors.JWTExpired) {
+      throw new Error('RefreshToken이 만료되었습니다.');
+    }
+    throw new Error('유효하지 않은 RefreshToken입니다.');
   }
 }

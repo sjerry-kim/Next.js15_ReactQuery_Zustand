@@ -25,7 +25,7 @@ export default function RootLayout({
       <body>
           <MuiThemeRegistry>
               <ReactQueryProviders>
-                <SessionManager />
+                {/*<SessionManager />*/}
                 {children}
               </ReactQueryProviders>
           </MuiThemeRegistry>

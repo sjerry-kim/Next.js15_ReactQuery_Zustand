@@ -1,4 +1,3 @@
-// 재발급 잠금 및 큐 로직은 그대로 유지합니다.
 let isRefreshing = false;
 let refreshQueue: Array<() => void> = [];
 
@@ -9,11 +8,13 @@ const notifyTokenRefreshed = () => {
 };
 
 export const apiFetch = async (url: string, options: RequestInit = {}): Promise<Response> => {
-  // ❌ 헤더에 토큰을 직접 추가하는 모든 로직을 완전히 삭제합니다.
-  // 브라우저가 자동으로 모든 관련 쿠키를 요청에 실어 보냅니다.
-  let response = await fetch(url, options);
+  const baseOptions: RequestInit = {
+    ...options,
+    credentials: 'include', // ✅ 항상 쿠키 포함
+  };
 
-  // 401 에러가 아니라면 그대로 반환합니다.
+  let response = await fetch(url, baseOptions);
+
   if (response.status !== 401) {
     return response;
   }
@@ -21,24 +22,35 @@ export const apiFetch = async (url: string, options: RequestInit = {}): Promise<
   // --- 401 처리: Refresh 토큰 시도 ---
   if (isRefreshing) {
     await awaitTokenRefresh();
-    return fetch(url, options);
+    return fetch(url, baseOptions); // ✅ 재시도도 쿠키 포함
   }
 
   isRefreshing = true;
   try {
-    const refreshRes = await fetch('/api/auth/refresh', { method: 'POST' });
+    console.log("401 처리 시작 - refresh 요청 전");
+    const refreshRes = await fetch(`${process.env.PUBLIC_URL}/api/auth/refresh`, {
+      method: 'POST',
+      credentials: 'include',
+    });
+    console.log("refresh 요청 후 응답 상태:", refreshRes.status)
 
     if (!refreshRes.ok) throw new Error('Refresh token is invalid');
 
-    // 재발급 성공 시, 대기 중이던 요청들을 깨웁니다.
     notifyTokenRefreshed();
 
-    // 원래 요청을 다시 시도합니다.
-    // 이 시점에는 브라우저가 서버로부터 받은 새로운 쿠키들을 가지고 있습니다.
-    return fetch(url, options);
+    return fetch(url, baseOptions); // ✅ 재시도도 쿠키 포함
 
   } catch (err) {
     window.dispatchEvent(new Event('auth-error'));
+
+    // todo 에러 발생 시 dispatchEvent(new Event('auth-error'))은 전역 처리용으로 좋아요.
+    // → 이걸 전역 listener로 감지해서 로그아웃 + redirect 처리하면 완성입니다.
+    //
+    // window.addEventListener('auth-error', () => {
+    //   alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+    //   window.location.href = '/login';
+    // });
+
     return Promise.reject(err);
   } finally {
     isRefreshing = false;
