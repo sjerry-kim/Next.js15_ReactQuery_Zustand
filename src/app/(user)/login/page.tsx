@@ -54,15 +54,11 @@ export default function Page() {
 
       const {
         accessToken,
-        expiresAt,
         user,
       } = await res.json();
 
-      localStorage.setItem('accessToken', accessToken);
-      // localStorage.setItem('accessTokenExpiresAt', expiresAt.toString());
+      // localStorage.setItem('accessToken', accessToken);
       useUserStore.getState().setUser(user);
-      // todo: 로그아웃 ui 생성 시 아래 코드 추가 필요
-      //   useUserStore.getState().clearUser();
 
       router.push('/');
     } catch (error) {

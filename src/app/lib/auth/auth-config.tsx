@@ -24,7 +24,7 @@ export const ADMIN_MENUS: Menu[] = [
     title: "대시보드",
     path: "/adm",
     icon: <DashboardIcon sx={{ width: 22 }} />,
-    roles: [ROLES.SUPER_ADMIN],
+    roles: [ROLES.USER ,ROLES.SUPER_ADMIN],
   },
   {
     idx: 1,

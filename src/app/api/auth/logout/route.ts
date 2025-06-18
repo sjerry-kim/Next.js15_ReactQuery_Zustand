@@ -16,10 +16,17 @@ export async function POST() {
     // maxAge를 0 또는 음수로 설정하여 쿠키를 즉시 만료시킵니다.
     response.cookies.set('refresh_token', '', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === 'production' ? true : false, // <- 개발환경에선 false
       path: '/',
       maxAge: 0, // 쿠키를 삭제하는 표준적인 방법
     });
+    response.cookies.set('access_token', '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production' ? true : false, // <- 개발환경에선 false
+      path: '/',
+      maxAge: 0, // 쿠키를 삭제하는 표준적인 방법
+    });
+    // response.cookies.delete('mini_token');
 
     // 3. 토큰이 없는 경우, 쿠키만 삭제하고 성공적으로 응답합니다.
     // 사용자는 이미 로그아웃된 상태나 마찬가지입니다.

@@ -8,6 +8,7 @@ import '@/Styles/ckContentStyles.css'
 // React-Query
 import ReactQueryProviders from '@/providers/ReactQueryProvider';
 import MuiThemeRegistry from './Styles/MuiThemeRegistry';
+import SessionManager from '@/utils/SessionManager';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -24,6 +25,7 @@ export default function RootLayout({
       <body>
           <MuiThemeRegistry>
               <ReactQueryProviders>
+                <SessionManager />
                 {children}
               </ReactQueryProviders>
           </MuiThemeRegistry>

@@ -37,7 +37,7 @@ import { COLORS } from '@/Styles/colorConstants';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { ADMIN_MENUS, getAuthorizedMenus } from '@/lib/auth/auth-config';
 import { useUserStore } from '@/zustand/userStore';
-import { clearAccessTokenFromStorage } from '@/utils/apiFetch';
+// import { clearAccessTokenFromStorage } from '@/utils/apiFetch';
 // import { clearAccessToken } from '@/utils/apiFetch';
 
 interface AdmLayoutProps {
@@ -269,7 +269,7 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
       }
 
       // ✅ 클라이언트 상태 정리
-      clearAccessTokenFromStorage(); // localStorage accessToken 제거
+      // clearAccessTokenFromStorage(); // localStorage accessToken 제거
       useUserStore.getState().clearUser(); // 유저 정보 초기화
 
       // 필요 시 React Query 캐시도 초기화
