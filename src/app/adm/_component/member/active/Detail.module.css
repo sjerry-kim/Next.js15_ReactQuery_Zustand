@@ -45,13 +45,10 @@
 }
 
 .content_container {
-  max-height: 600px;
+  height: fit-content;
   overflow-y: auto;
-  scrollbar-width: none;
 }
-.content_container::-webkit-scrollbar {
-  display: none;
-}
+
 .bottom_container {
   display: flex;
   flex-direction: row;
@@ -68,45 +65,42 @@
   background-color: #F5F5F5;
 }
 
-/* 모달 children */
-.container {
-  padding: 16px;
-}
-
-.list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+/* Modal children */
+.content_container {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  @apply gap-3
 }
 
-.list li {
+.content_container > li {
   display: flex;
-  gap: 16px;
   flex-wrap: wrap;
 }
 
-/* 프로필 섹션: 프로필 사진 + 이름/이메일 세로 배치 */
-.profileSection {
-  align-items: flex-start;
+.label {
+  @apply font-bold text-md;
 }
 
-.profileContainer {
+/* profile */
+.profile_box {
+  align-items: center;
+  @apply gap-3 !important
+}
+
+.profile_set {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  gap: 8px;
   min-width: 100px;
+  padding: 10px;
 }
 
 .avatarSkeleton {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background-color: #e0e0e0;
+  width: 120px;
+  height: 120px;
   animation: pulse 1.5s infinite;
+  @apply rounded-full bg-neutral-300
 }
 
 @keyframes pulse {
@@ -114,99 +108,57 @@
   50% { opacity: 0.4; }
 }
 
-.infoColumn {
+.inner_column {
   display: flex;
   flex-direction: column;
-  gap: 12px;
   flex: 1;
-  min-width: 160px;
+  @apply gap-3
 }
 
-/* 비밀번호 섹션 - 한 줄에 라벨, 3 inputs, 버튼 */
-.passwordLabel {
-  font-weight: bold;
-  font-size: 14px;
-  margin-bottom: 4px; /* @apply gap-1에 해당하는 0.25rem (4px) 간격 */
-  display: block;
-}
-
-.passwordInputs {
+.inner_row {
   display: flex;
-  gap: 4px; /* @apply gap-1 */
+  flex-direction: column;
+  width: 100%;
+  @apply gap-1
+}
+
+/* inner_one_row - 한 줄에 인풋, 버튼 여러개 */
+.inner_one_row {
+  display: flex;
+  flex-direction: column;
   align-items: center;
   width: 100%;
+  @apply gap-1
 }
 
-.passwordInputs > input {
+.inner_row_set {
+  display: flex;
+  flex-direction: row;
+  @apply gap-2
+}
+
+.inner_row_set > input {
   flex-grow: 1;
   min-width: 0;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
 }
 
-.button {
-  background-color: #6b7280; /* 예: gray-500 */
-  color: white;
-  padding: 8px 16px;
-  border-radius: 4px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+.inner_row_set > button {
+  padding: 0 16px;
+  height: 100%;
+  @apply bg-primary text-surface
 }
 
-.button:hover {
-  background-color: #4b5563; /* 예: gray-700 */
-}
-/* inputs, buttons 기본 */
-.input {
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-  min-width: 160px;
-  flex-grow: 1;
+.inner_row_set > button:hover {
+  @apply bg-primary-dark
 }
 
-.inputDisabled {
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-  background-color: #f9f9f9;
-  color: #888;
-}
-
-.textarea {
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  resize: vertical;
-  font-size: 14px;
-  width: 100%;
-}
-
-.button {
-  padding: 8px 16px;
-  background-color: #1976d2;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  white-space: nowrap;
-  min-width: 100px;
-}
-
-/* 폼 섹션 */
-.formSection {
-  flex-direction: column;
-  width: 100%;
+/* input-box: label-input 한쌍씩 */
+.input_box {
   display: flex;
-  gap: 12px;
+  flex-direction: column;
+  @apply gap-1
 }
 
-.label {
-  font-weight: bold;
-  font-size: 14px;
+.input_box > textarea {
+  height: 250px;
 }

@@ -2,11 +2,13 @@ export const COLORS = {
   primary: {
     DEFAULT: '#6366F1',
     light: '#A5B4FC',
+    bg: '#E0E7FF',
     dark: '#4F46E5',
   },
   secondary: {
     DEFAULT: '#E9DCC3',
     light: '#F4EBD6',
+    bg: '#FAF6EF',
     dark: '#D4C79E',
   },
   background: {
@@ -35,25 +37,30 @@ export const COLORS = {
   info: {
     DEFAULT: '#2D9CDB',
     bg: '#E3F2FA',
+    light: '#C9E6F5',
     text: '#1F6F99',
-    dark: '#238AC7', // hover용으로 dark 추가
+    dark: '#238AC7',
   },
   danger: {
     DEFAULT: '#EB5757',
     bg: '#F9E3E3',
+    light: '#F3C8C8',
     text: '#9B3D3D',
-    dark: '#D94C4C', // hover용으로 dark 추가
+    dark: '#D94C4C',
   },
   warn: {
     DEFAULT: '#F2994A',
     bg: '#FDE9D6',
+    light: '#F7D2A9',
     text: '#9B5E13',
-    dark: '#E08A3B', // hover용으로 dark 추가
+    dark: '#E08A3B',
   },
   success: {
     DEFAULT: '#27AE60',
     bg: '#E3F7E8',
+    light: '#C4EAD1',
     text: '#1B6F3F',
-    dark: '#219D54', // hover용으로 dark 추가
+    dark: '#219D54',
   },
+
 } as const;

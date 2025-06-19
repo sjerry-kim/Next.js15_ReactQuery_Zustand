@@ -12,11 +12,12 @@ button {
   align-items: center;
   justify-content: center;
   padding: 9px 24px;
+  box-sizing: border-box;
   border-radius: 8px;
   height: 36px;
   line-height: 150%;
   letter-spacing: -0.35px;
-  transition: all 0.2s ease-in-out;
+  @apply rounded-md text-md font-normal cursor-pointer transition duration-300;
 }
 input {
   padding: 10px 12px;
@@ -24,6 +25,7 @@ input {
   font-size: .8125rem;
   resize: none;
   transition: all 0.3s ease-in-out;
+  @apply rounded-md
 }
 select {
   background-color: #FFF;
@@ -44,6 +46,14 @@ select {
 select:hover, input:hover, textarea:hover, select:focus, input:focus, textarea:focus {
   border: 1px solid;
   @apply border-primary-light transition duration-300;
+}
+textarea {
+  padding: 10px 12px;
+  border: 1px solid #D1D1D1 ;
+  font-size: .8125rem;
+  resize: none;
+  transition: all 0.3s ease-in-out;
+  @apply rounded-md
 }
 
 /* ck-editor custom */

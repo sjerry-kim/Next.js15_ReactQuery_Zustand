@@ -31,23 +31,22 @@ export default function Page({ id }: PageProps) {
   });
   const {handleChange, handleCustomChange} = onTextChange(jsonData, setJsonData);
   const confirmationButtons: ModalButton[] = [
+    // variant와 color를 생략하면 기본값(contained, primary)이 적용
     {
       text: '정지',
       onClick: () => {
         handleTempBtn();
       },
       variant: 'outlined',
-      color: 'white',
+      color: 'grey',
     },
     {
       text: '탈퇴',
       onClick: () => {
-        console.log('저장되었습니다.');
         handleTempBtn();
       },
       variant: 'contained',
       color: 'danger',
-      // variant와 color를 생략하면 기본값(contained, primary)이 적용됩니다.
     },
   ];
 
@@ -135,45 +134,48 @@ export default function Page({ id }: PageProps) {
 
   return (
     <CommonModal
-      modalTitle="회원 관리"
+      modalTitle="회원 정보"
       buttons={confirmationButtons} // 원하는 버튼 배열을 전달
       onClose={() => router.back()}
     >
-      <div className={styles.container}>
-        <ul className={styles.list}>
-          <li className={styles.profileSection}>
-            <div className={styles.profileContainer}>
+        <ul className={styles.content_container}>
+          <li className={styles.profile_box}>
+            <div className={styles.profile_set}>
               <div className={styles.avatarSkeleton}></div>
-              <button className={styles.button}>프로필 사진 변경</button>
             </div>
-            <div className={styles.infoColumn}>
-              <label className={styles.label}>이름</label>
-              <input type="text" placeholder="이름" className={styles.input} />
-
-              <label className={styles.label}>이메일</label>
-              <input type="email" value="user@example.com" disabled className={styles.inputDisabled} />
-            </div>
-          </li>
-
-          <li className={styles.passwordSection}>
-            <label className={styles.passwordLabel}>비밀번호 변경</label>
-            <div className={styles.passwordInputs}>
-              <input type="password" placeholder="현재 비밀번호" className={styles.input} />
-              <input type="password" placeholder="새 비밀번호" className={styles.input} />
-              <input type="password" placeholder="비밀번호 확인" className={styles.input} />
-              <button className={styles.button}>변경</button>
+            <div className={styles.inner_column}>
+              <div className={styles.inner_row}>
+                <label className={styles.label}>이름</label>
+                <input type="text" placeholder="이름" className={styles.input} />
+              </div>
+              <div className={styles.inner_row}>
+                <label className={styles.label}>이메일</label>
+                <input type="email" value="user@example.com" disabled className={styles.inputDisabled} />
+              </div>
             </div>
           </li>
 
-          <li className={styles.formSection}>
+          <li className={styles.one_row_box}>
+            <div className={styles.inner_row}>
+              <label className={styles.label}>비밀번호 변경</label>
+              <div className={styles.inner_row_set}>
+                <input type="password" placeholder="새 비밀번호" className={styles.input} />
+                <input type="password" placeholder="비밀번호 확인" className={styles.input} />
+                <button className={styles.button}>변경</button>
+              </div>
+            </div>
+          </li>
+
+          <li className={styles.input_box}>
             <label className={styles.label}>주소</label>
             <input type="text" placeholder="주소" className={styles.input} />
+          </li>
 
+          <li className={styles.input_box}>
             <label className={styles.label}>특이사항 (관리자 메모)</label>
             <textarea placeholder="특이사항" rows={4} className={styles.textarea} />
           </li>
         </ul>
-      </div>
     </CommonModal>
   );
 }

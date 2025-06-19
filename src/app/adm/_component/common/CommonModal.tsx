@@ -8,8 +8,8 @@ import { ReactNode } from 'react';
 export interface ModalButton {
   text: string;
   onClick: () => void;
-  color?: 'primary' | 'secondary' | 'danger' | 'white'; // 버튼 색상 옵션
-  variant?: 'contained' | 'outlined';         // 버튼 스타일 옵션
+  color?: 'primary' | 'grey' | 'info' | 'danger' | 'warn' | 'success'; // 버튼 색상 옵션
+  variant?: 'contained' | 'outlined'; // 버튼 스타일 옵션
 }
 
 // 2. ModalProps에서 기존 버튼 관련 props를 제거하고 buttons 배열을 받도록 수정
@@ -35,7 +35,7 @@ export default function CommonModal({
             <CloseIcon />
           </button>
         </div>
-        <div className={styles.content_container}>{children}</div>
+        <div className={styles.child_container}>{children}</div>
 
         {/* 3. buttons 배열의 길이가 0보다 클 때만 버튼 컨테이너를 렌더링 */}
         {buttons.length > 0 && (

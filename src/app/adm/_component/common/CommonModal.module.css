@@ -41,10 +41,6 @@
   border-bottom: 1px solid #E5E8EC;
 }
 
-.top_container h4 {
-
-}
-
 .top_container .close_btn {
   padding: 0;
 }
@@ -57,17 +53,11 @@
   fill: #666666;
 }
 
-.content_container {
+.child_container {
   padding: 15px;
   width: 100%;
   min-height: 350px;
-  max-height: 550px;
   overflow-y: auto;
-  scrollbar-width: none;
-}
-
-.content_container::-webkit-scrollbar {
-  display: none;
 }
 
 .bottom_container {
@@ -75,7 +65,7 @@
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  padding: 0 15px;
+  padding: 15px;
   width: 100%;
   height: 65px;
   border-top: 1px solid #E5E8EC;
@@ -85,35 +75,43 @@
 .bottom_container .submit_btn {
   height: 36px;
   border: 1px solid #D0D4DA;
-
 }
 
 .bottom_container .submit_btn:hover {
   background-color: #F5F5F5;
 }
 
-/* bottom 버튼 공통 스타일 */
+/* button 공통 스타일 */
 .button {
-  height: 36px;
   padding: 0 16px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  @apply rounded-md text-md font-normal cursor-pointer transition duration-300;
+  height: 36px;
 }
 
+/* --- Variant: Contained --- */
 /* Primary */
 .contained.primary {
-  background-color: #1976d2;
-  color: white;
-  border: 1px solid #1976d2;
+  @apply bg-primary text-neutral-100
 }
 .contained.primary:hover {
-  background-color: #1565c0;
+  @apply bg-primary-dark
 }
 
-/* todo 업무는 여기서부터!  */
+/* Grey */
+.contained.grey {
+  @apply bg-neutral-500 text-neutral-100
+}
+.contained.grey:hover {
+  @apply bg-neutral-600
+}
+
+/* Info */
+.contained.danger {
+  @apply bg-danger text-neutral-100
+}
+.contained.danger:hover {
+  @apply bg-danger-dark
+}
+
 /* Danger */
 .contained.danger {
   @apply bg-danger text-neutral-100
@@ -122,25 +120,72 @@
   @apply bg-danger-dark
 }
 
-/* --- Variant: Outlined (테두리만) --- */
+/* Warn */
+.contained.warn {
+  @apply bg-warn text-neutral-100
+}
+.contained.warn:hover {
+  @apply bg-warn-dark
+}
+
+/* Success */
+.contained.success {
+  @apply bg-success text-neutral-100
+}
+.contained.success:hover {
+  @apply bg-success-dark
+}
+
+/* --- Variant: Outlined --- */
 .outlined {
-  background-color: #ffffff; /* 기본 배경은 흰색 */
+  border: 1px solid;
+  @apply bg-surface
 }
 
-/* Secondary (기본) 버튼 (보내주신 스타일) */
-.outlined.white {
-  color: #333; /* 적절한 기본 텍스트 색상 */
-  border: 1px solid #D0D4DA; /* 보내주신 테두리 색상 적용 */
-}
-.outlined.white:hover {
-  background-color: #F5F5F5; /* 보내주신 hover 색상 적용 */
-}
-
-/* Outlined Primary 버튼 */
+/* Primary */
 .outlined.primary {
-  color: #1976d2;
-  border: 1px solid #1976d2;
+  @apply border-primary-light text-primary-dark
 }
 .outlined.primary:hover {
-  background-color: rgba(25, 118, 210, 0.04);
+  @apply bg-primary-bg
+}
+
+/* Grey */
+.outlined.grey {
+  @apply border-neutral-250 text-neutral-700
+}
+.outlined.grey:hover {
+    @apply bg-neutral-150;
+}
+
+/* Info */
+.outlined.info {
+  @apply border-info-light text-info-dark
+}
+.outlined.info:hover {
+  @apply bg-info-bg
+}
+
+/* Danger */
+.outlined.danger {
+  @apply border-danger-light text-danger-dark
+}
+.outlined.danger:hover {
+  @apply bg-danger-bg
+}
+
+/* Warn */
+.outlined.warn {
+  @apply border-warn-light text-warn-dark
+}
+.outlined.warn:hover {
+  @apply bg-warn-bg
+}
+
+/* Success */
+.outlined.success {
+  @apply border-success text-success-dark
+}
+.outlined.success:hover {
+  @apply bg-success-bg
 }
