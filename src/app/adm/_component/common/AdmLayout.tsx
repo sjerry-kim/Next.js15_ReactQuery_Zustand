@@ -37,6 +37,7 @@ import { COLORS } from '@/Styles/colorConstants';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { ADMIN_MENUS, getAuthorizedMenus } from '@/lib/auth/auth-config';
 import { useUserStore } from '@/zustand/userStore';
+import { LuDot } from 'react-icons/lu';
 // import { clearAccessTokenFromStorage } from '@/utils/apiFetch';
 // import { clearAccessToken } from '@/utils/apiFetch';
 
@@ -167,6 +168,7 @@ const DrawerContent = ({ drawerOpen, setDrawerOpen, isMobile }: DrawerContentPro
                 <ListItemButton
                   sx={{ minHeight: 48, justifyContent: isMobile || drawerOpen ? 'initial' : 'center', px: 2.5 }}
                   onClick={() => handleMenuClick(item)}
+                  selected={isParentActive}
                 >
                   <ListItemIcon
                     sx={{
@@ -201,10 +203,10 @@ const DrawerContent = ({ drawerOpen, setDrawerOpen, isMobile }: DrawerContentPro
                       return (
                         <ListItemButton
                           key={child.path}
-                          sx={{ pl: 4 }}
+                          sx={{ pl: 4, gap: 1 }}
                           onClick={() => handleSubMenuClick(child.path)}
-                          selected={isChildActive}
                         >
+                          <LuDot style={{color: isChildActive ? COLORS.primary.light : 'inherit'}}/>
                           <ListItemText
                             primary={child.title}
                             sx={{
