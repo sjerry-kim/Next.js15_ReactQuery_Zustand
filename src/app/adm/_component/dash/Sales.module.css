@@ -1,0 +1,20 @@
+.chartWrapper {
+  position: relative;
+}
+
+.chartAreaWrapper {
+  width: 100%;
+  overflow-x: scroll;
+}
+
+.chart_y {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  background: linear-gradient(to right, transparent, white 0%, transparent 200%);
+}
+
+.chart_full {
+  padding-right: 10px !important;
+}
