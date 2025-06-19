@@ -188,7 +188,9 @@ const DrawerContent = ({ drawerOpen, setDrawerOpen, isMobile }: DrawerContentPro
                     }}
                   />
                   {(isMobile || drawerOpen) && item.children && (
-                    openMenuIdx === item.idx ? <ExpandLess /> : <ExpandMore />
+                    openMenuIdx === item.idx ?
+                      <ExpandLess sx={{color: isParentActive ? COLORS.primary.light : 'inherit'}} /> :
+                      <ExpandMore sx={{color: isParentActive ? COLORS.primary.light : 'inherit'}} />
                   )}
                 </ListItemButton>
               </ListItem>
