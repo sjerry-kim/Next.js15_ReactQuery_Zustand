@@ -158,6 +158,48 @@ export default function Sales({ sectionWidth }: SalesProps) {
     }
   };
 
+  const commonDatePickerStyle = {
+    size: 'small',
+    fullWidth: false,
+    variant: 'outlined',
+    inputProps: { readOnly: false },
+    InputLabelProps: { shrink: true },
+    sx: {
+      width: isDesktop ? '105px' : "100%",
+      border: '1px solid #D0D4DA',
+      borderRadius: '0.375rem',
+      padding: '1px 8px',
+      backgroundColor: '#FFF',
+      fontSize: '0.75rem',       // font size 변경
+      letterSpacing: '-0.35px',
+      color: '#4b4b4b',          // font color 변경
+      backgroundImage: 'none',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'right 12px center',
+      backgroundSize: '12px',
+      '& input': {
+        all: 'unset',
+        width: '100%',
+        fontSize: '0.75rem',     // input 내부 폰트 크기 변경
+        letterSpacing: '-0.35px',
+        color: '#4b4b4b',        // input 내부 폰트 색상 변경
+        lineHeight: 1.625,
+      },
+      '& .MuiOutlinedInput-notchedOutline': {
+        border: 'none',
+      },
+      '& .MuiOutlinedInput-root': {
+        padding: 0,
+      },
+      '& .MuiInputAdornment-root': {
+        marginLeft: 0,
+      },
+    },
+  };
+
+
+
+
   // 필터 UI 렌더링
   const renderFilters = () => {
     switch (draftFilters.type) {
@@ -210,29 +252,127 @@ export default function Sales({ sectionWidth }: SalesProps) {
 
       case 'custom':
         return (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              border: '1px solid #ccc',
-              padding: '8px',
-              borderRadius: '4px',
-            }}
-          >
+          <div className={styles.datepicker_box}>
+            {/*<DatePicker*/}
+            {/*  // label="시작일"*/}
+            {/*  value={draftFilters.startDate}*/}
+            {/*  onChange={(val) => handleFilterChange('startDate', val)}*/}
+            {/*  slotProps={{ textField: { size: 'small' } }}*/}
+            {/*/>*/}
+            {/*<span>~</span>*/}
+            {/*<DatePicker*/}
+            {/*  // label="종료일"*/}
+            {/*  value={draftFilters.endDate}*/}
+            {/*  onChange={(val) => handleFilterChange('endDate', val)}*/}
+            {/*  slotProps={{ textField: { size: 'small' } }}*/}
+            {/*/>*/}
+
             <DatePicker
-              label="시작일"
               value={draftFilters.startDate}
               onChange={(val) => handleFilterChange('startDate', val)}
-              slotProps={{ textField: { size: 'small' } }}
+              slotProps={{
+                textField: { placeholder: "시작일 선택", ...commonDatePickerStyle} as any,
+                actionBar: {
+                  actions: ['cancel', 'accept'],
+                },
+                popper: {
+                  sx: {
+                    '& .MuiPaper-root': {
+                      '@media (max-width: 600px)': {
+                        width: 306,
+                      },
+                    },
+                  },
+                },
+                openPickerButton: {
+                  disableRipple: true,
+                  sx: {
+                    padding: 1,
+                    '&:hover': {
+                      backgroundColor: 'transparent',
+                    },
+                    '&:focus': {
+                      backgroundColor: 'transparent',
+                    },
+                  },
+                },
+              }}
+              componentsProps={{
+                openPickerIcon: {
+                  sx: { fontSize: '0.55rem' },
+                },
+                openPickerButton: {
+                  disableRipple: true,
+                  sx: {
+                    padding: 1,
+                    fontSize: '0.75rem',
+                    '&:hover': { backgroundColor: 'transparent' },
+                    '&:focus': { backgroundColor: 'transparent' },
+                  },
+                },
+              }}
+              localeText={{
+                cancelButtonLabel: '취소',
+                okButtonLabel: '확인',
+              }}
+              desktopModeMediaQuery="@media (min-width: 0px)"
             />
+
             <span>~</span>
+
             <DatePicker
-              label="종료일"
               value={draftFilters.endDate}
               onChange={(val) => handleFilterChange('endDate', val)}
-              slotProps={{ textField: { size: 'small' } }}
+              slotProps={{
+                textField: { placeholder: "종료일 선택", ...commonDatePickerStyle} as any,
+                actionBar: {
+                  actions: ['cancel', 'accept'],
+                },
+                popper: {
+                  sx: {
+                    '& .MuiPaper-root': {
+                      '@media (max-width: 600px)': {
+                        width: 306,
+                      },
+                    },
+                  },
+                },
+                openPickerButton: {
+                  disableRipple: true,
+                  sx: {
+                    padding: 1,
+                    '&:hover': {
+                      backgroundColor: 'transparent',
+                    },
+                    '&:focus': {
+                      backgroundColor: 'transparent',
+                    },
+                  },
+                },
+              }}
+              componentsProps={{
+                openPickerIcon: {
+                  sx: { fontSize: '0.55rem' },
+                },
+                openPickerButton: {
+                  disableRipple: true,
+                  sx: {
+                    padding: 1,
+                    fontSize: '0.75rem',
+                    '&:hover': { backgroundColor: 'transparent' },
+                    '&:focus': { backgroundColor: 'transparent' },
+                  },
+                },
+              }}
+              localeText={{
+                cancelButtonLabel: '취소',
+                okButtonLabel: '확인',
+              }}
+              desktopModeMediaQuery="@media (min-width: 0px)"
             />
+
+
+
           </div>
         );
 
@@ -314,7 +454,7 @@ export default function Sales({ sectionWidth }: SalesProps) {
       <div className={styles.chart_top_wrapper}>
         <h4>매출 현황 통계</h4>
         <div className={styles.filter_container}>
-          { isLaptop || isDesktop ? (
+          { isDesktop ? (
             <>
               <select name="type" value={draftFilters.type} className={styles.select} onChange={(e) => handleFilterChange('type', e.target.value)}>
                 <option value="yearly">연도별 보기</option>
