@@ -9,6 +9,7 @@
 .dash_main section {
   width: 100%;
   height: 100%;
+  overflow-y: hidden;
 }
 
 .dash_top, .dash_bottom, .info_wrapper_top, .info_wrapper_bottom {
@@ -59,7 +60,17 @@
   .dash_top, .dash_bottom, .info_wrapper_top, .info_wrapper_bottom {
     flex-direction: column;
   }
-  .dash_main section {
-    height: 415px;
+
+  .dash_top {
+    height: fit-content;
   }
+
+  .dash_main section {
+    height: 430px !important;
+  }
+
+  .chart_wrapper {
+    height: 430px !important;
+  }
+
 }
