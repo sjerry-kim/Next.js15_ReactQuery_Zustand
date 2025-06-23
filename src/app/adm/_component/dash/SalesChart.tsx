@@ -5,8 +5,8 @@ import { Chart as ChartJS, LineController, CategoryScale, LinearScale, PointElem
 import React, { useEffect, useState, useRef } from 'react';
 import moment from 'moment';
 import 'moment/locale/ko';
-import styles from './Sales.module.css';
-import { FilterState } from './ChartFrame'; // 타입을 ChartFrame에서 가져옵니다.
+import styles from './SalesChart.module.css';
+import { FilterState } from './TimelineFilterControls';
 
 // Chart.js 등록 및 기본 옵션
 ChartJS.register(LineController, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
@@ -41,25 +41,54 @@ export default function SalesChart({ appliedFilters, masterData, sectionWidth }:
     if (type === 'yearly') {
       const yearlySales = masterData.reduce((acc, item) => { const itemYear = moment(item.date).format('YYYY'); acc[itemYear] = (acc[itemYear] || 0) + item.sales; return acc; }, {} as Record<string, number>);
       newLabels = Object.keys(yearlySales).sort(); newSalesData = newLabels.map(y => yearlySales[y]);
-    } else if (type === 'monthly') {
+    }
+    else if (type === 'monthly') {
       const monthlySales = masterData.filter(item => moment(item.date).year() === year).reduce((acc, item) => { const m = moment(item.date).format('M월'); acc[m] = (acc[m] || 0) + item.sales; return acc; }, {} as Record<string, number>);
       const sortedMonths = Array.from({ length: 12 }, (_, i) => `${i + 1}월`); newLabels = sortedMonths.filter(m => monthlySales[m] !== undefined); newSalesData = newLabels.map(m => monthlySales[m]);
-    } else if (type === 'weekly') {
-      const weeklySales: Record<string, number> = {}; const weeklyLabels: Record<string, string> = {};
-      masterData.filter(item => moment(item.date).year() === year && moment(item.date).month() + 1 === month)
+    }
+    /* 1. 주차 기준을 일요일-토요일(달력 기준)으로 삼음 */
+    else if (type === 'weekly') {
+      const weeklySales: Record<string, number> = {};
+      const weeklyLabels: Record<string, string> = {};
+
+      masterData
+        .filter(item => moment(item.date).year() === year && moment(item.date).month() + 1 === month)
         .forEach(item => {
-          const weekOfMonth = `${Math.ceil(moment(item.date).date() / 7)}주차`;
-          weeklySales[weekOfMonth] = (weeklySales[weekOfMonth] || 0) + item.sales;
-          if (!weeklyLabels[weekOfMonth]) {
-            const weekStart = moment(item.date).startOf('week').format('MM.DD');
-            const weekEnd = moment(item.date).endOf('week').format('MM.DD');
-            weeklyLabels[weekOfMonth] = `${weekOfMonth} (${weekStart}~${weekEnd})`;
+          const date = moment(item.date);
+          const weekStart = date.clone().startOf('week'); // 일요일
+          const weekEnd = date.clone().endOf('week');     // 토요일
+          const weekKey = weekStart.format('YYYY-MM-DD');
+
+          if (!weeklySales[weekKey]) {
+            weeklySales[weekKey] = 0;
+            weeklyLabels[weekKey] = `${weekStart.format('D일')}-${weekEnd.format('D일')}`;
           }
+
+          weeklySales[weekKey] += item.sales;
         });
-      const sortedWeeks = Object.keys(weeklySales).sort((a, b) => parseInt(a) - parseInt(b));
-      newLabels = sortedWeeks.map(week => weeklyLabels[week]);
-      newSalesData = sortedWeeks.map(week => weeklySales[week]);
-    } else if (type === 'custom' && startDate && endDate) {
+
+      const sortedWeekKeys = Object.keys(weeklySales).sort(); // 날짜 순 정렬
+      newLabels = sortedWeekKeys.map(key => weeklyLabels[key]);
+      newSalesData = sortedWeekKeys.map(key => weeklySales[key]);
+    }
+    /* 2. 주차 기준을 월요일-일요일으로 삼음 */
+    // else if (type === 'weekly') {
+    //   const weeklySales: Record<string, number> = {}; const weeklyLabels: Record<string, string> = {};
+    //   masterData.filter(item => moment(item.date).year() === year && moment(item.date).month() + 1 === month)
+    //     .forEach(item => {
+    //       const weekOfMonth = `${Math.ceil(moment(item.date).date() / 7)}주차`;
+    //       weeklySales[weekOfMonth] = (weeklySales[weekOfMonth] || 0) + item.sales;
+    //       if (!weeklyLabels[weekOfMonth]) {
+    //         const weekStart = moment(item.date).startOf('week').format('MM.DD');
+    //         const weekEnd = moment(item.date).endOf('week').format('MM.DD');
+    //         weeklyLabels[weekOfMonth] = `${weekOfMonth} (${weekStart}~${weekEnd})`;
+    //       }
+    //     });
+    //   const sortedWeeks = Object.keys(weeklySales).sort((a, b) => parseInt(a) - parseInt(b));
+    //   newLabels = sortedWeeks.map(week => weeklyLabels[week]);
+    //   newSalesData = sortedWeeks.map(week => weeklySales[week]);
+    // }
+    else if (type === 'custom' && startDate && endDate) {
       const filtered = masterData.filter(item => moment(item.date).isBetween(startDate, endDate, 'day', '[]'));
       newLabels = filtered.map(item => item.date); newSalesData = filtered.map(item => item.sales);
     }
@@ -96,7 +125,7 @@ export default function SalesChart({ appliedFilters, masterData, sectionWidth }:
   return (
     <>
       <canvas ref={yAxisChartRef} className={styles.chart_y} />
-      <div className={styles.chartAreaWrapper}>
+      <div className={styles.chart_area_wrapper}>
         <div style={{ width: `${chartWidth}px`, height: '365px' }}>
           <Line ref={chartRef} data={chartData} options={options} plugins={[yAxisCloner]} />
         </div>

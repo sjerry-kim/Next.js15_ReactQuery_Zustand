@@ -16,7 +16,6 @@
 
 .select {
   height: 100%;
-  /*font-size: 0.75rem;*/
   @apply text-sm text-neutral-700
   leading-relaxed tracking-tight rounded-md ;
 }
@@ -58,48 +57,12 @@
   @apply border-primary-light transition duration-300;
 }
 
-
-
 /* Chart.js 커스텀 */
-.chartWrapper {
+.chart_wrapper {
   display: flex;
   flex-direction: row;
   justify-content: center;
   position: relative;
-}
-
-.chartAreaWrapper {
-  width: 100%;
-  overflow-x: scroll;
-  padding: 0 !important;
-}
-
-.chart_y {
-  position: absolute;
-  top: 4.8px!important;
-  left: 0;
-  pointer-events: none;
-  /*background: linear-gradient(to right, transparent, white 0%, transparent 200%);*/
-  background: linear-gradient(
-      to right,
-      rgba(255, 255, 255, 1) 0%,
-      rgba(255, 255, 255, 1) 70%,
-      rgba(255, 255, 255, 0) 95%,
-      rgba(255, 255, 255, 0) 100%
-  );
-}
-
-.chart_full {
-  padding-right: 10px !important;
-}
-
-/* datepicker 영역 */
-.datepicker_box {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  height: 36px;
 }
 
 /* 모달 child */
@@ -116,6 +79,6 @@
   @apply gap-2
 }
 
-.filter_bottom_box .select {
-  width: 100%;
+.filter_bottom_box select {
+  width: 100% !important;
 }

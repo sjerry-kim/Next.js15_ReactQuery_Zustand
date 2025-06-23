@@ -1,0 +1,21 @@
+/* Chart.js 커스텀 */
+.chart_area_wrapper {
+  width: 100%;
+  overflow-x: scroll;
+  padding: 0 !important;
+}
+
+.chart_y {
+  position: absolute;
+  top: 4.8px!important;
+  left: 0;
+  pointer-events: none;
+  /*background: linear-gradient(to right, transparent, white 0%, transparent 200%);*/
+  background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 1) 70%,
+      rgba(255, 255, 255, 0) 95%,
+      rgba(255, 255, 255, 0) 100%
+  );
+}

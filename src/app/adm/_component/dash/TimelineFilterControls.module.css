@@ -1,0 +1,36 @@
+.select {
+  height: 100%;
+  /*font-size: 0.75rem;*/
+  @apply text-sm text-neutral-700
+  leading-relaxed tracking-tight rounded-md ;
+}
+
+/* datepicker 영역 */
+.datepicker_box svg {
+  min-width: 18px;
+  @apply text-lg text-neutral-500
+  transition duration-300 cursor-pointer;
+}
+
+.datepicker_box svg:hover {
+  @apply text-primary-light transition duration-300;
+}
+
+.datepicker_box {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  @apply gap-1
+}
+
+.datepicker_box span {
+  @apply text-sm text-neutral-700
+}
+
+.datepicker_box {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 36px;
+}
