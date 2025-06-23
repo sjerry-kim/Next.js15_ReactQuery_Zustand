@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { FilterState } from '@/adm/_component/dash/TimelineFilterControls';
+import { FilterState } from '@/adm/_component/dash/chart/TimelineFilterControls';
 import styles from './CategoricalFilterControls.module.css';
 
 interface WeekOption {

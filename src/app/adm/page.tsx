@@ -1,10 +1,10 @@
 "use client";
 
 import { useMemo, useState, useRef, useEffect } from 'react';
-import ChartFrame from '@/adm/_component/dash/ChartFrame';
-import SalesChart from '@/adm/_component/dash/SalesChart';
-import UserAgePieChart from '@/adm/_component/dash/UserAgePieChart';
-import SignupTrendBarChart from '@/adm/_component/dash/SignupTrendBarChart';
+import ChartFrame from '@/adm/_component/dash/chart/ChartFrame';
+import SalesChart from '@/adm/_component/dash/chart/SalesChart';
+import UserAgePieChart from '@/adm/_component/dash/chart/UserAgePieChart';
+import SignupTrendBarChart from '@/adm/_component/dash/chart/SignupTrendBarChart';
 import styles from './page.module.css';
 import moment from 'moment';
 import { faker } from '@faker-js/faker';
