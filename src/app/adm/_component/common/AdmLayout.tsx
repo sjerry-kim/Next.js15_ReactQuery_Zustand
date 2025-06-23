@@ -35,9 +35,12 @@ import {
 } from '@mui/material';
 import { COLORS } from '@/Styles/colorConstants';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import LogoutIcon from '@mui/icons-material/Logout';
+import HomeIcon from '@mui/icons-material/Home';
 import { ADMIN_MENUS, getAuthorizedMenus } from '@/lib/auth/auth-config';
 import { useUserStore } from '@/zustand/userStore';
 import { LuDot } from 'react-icons/lu';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 // import { clearAccessTokenFromStorage } from '@/utils/apiFetch';
 // import { clearAccessToken } from '@/utils/apiFetch';
 
@@ -236,6 +239,7 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
   const theme = useTheme();
   const [drawerOpen, setDrawerOpen] = useState(false); // Drawer
   const [toggleOpen, setToggleOpen] = useState(false); // Drawer
+  const user = useUserStore((state) => state.user);
   const anchorRef = useRef<HTMLButtonElement>(null);
   const prevOpen = useRef(toggleOpen);
   const { isMobile } = useWindowSize(); // isLaptop은 현재 사용되지 않으므로 제거해도 무방
@@ -392,7 +396,7 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
 
           {/*{ isMobile && <h2>Administrator Page</h2> }*/}
           <div className={styles.header_right}>
-            <p style={{marginLeft: isMobile ? 'auto' : 0}}>안녕하세요 관리자님!</p> {/* 간단한 정렬 */}
+            <p style={{marginLeft: isMobile ? 'auto' : 0}}>안녕하세요 {user?.name}님 🩷</p> {/* 간단한 정렬 */}
             <IconButton   ref={anchorRef} onClick={handleToggle}>
               <MoreVertIcon sx={{width: 22}}/>
             </IconButton >
@@ -421,9 +425,27 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
                         aria-labelledby="composition-button"
                         onKeyDown={handleListKeyDown}
                       >
-                        <MenuItem onClick={handleClose}>홈으로 이동</MenuItem>
-                        <MenuItem onClick={handleClose}>마이페이지</MenuItem>
-                        <MenuItem onClick={handleLogout}>로그아웃</MenuItem>
+                        <MenuItem
+                          sx={{fontSize: "0.8125rem"}}
+                          onClick={handleClose}
+                        >
+                          <HomeIcon sx={{ width: 18, marginRight: 1 }} />
+                          홈으로 이동
+                        </MenuItem>
+                        <MenuItem
+                          sx={{fontSize: "0.8125rem"}}
+                          onClick={handleClose}
+                        >
+                          <ManageAccountsIcon sx={{ width: 18, marginRight: 1 }} />
+                          마이페이지
+                        </MenuItem>
+                        <MenuItem
+                          sx={{fontSize: "0.8125rem"}}
+                          onClick={handleLogout}
+                        >
+                          <LogoutIcon sx={{ width: 18, marginRight: 1 }} />
+                          로그아웃
+                        </MenuItem>
                       </MenuList>
                     </ClickAwayListener>
                   </Paper>
