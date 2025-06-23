@@ -1,22 +1,26 @@
 .dash_main {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  overflow-y: auto;
+  /*display: flex;*/
+  /*flex-direction: column;*/
+  /*justify-content: space-between;*/
+  /*padding: 20px;*/
+  /*height: 100%;*/
+  /*overflow-y: hidden;*/
+  /*box-sizing: border-box;*/
   @apply gap-3;
 }
 
 .dash_main section {
   width: 100%;
-  height: 100%;
+  /*height: 100%;*/
   overflow-y: hidden;
 }
 
 .dash_top, .dash_bottom, .info_wrapper_top, .info_wrapper_bottom {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   width: 100%;
-  height: 100%;
+  flex: 1;
   @apply gap-3;
 }
 

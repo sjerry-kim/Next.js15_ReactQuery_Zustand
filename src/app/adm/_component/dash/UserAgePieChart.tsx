@@ -157,7 +157,7 @@ export default function UserAgePieChart({ appliedFilters, masterData }: PieChart
   }, [appliedFilters, masterData]);
 
   return (
-    <div style={{ position: 'relative', height: '350px', width: '80%' }}>
+    <div style={{ position: 'relative', height: '340px', width: '80%' }}>
       <Pie data={chartData} options={options} />
     </div>
   );

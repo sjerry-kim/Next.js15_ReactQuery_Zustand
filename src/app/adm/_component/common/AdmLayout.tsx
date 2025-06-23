@@ -310,11 +310,6 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
     prevOpen.current = toggleOpen;
   }, [toggleOpen]);
 
-  // useWindowSize가 초기 로딩 중일 때
-  if (isMobile === undefined) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <Box sx={{ display: 'flex', width: '100dvw' }}>
       <CssBaseline />
@@ -378,7 +373,7 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
       )}
 
       {/* children Box */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, minWidth: 0, }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, minWidth: 0, width: '100dvh', overflowX: 'hidden' }}>
         <header className={styles.header}>
           {
             isMobile ?
