@@ -6,6 +6,7 @@ import styles from './page.module.css';
 import onTextChange from '@/utils/onTextChange';
 import { useUserStore } from '@/zustand/userStore';
 import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/zustand/authStore';
 
 export default function Page() {
   const router = useRouter();
@@ -60,6 +61,7 @@ export default function Page() {
 
       // localStorage.setItem('accessToken', accessToken);
       useUserStore.getState().setUser(user);
+      useAuthStore.getState().setAccessToken(accessToken);
 
       router.push('/');
     } catch (error) {

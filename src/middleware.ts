@@ -27,8 +27,9 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // 1. 쿠키에서 access_token, refresh_token 가져오기
-  const accessToken = req.cookies.get('access_token')?.value;
+  // 1. 헤더에서 access_token, 쿠키에서 refresh_token 가져오기
+  const authHeader = req.headers.get('Authorization');
+  const accessToken = authHeader?.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
   const refreshToken = req.cookies.get('refresh_token')?.value;
 
   let payload: TokenPayload | null = null;
