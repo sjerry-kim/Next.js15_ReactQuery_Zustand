@@ -8,6 +8,7 @@ import SignupTrendBarChart from '@/adm/_component/dash/chart/SignupTrendBarChart
 import styles from './page.module.css';
 import moment from 'moment';
 import { faker } from '@faker-js/faker';
+import MiniBoard from '@/adm/_component/dash/MiniBoard';
 
 // 매출 현황 통계 임시 데이터 생성
 const generateSalesData = () => {
@@ -70,7 +71,7 @@ const generateSignupData = () => {
 export default function Page() {
   const salesMasterData   = useMemo(() => generateSalesData (), []);
   const userMasterData = useMemo(() => generateUserData(), []);
-  const signupMasterData = useMemo(() => generateSignupData(), []); // ✅ 회원가입 데이터 생성
+  const signupMasterData = useMemo(() => generateSignupData(), []);
   const salesSectionRef = useRef<HTMLElement>(null); // SalesChart section 너비 계산용
   const [salesSectionWidth, setSalesSectionWidth] = useState(0);
   const signupSectionRef = useRef<HTMLElement>(null); // SalesChart section 너비 계산용
@@ -149,12 +150,20 @@ export default function Page() {
         </section>
         <section className={styles.info_wrapper}>
           <div className={styles.info_wrapper_top}>
-            <article className={styles.info_container}>4</article>
-            <article className={styles.info_container}>5</article>
+            <article className={styles.info_container}>
+              <MiniBoard title={"오늘 결제 건수"} variation={10} count={121} />
+            </article>
+            <article className={styles.info_container}>
+              <MiniBoard title={"오늘 취소 건수"} variation={0} count={34} />
+            </article>
           </div>
           <div className={styles.info_wrapper_bottom}>
-            <article className={styles.info_container}>6</article>
-            <article className={styles.info_container}>7</article>
+            <article className={styles.info_container}>
+              <MiniBoard title={"오늘 접속자 수"} variation={56} count={2037} />
+            </article>
+            <article className={styles.info_container}>
+              <MiniBoard title={"오늘 회원가입 수"} variation={-12} count={89} />
+            </article>
           </div>
         </section>
       </div>

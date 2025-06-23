@@ -1,7 +1,17 @@
 'use client';
 
 import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartOptions } from 'chart.js';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ChartOptions,
+  Chart,
+} from 'chart.js';
 import React, { useEffect, useState, useRef } from 'react';
 import moment from 'moment';
 import 'moment/locale/ko';
@@ -32,6 +42,8 @@ export default function SignupTrendChart({ appliedFilters, masterData, sectionWi
   const [chartData, setChartData] = useState<{ labels: string[], datasets: any[] }>({ labels: [], datasets: [] });
   const [chartWidth, setChartWidth] = useState(sectionWidth);
   const chartRef = useRef<ChartJS<'bar'>>(null);
+  const yAxisChartRef = useRef<HTMLCanvasElement>(null);
+
 
   useEffect(() => {
     let newLabels: string[] = [];
@@ -98,11 +110,33 @@ export default function SignupTrendChart({ appliedFilters, masterData, sectionWi
     setChartWidth(newLabels.length > 12 ? Math.max(600, newLabels.length * 70) : (sectionWidth > 10 ? sectionWidth - 10 : 880));
   }, [appliedFilters, masterData, sectionWidth]);
 
+  // Y축 복제 플러그인 (사용자님 로직 그대로 복원)
+  const yAxisCloner = {
+    id: 'yAxisCloner',
+    afterDraw: (chart: Chart) => {
+      if (!yAxisChartRef.current || !chart.chartArea) return;
+      const yAxisCanvas = yAxisChartRef.current; const { chartArea } = chart; const dpr = chart.currentDevicePixelRatio || 1;
+      const logicalCopyWidth =  chartArea.left -5; const logicalCopyHeight = chartArea.bottom + 3; const logicalSourceY = chartArea.top - 5;
+      const physicalCopyWidth = logicalCopyWidth * dpr; const physicalCopyHeight = logicalCopyHeight * dpr;
+      if (yAxisCanvas.width !== physicalCopyWidth || yAxisCanvas.height !== physicalCopyHeight) {
+        yAxisCanvas.width = physicalCopyWidth; yAxisCanvas.height = physicalCopyHeight;
+        yAxisCanvas.style.width = `${logicalCopyWidth}px`; yAxisCanvas.style.height = `${logicalCopyHeight}px`;
+        yAxisCanvas.style.top = `${logicalSourceY}px`;
+      }
+      const yAxisCtx = yAxisCanvas.getContext('2d'); if (!yAxisCtx) return;
+      yAxisCtx.clearRect(0, 0, physicalCopyWidth, physicalCopyHeight);
+      yAxisCtx.drawImage(chart.canvas, 0, logicalSourceY * dpr, logicalCopyWidth * dpr, logicalCopyHeight * dpr, 0, 0, physicalCopyWidth, physicalCopyHeight);
+    }
+  };
+
   return (
-    <div className={styles.chart_area_wrapper}>
-      <div style={{ width: `${chartWidth}px`, height: '340px' }}>
-        <Bar ref={chartRef} data={chartData} options={options} />
+    <>
+      <canvas ref={yAxisChartRef} className={styles.chart_y} />
+      <div className={styles.chart_area_wrapper}>
+        <div style={{ width: `${chartWidth}px`, height: '340px', paddingRight: '20px' }}>
+          <Bar ref={chartRef} data={chartData} options={options} plugins={[yAxisCloner]}/>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -5,6 +5,7 @@ main {
   padding: 24px 30px;
   width: 100%;
   height: calc(100dvh - 64px);
+  overflow-y: auto;
 }
 button {
   display: flex;

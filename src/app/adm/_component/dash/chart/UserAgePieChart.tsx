@@ -38,6 +38,7 @@ export default function UserAgePieChart({ appliedFilters, masterData }: PieChart
     layout: {
       padding: {
         top: 10,
+        bottom: 30,
         right: layoutPaddingRight,
       },
     }

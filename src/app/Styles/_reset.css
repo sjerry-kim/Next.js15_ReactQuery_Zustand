@@ -10,7 +10,7 @@
 html, body {
   touch-action: manipulation; /* 더블 탭 줌 방지 */
   overflow-x: hidden; /* 가로 스크롤 방지 */
-  overflow-y: hidden; /* 가로 스크롤 방지 */
+  overflow-y: hidden; /* 세로 스크롤 방지 */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /*font-family: ⚠️ globals.css & tailwind.config.js에서 설정중 *!*/

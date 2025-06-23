@@ -28,7 +28,6 @@ interface SalesChartProps {
 export default function SalesChart({ appliedFilters, masterData, sectionWidth }: SalesChartProps) {
   const [chartData, setChartData] = useState<{ labels: string[], datasets: any[] }>({ labels: [], datasets: [] });
   const [chartWidth, setChartWidth] = useState(sectionWidth);
-
   const chartRef = useRef<ChartJS<'line'>>(null);
   const yAxisChartRef = useRef<HTMLCanvasElement>(null);
 

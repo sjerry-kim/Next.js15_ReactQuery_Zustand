@@ -373,7 +373,7 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
       )}
 
       {/* children Box */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, minWidth: 0, width: '100dvh', overflowX: 'hidden' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, minWidth: 0, width: '100dvh', overflowY: 'hidden' }}>
         <header className={styles.header}>
           {
             isMobile ?
