@@ -1,12 +1,9 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { supabase } from '@/lib/supabase';
-import {
-  generateAccessToken,
-  generateRefreshToken,
-  TokenPayload,
-} from '@/utils/jwt'; // ✅ jose를 사용하는 비동기 함수들
+import { generateAccessToken, generateRefreshToken, } from '@/utils/jwt';
 import prisma from '@/lib/prisma';
+import {TokenPayload} from '@/types/next-auth';
 
 export async function POST(req: Request) {
   try {
@@ -80,30 +77,20 @@ export async function POST(req: Request) {
       accessToken: accessToken,
     });
 
-    // 8. 두 토큰을 모두 안전한 HttpOnly 쿠키에 설정
-    // response.cookies.set('access_token', accessToken, {
-    //   httpOnly: true,
-    //   // secure: process.env.NODE_ENV === 'production' ? true : false, // <- 개발환경에선 false
-    //   path: '/',
-    //   // maxAge: 60 * 5, // 5분
-    //   maxAge: 60 * 1, // 1분
-    //   // sameSite: 'strict',
-    //   sameSite: 'lax',
-    // });
-
+    // 8. Refreshtoken을안 전한 HttpOnly 쿠키에 설정
     response.cookies.set('refresh_token', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production' ? true : false, // <- 개발환경에선 false
       path: '/',
-      // maxAge: 60 * 60 * 24 * 90, // 90일
-      maxAge: 60 * 1.5, // 1분 30초
+      maxAge: 60 * 60 * 24 * 90, // 90일
+      // maxAge: 45, // 45초 - 테스트용
       // sameSite: 'strict',
       sameSite: 'lax',
     });
 
     return response;
-
   } catch (err) {
+    // todo 에러처리
     console.error('로그인 API 처리 중 예외 발생:', err);
     return NextResponse.json(
       { error: '서버 내부 오류가 발생했습니다.' },

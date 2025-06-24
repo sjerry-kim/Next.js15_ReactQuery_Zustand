@@ -10,7 +10,7 @@ type User = {
 
 type UserStore = {
   user: User | null;
-  setUser: (user: User) => void;
+  setUser: (user: any) => void;
   clearUser: () => void;
 };
 

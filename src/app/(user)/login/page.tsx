@@ -49,23 +49,21 @@ export default function Page() {
         credentials: 'include',
       });
 
+      // todo 에러처리 통일 필요
       if (!res.ok) {
         const err = await res.json();
         throw new Error(err.error || '로그인 실패');
       }
 
-      const {
-        accessToken,
-        user,
-      } = await res.json();
+      const { accessToken, user } = await res.json();
 
-      // localStorage.setItem('accessToken', accessToken);
       useUserStore.getState().setUser(user);
       useAuthStore.getState().setAccessToken(accessToken);
 
       router.push('/');
     } catch (error) {
-      console.error('로그인 에러:');
+      // todo 에러처리 통일 필요
+      console.error('로그인 에러!');
     }
   };
 

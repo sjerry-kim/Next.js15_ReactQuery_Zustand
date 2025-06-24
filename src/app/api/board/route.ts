@@ -1,7 +1,6 @@
 import { board, PrismaClient } from '@prisma/client';
 import { Board, PaginatedBoardResponse } from '@/types/board';
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAccessTokenFromRequest } from '@/utils/jwt';
 
 const prisma = new PrismaClient();
 

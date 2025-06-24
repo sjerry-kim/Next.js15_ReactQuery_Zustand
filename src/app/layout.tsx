@@ -8,7 +8,6 @@ import '@/Styles/ckContentStyles.css'
 // React-Query
 import ReactQueryProviders from '@/providers/ReactQueryProvider';
 import MuiThemeRegistry from './Styles/MuiThemeRegistry';
-import SessionManager from '@/utils/SessionManager';
 import AuthInitializer from '@/providers/AuthInitializer';
 
 export const metadata: Metadata = {
@@ -26,8 +25,9 @@ export default function RootLayout({
       <body>
           <MuiThemeRegistry>
               <ReactQueryProviders>
-                <AuthInitializer />
+                <AuthInitializer>
                   {children}
+                </AuthInitializer>
               </ReactQueryProviders>
           </MuiThemeRegistry>
       </body>

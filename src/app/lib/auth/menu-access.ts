@@ -3,7 +3,7 @@ import { Menu } from '@/types/next-auth';
 
 interface ProtectedPath {
   path: string;
-  roles: string[];
+  roles?: string[];
 }
 
 // children까지 flatten 해서 path+roles 추출

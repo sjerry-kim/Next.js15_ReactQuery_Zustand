@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, ReactNode, useEffect, useRef, useMemo, useCallback } from 'react';
-import { ReactElement } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import useWindowSize from '@/hooks/useWindowSize.';
@@ -30,7 +29,6 @@ import {
   MenuList,
   Paper,
   Popper,
-  SvgIconProps,
   SwipeableDrawer,
 } from '@mui/material';
 import { COLORS } from '@/Styles/colorConstants';
@@ -41,8 +39,8 @@ import { ADMIN_MENUS, getAuthorizedMenus } from '@/lib/auth/auth-config';
 import { useUserStore } from '@/zustand/userStore';
 import { LuDot } from 'react-icons/lu';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-// import { clearAccessTokenFromStorage } from '@/utils/apiFetch';
-// import { clearAccessToken } from '@/utils/apiFetch';
+import { useAuthStore } from '@/zustand/authStore';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface AdmLayoutProps {
   children: ReactNode;
@@ -232,17 +230,16 @@ const DrawerContent = ({ drawerOpen, setDrawerOpen, isMobile }: DrawerContentPro
   );
 };
 
-
-// 레이아웃 (이하 코드는 변경 없음)
 export default function AdmLayout({ children }: AdmLayoutProps) {
   const router = useRouter();
   const theme = useTheme();
+  const queryClient = useQueryClient();
   const [drawerOpen, setDrawerOpen] = useState(false); // Drawer
   const [toggleOpen, setToggleOpen] = useState(false); // Drawer
   const user = useUserStore((state) => state.user);
   const anchorRef = useRef<HTMLButtonElement>(null);
   const prevOpen = useRef(toggleOpen);
-  const { isMobile } = useWindowSize(); // isLaptop은 현재 사용되지 않으므로 제거해도 무방
+  const { isMobile } = useWindowSize();
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -260,28 +257,31 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
     try {
       const res = await fetch('/api/auth/logout', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include', // refreshToken 쿠키 삭제용
       });
 
+      // 서버에서의 로그아웃 요청이 실패하더라도 클라이언트 상태는 정리
       if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || '로그아웃 실패');
+        console.error('서버 로그아웃에 실패!');
       }
 
-      // ✅ 클라이언트 상태 정리
-      // clearAccessTokenFromStorage(); // localStorage accessToken 제거
-      useUserStore.getState().clearUser(); // 유저 정보 초기화
+      // 클라이언트의 모든 인증 관련 상태를 정리
+      useAuthStore.getState().clearAccessToken();
+      useUserStore.getState().setUser(null);
 
-      // 필요 시 React Query 캐시도 초기화
-      // queryClient.clear();
+      // React Query에 캐시된 모든 데이터를 삭제
+      // 다른 사용자가 로그인했을 때 이전 사용자의 데이터가 보이는 것을 방지
+      queryClient.clear();
 
-      // ✅ 라우팅
-      router.push('/');
+      // 메인페이지로 이동하여 모든 상태를 완전히 새로고침
+      window.location.href = '/';
+
     } catch (error) {
-      console.error('로그아웃 에러:', error);
+      // todo 에러처리
+      // 네트워크 에러 등 fetch 자체가 실패한 경우
+      console.error('로그아웃 처리 중 에러 발생:', error);
+      // 에러가 발생하더라도 사용자 경험을 위해 강제로 상태를 초기화하고 이동할 수 있습니다.
+      alert('로그아웃 중 문제가 발생했습니다. 페이지를 새로고침합니다.');
+      window.location.href = '/login';
     }
   };
 
