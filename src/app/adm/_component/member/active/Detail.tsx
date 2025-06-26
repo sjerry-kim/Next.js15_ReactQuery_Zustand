@@ -8,8 +8,9 @@ import { getBoard } from '@/lib/queries/boardQuery';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import onTextChange from '@/utils/onTextChange';
 import { Board } from '@/types/board';
-import CommonModal, { ModalButton } from '@/adm/_component/common/CommonModal';
+import CommonModal from '@/adm/_component/common/CommonModal';
 import Editor from '@/adm/_component/common/Editor';
+import { CommonModalButton } from '@/types/modal';
 
 type PageProps = {
   id: string;
@@ -30,7 +31,7 @@ export default function Page({ id }: PageProps) {
     content: data?.content || '',
   });
   const {handleChange, handleCustomChange} = onTextChange(jsonData, setJsonData);
-  const confirmationButtons: ModalButton[] = [
+  const confirmationButtons: CommonModalButton[] = [
     // variant와 color를 생략하면 기본값(contained, primary)이 적용
     {
       text: '정지',
