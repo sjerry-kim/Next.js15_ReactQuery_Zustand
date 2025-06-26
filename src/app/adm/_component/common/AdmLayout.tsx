@@ -41,6 +41,7 @@ import { LuDot } from 'react-icons/lu';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import { useAuthStore } from '@/zustand/authStore';
 import { useQueryClient } from '@tanstack/react-query';
+import NotificationButton from '@/adm/_component/common/NotificationButton';
 
 interface AdmLayoutProps {
   children: ReactNode;
@@ -373,6 +374,7 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
             }
           </DrawerHeaderStyled>
           <DrawerContent drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} isMobile={false}/>
+          <NotificationButton />
         </DesktopStyledDrawer>
       )}
 

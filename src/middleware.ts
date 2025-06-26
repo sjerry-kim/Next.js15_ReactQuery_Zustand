@@ -96,7 +96,7 @@ export async function middleware(req: NextRequest) {
       const sortedProtectedPaths = [...PROTECTED_PATHS].sort((a, b) => b.path.length - a.path.length);
       const matchedPath = sortedProtectedPaths.find(({ path }) => pathname.startsWith(path));
 
-      if (matchedPath && !matchedPath.roles.includes(rtPayload.role)) {
+      if (matchedPath && !matchedPath.roles?.includes(rtPayload.role)) {
         // console.log(`[Middleware] 접근 거부 (RefreshToken 기반): ${rtPayload.email}(${rtPayload.role}) -> ${pathname}`);
         return NextResponse.redirect(new URL('/403', req.url));
       }
@@ -127,7 +127,7 @@ export async function middleware(req: NextRequest) {
   const matchedPath = sortedProtectedPaths.find(({ path }) => pathname.startsWith(path));
 
 
-  if (matchedPath && !matchedPath.roles.includes(payload.role)) {
+  if (matchedPath && !matchedPath.roles?.includes(payload.role)) {
     // console.log(`[Middleware] 접근 거부 : ${rtPayload.email}(${rtPayload.role}) -> ${pathname}`);
     return NextResponse.redirect(new URL('/403', req.url));
   }

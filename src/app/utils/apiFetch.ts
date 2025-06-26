@@ -16,9 +16,16 @@ const notifyTokenRefreshed = (newAccessToken: string) => {
 };
 
 /* ✅ 토큰 인증이 필요한 api를 랩핑하는 공통 함수 */
-export const apiFetch = async (url: string, options: RequestInit = {}): Promise<Response> => {
+export const apiFetch = async (url: string, options: RequestInit & { params?: Record<string, any> } = {}): Promise<Response> => {
   let accessToken = useAuthStore.getState().accessToken;
-  
+  let finalUrl = url;
+
+  if (options.params && Object.keys(options.params).length > 0) {
+    // URLSearchParams는 객체를 "?key1=value1&key2=value2" 형태의 문자열로 만들어줍니다.
+    const queryParams = new URLSearchParams(options.params);
+    finalUrl = `${url}?${queryParams.toString()}`;
+  }
+
   // fetch 통신 옵션 생성 함수
   const buildOptions = (accessToken: string | null): RequestInit => {
     // new Headers()를 사용하여 헤더 객체를 안전하게 생성
@@ -41,7 +48,7 @@ export const apiFetch = async (url: string, options: RequestInit = {}): Promise<
   };
 
   // haeder에 Accesstoken을 포함해서 fetch 통신
-  let response = await fetch(url, buildOptions(accessToken));
+  let response = await fetch(finalUrl, buildOptions(accessToken));
 
   // 문제 없을 시 response 반환
   if (response.status !== 401) return response;
@@ -53,7 +60,7 @@ export const apiFetch = async (url: string, options: RequestInit = {}): Promise<
     // 다른 곳에서 그 resolve 함수를 새 토큰 값과 함께 호출해 줄 때까지 기다렸다가,
     // 그 결과값을 newAccessToken 변수에 담음.
     const newAccessToken = await awaitTokenRefresh();
-    return fetch(url, buildOptions(newAccessToken));
+    return fetch(finalUrl, buildOptions(newAccessToken));
   }
 
   // 첫 번째 요청인 경우
@@ -78,7 +85,7 @@ export const apiFetch = async (url: string, options: RequestInit = {}): Promise<
     notifyTokenRefreshed(newAccessToken);
 
     // 실패한 fetch 통신 재시도
-    return fetch(url, buildOptions(newAccessToken));
+    return fetch(finalUrl, buildOptions(newAccessToken));
   } catch (error) {
     // "인증 에러 발생!"이라고 앱 전체에 방송(dispatch)
     // AuthInitializer에서 로그아웃 페이지로 이동됨.

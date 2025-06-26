@@ -9,6 +9,7 @@ import '@/Styles/ckContentStyles.css'
 import ReactQueryProviders from '@/providers/ReactQueryProvider';
 import MuiThemeRegistry from './Styles/MuiThemeRegistry';
 import AuthInitializer from '@/providers/AuthInitializer';
+import ClientProviders from '@/providers/ClientProviders';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -25,9 +26,11 @@ export default function RootLayout({
       <body>
           <MuiThemeRegistry>
               <ReactQueryProviders>
-                <AuthInitializer>
-                  {children}
-                </AuthInitializer>
+                <ClientProviders>
+                  <AuthInitializer>
+                    {children}
+                  </AuthInitializer>
+                </ClientProviders>
               </ReactQueryProviders>
           </MuiThemeRegistry>
       </body>
