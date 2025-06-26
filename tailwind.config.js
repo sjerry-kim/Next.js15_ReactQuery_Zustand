@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-const { COLORS } = require('./src/app/Styles/colorConstants');
+const { COLORS } = require('./src/app/_constant/colorConstants');
 
 module.exports = {
   content: [

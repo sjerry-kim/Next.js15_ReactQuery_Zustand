@@ -20,8 +20,6 @@ interface PaginationProps {
   pageNumbersToShow?: number; // 페이지네이션에서 보여줄 숫자 개수
 }
 
-export const ITEMS_PER_PAGE = 10; // 페이지 당 아이템 수
-
 export default function Pagination({
   currentPage,
   totalPages,
@@ -73,7 +71,7 @@ export default function Pagination({
 
     // URL 업데이트 & router.push로 navigation을 트리거
     // scroll: false -> 페이지 바뀔 때마다 스크롤이 상단으로 올라가는 동작 막기
-    router.push(`${pathname}?${newSearchParams.toString()}`, { scroll: false });
+    // router.push(`${pathname}?${newSearchParams.toString()}`, { scroll: false });
   };
 
   const pageButtons = [];

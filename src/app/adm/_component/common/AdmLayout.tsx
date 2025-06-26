@@ -31,7 +31,7 @@ import {
   Popper,
   SwipeableDrawer,
 } from '@mui/material';
-import { COLORS } from '@/Styles/colorConstants';
+import { COLORS } from '@/_constant/colorConstants';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
