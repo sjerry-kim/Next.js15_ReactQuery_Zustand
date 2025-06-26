@@ -1,17 +1,24 @@
 import { PaginatedBoardResponse } from '@/types/board';
 import { apiFetch } from '@/utils/apiFetch';
+import { SearchParams } from 'next/dist/server/request/search-params';
 
-export async function getBoardList(page: number = 1, pageSize: number = 10): Promise<PaginatedBoardResponse> {
-  const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/protected/board?page=${page}&pageSize=${pageSize}`;
+export async function getBoardList(
+  page: number = 1,
+  pageSize: number = 10,
+  search: SearchParams = {}
+): Promise<PaginatedBoardResponse> {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    pageSize: pageSize.toString(),
+  });
 
-  // const res = await fetch(apiUrl, {
-  //   // cache: 'no-store', // Uncomment if you want to ensure fresh data every time,
-  //   // but React Query's staleTime/gcTime usually handles this.
-  //   next: {
-  //     // Be more specific with tags if you need to revalidate specific pages
-  //     tags: ['boardList', `boardList-page-${page}-size-${pageSize}`],
-  //   },
-  // });
+  if (search.searchKeyword) {
+    // @ts-ignore
+    params.append('searchType', search.searchType || ''); // @ts-ignore
+    params.append('searchKeyword', search.searchKeyword);
+  }
+
+  const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/protected/board?${params.toString()}`;
 
   const res = await apiFetch(apiUrl);
 

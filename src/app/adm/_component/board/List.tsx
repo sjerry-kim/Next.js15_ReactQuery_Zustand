@@ -2,24 +2,37 @@
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { useState, useEffect, useCallback } from 'react';
-
+import React, { useState, useEffect, useCallback, FormEvent } from 'react';
 import { getBoardList } from '@/lib/queries/boardQuery';
 import type { Board, PaginatedBoardResponse } from '@/types/board';
 import Pagination from '@/adm/_component/common/Pagination';
-import { ITEMS_PER_PAGE } from '@/adm/_component/common/Pagination';
-
+import { ITEMS_PER_PAGE } from '@/_constant/pagination';
 import styles from "./List.module.css";
 import { LuSearch } from "react-icons/lu";
 import { MdOutlineReplay } from "react-icons/md";
 import useWindowSize from '@/hooks/useWindowSize.';
+import onTextChange from '@/utils/onTextChange';
+
+interface JsonData {
+  searchType: string;
+  searchKeyword: string;
+  id: string;
+  content: string;
+}
 
 export default function BoardListPage() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [jsonData, setJsonData] = useState<JsonData>({
+    searchType: "",
+    searchKeyword: "",
+    id: searchParams.get("id") || "0",
+    content: searchParams.get("content") || "",
+  });
   const queryClient = useQueryClient();
-  const { isMobile } = useWindowSize(); // isLaptop은 현재 사용되지 않으므로 제거해도 무방
+  const {handleChange} = onTextChange(jsonData, setJsonData);
+  const { isMobile } = useWindowSize();
 
   const getPageFromUrl = useCallback(() => {
     const pageParam = searchParams.get('page');
@@ -27,9 +40,12 @@ export default function BoardListPage() {
     return isNaN(page) || page < 1 ? 1 : page;
   }, [searchParams]);
 
-  const [currentPage, setCurrentPage] = useState<number>(getPageFromUrl);
+  const currentPage = getPageFromUrl();
+  const searchTypeFromUrl = searchParams.get('searchType') || "";
+  const searchKeywordFromUrl = searchParams.get('searchKeyword') || "";
 
-  // Board List GET React Query
+  const queryKey = ['boardList', currentPage, ITEMS_PER_PAGE, searchTypeFromUrl, searchKeywordFromUrl];
+
   const {
     data: paginatedData,
     isLoading,
@@ -38,12 +54,15 @@ export default function BoardListPage() {
     isFetching,
     isPlaceholderData,
   } = useQuery<PaginatedBoardResponse, Error>({
-    queryKey: ['boardList', currentPage, ITEMS_PER_PAGE],
-    queryFn: () => getBoardList(currentPage, ITEMS_PER_PAGE),
+    queryKey: queryKey,
+    queryFn: () => getBoardList(currentPage, ITEMS_PER_PAGE, {
+      searchType: searchTypeFromUrl,
+      searchKeyword: searchKeywordFromUrl
+    }),
     staleTime: 60 * 1000,
     gcTime: 5 * 60 * 1000,
-    placeholderData: (previousData) => previousData, // 이전 데이터 유지 (v5+)
-    enabled: typeof currentPage === 'number' && !isNaN(currentPage) && currentPage > 0, // currentPage가 유효한 양의 정수일 때만 쿼리를 실행
+    placeholderData: (previousData) => previousData,
+    enabled: currentPage > 0,
   });
 
   // 렌더링할 데이터 준비
@@ -55,62 +74,76 @@ export default function BoardListPage() {
   const handlePageChange = useCallback((newPage: number) => {
     if (newPage === currentPage) return;
 
-    const newSearchParams = new URLSearchParams(searchParams.toString());
+    const currentSearchType = searchParams.get('searchType');
+    const currentSearchKeyword = searchParams.get('searchKeyword');
+    const newSearchParams = new URLSearchParams();
+
+    // 새로운 페이지 번호를 설정
     newSearchParams.set('page', newPage.toString());
+
+    // 기존 검색 조건이 존재할 경우, 그대로 다시 추가
+    if (currentSearchType) newSearchParams.set('searchType', currentSearchType);
+    if (currentSearchKeyword) newSearchParams.set('searchKeyword', currentSearchKeyword);
+
+    // 완성된 쿼리 스트링으로 라우터를 push
     router.push(`${pathname}?${newSearchParams.toString()}`, { scroll: false });
   }, [currentPage, pathname, router, searchParams]);
 
-  // 상세/수정 모달 handler
   const handleRowClick = (itemId: number) => {
-    const currentParamsString = searchParams.toString();
-    const destination = `/adm/board/${itemId}?${currentParamsString}`;
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    const destination = `/adm/member/active/${itemId}?${newSearchParams.toString()}`;
     router.push(destination);
   };
 
 // 글쓰기 모달 handler
   const handleAddClick = () => {
     const currentParamsString = searchParams.toString();
-
-    console.log(currentParamsString);
-
     const destination = `/adm/board/add?${currentParamsString}`;
     router.push(destination);
   };
 
-  // URL(searchParams)이 변경될 때 currentPage 상태를 업데이트하는 이펙트
-  useEffect(() => {
-    const pageFromUrl = getPageFromUrl();
+  const handleSearch = (event: FormEvent) => {
+    event.preventDefault();
 
-    // 현재 상태와 URL의 페이지가 다를 경우에만 업데이트
-    if (currentPage !== pageFromUrl) setCurrentPage(pageFromUrl);
+    const queryString = new URLSearchParams({
+      searchType: jsonData.searchType,
+      searchKeyword: jsonData.searchKeyword,
+      page: '1',
+    }).toString();
 
-    // currentPage를 의존성에 추가하여, 외부 요인으로 currentPage가 변경되었을 때도 URL과 비교하여 동기화
-  }, [getPageFromUrl, currentPage]);
+    router.push(`${location.pathname}?${queryString}`);
+  }
 
-  // 다음 페이지 데이터 미리 가져오기 (Prefetching)
-  // react-query가 (미리 가져온 데이터를) 가지고 있다가
-  // 동일한 매개변수(정확히는 useQuery가 동일한 queryKey)로 호출될 때
-  // 미리 프리패칭한 것을 가져옴
+  // 다음 페이지 prefetch용 effect
   useEffect(() => {
     if (
       paginatedData &&
       !isPlaceholderData &&
-      currentPage > 0 && // 현재 페이지가 유효하고
-      currentPage < paginatedData.totalPages // 다음 페이지가 존재할 때
+      currentPage < paginatedData.totalPages
     ) {
       queryClient.prefetchQuery({
-        queryKey: ['boardList', currentPage + 1, ITEMS_PER_PAGE],
-        queryFn: () => getBoardList(currentPage + 1, ITEMS_PER_PAGE),
+        queryKey: queryKey,
+        queryFn: () => getBoardList(currentPage + 1, ITEMS_PER_PAGE, {
+          searchType: searchTypeFromUrl,
+          searchKeyword: searchKeywordFromUrl
+        }),
         staleTime: 60 * 1000,
       });
     }
-  }, [paginatedData, currentPage, queryClient, isPlaceholderData, ITEMS_PER_PAGE]); // ITEMS_PER_PAGE가 동적이면 의존성에 추가해야 함
+  }, [paginatedData, currentPage, queryClient, isPlaceholderData, searchTypeFromUrl, searchKeywordFromUrl]);
 
-  // 에러 처리 UI
+  // useState(jsonData)를 URL과 동기화하는 effect
+  useEffect(() => {
+    setJsonData(prev => ({
+      ...prev,
+      searchType: searchTypeFromUrl,
+      searchKeyword: searchKeywordFromUrl
+    }));
+  }, [searchTypeFromUrl, searchKeywordFromUrl]);
+
   if (isError && error) {
     // TODO: 커스텀 알림창 또는 에러 페이지 구현
     alert(`에러가 발생하였습니다: ${error.message}. 관리자에게 문의하세요.`);
-    // router.push('/error');
     return <div>데이터를 불러오는데 실패했습니다. 나중에 다시 시도해주세요.</div>;
   }
 
@@ -128,21 +161,22 @@ export default function BoardListPage() {
           <div className={styles.gradient_overlay}></div>
         </div>
 
-        <div className={styles.search_container}>
-          <select>
-            <option>전체</option>
-            <option>상품코드</option>
-            <option>상품명</option>
-            <option>등록일</option>
+        <form className={styles.search_container} onSubmit={handleSearch}>
+          <select name="searchType" value={jsonData.searchType} onChange={handleChange}>
+            <option value={""}>전체</option>
+            <option value={"id"}>게시물코드</option>
+            <option value={"content"}>내용</option>
           </select>
           <div className={styles.searchbar_box}>
-            <input placeholder="검색어를 입력하세요"/>
-            <LuSearch />
+            <input name="searchKeyword" value={jsonData.searchKeyword} placeholder="검색어를 입력하세요" onChange={handleChange}/>
+            <button type="submit">
+              <LuSearch />
+            </button>
           </div>
           <div title={"초기화"} className={styles.search_reset_box}>
             <MdOutlineReplay />
           </div>
-        </div>
+        </form>
       </section>
 
       <section className={styles.table_wrapper}>
@@ -160,7 +194,7 @@ export default function BoardListPage() {
           </tr>
           </thead>
           <tbody>
-          {isLoading && !paginatedData ? ( // Initial load
+          {isLoading ? ( // Initial load
             <tr>
               <td colSpan={6} style={{ textAlign: 'center', padding: '20px' }}>
                 <h1>로딩중...</h1>

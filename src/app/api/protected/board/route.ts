@@ -1,4 +1,4 @@
-import { board } from '@prisma/client';
+import { board, Prisma } from '@prisma/client';
 import { Board, PaginatedBoardResponse } from '@/types/board';
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
@@ -7,6 +7,8 @@ export async function GET(request: NextRequest): Promise<NextResponse<PaginatedB
   const searchParams = request.nextUrl.searchParams;
   const page = parseInt(searchParams.get('page') || '1', 10);
   const pageSize = parseInt(searchParams.get('pageSize') || '10', 10); // Default page size
+  const searchType = searchParams.get('searchType') || '';
+  const searchKeyword = searchParams.get('searchKeyword') || '';
 
   if (isNaN(page) || page < 1) {
     return NextResponse.json({ error: 'Invalid page number. Must be a positive integer.' }, { status: 400 });
@@ -18,10 +20,40 @@ export async function GET(request: NextRequest): Promise<NextResponse<PaginatedB
   const skip = (page - 1) * pageSize;
   const take = pageSize;
 
+  const where: Prisma.boardWhereInput = {};
+
+  if (searchKeyword) {
+    if (searchType === 'id') {
+      const numericKeyword = Number(searchKeyword);
+      if (!isNaN(numericKeyword)) {
+        where.id = numericKeyword;
+      }
+    } else if (searchType === 'content') {
+      where.content = {
+        contains: searchKeyword,
+        mode: 'insensitive',
+      };
+    } else {
+      const conditions: Prisma.boardWhereInput[] = [];
+      conditions.push({
+        content: {
+          contains: searchKeyword,
+          mode: 'insensitive',
+        },
+      });
+      const numericKeyword = Number(searchKeyword);
+      if (!isNaN(numericKeyword)) {
+        conditions.push({ id: numericKeyword });
+      }
+      where.OR = conditions;
+    }
+  }
+
   try {
     // Use a transaction to get both data and total count efficiently
     const [boardsData, totalItems] = await prisma.$transaction([
       prisma.board.findMany({
+        where,
         select: {
           id: true,
           content: true,
@@ -36,7 +68,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<PaginatedB
         skip: skip,
         take: take,
       }),
-      prisma.board.count(), // Get the total number of board items
+      prisma.board.count({ where }),
     ]);
 
     // Convert BigInt IDs to numbers and add row numbers

@@ -120,6 +120,10 @@
   @apply text-sm text-neutral-700 border-none;
 }
 
+.searchbar_box button {
+  padding: 0;
+}
+
 .search_reset_box {
   display: flex;
   flex-direction: row;
