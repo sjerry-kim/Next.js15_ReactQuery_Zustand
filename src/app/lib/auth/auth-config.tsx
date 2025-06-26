@@ -3,6 +3,9 @@ import EditNoteIcon from '@mui/icons-material/EditNote';
 import FaceIcon from '@mui/icons-material/Face';
 import CardTravelIcon from '@mui/icons-material/CardTravel';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import BuildIcon from '@mui/icons-material/Build';
+import CodeIcon from '@mui/icons-material/Code';
+import PersonIcon from '@mui/icons-material/Person';
 import { Menu, Role } from '@/types/next-auth';
 
 export const ROLES = {
@@ -51,14 +54,16 @@ export const ADMIN_MENUS: Menu[] = [
     title: "회원관리",
     path: "/adm/member",
     icon: <FaceIcon sx={{ width: 22 }} />,
-    roles: [ROLES.SUPER_ADMIN],
+    roles: [ROLES.MANAGER, ROLES.SUPER_ADMIN],
     children: [
       {
+        idx:1,
         title: "일반 회원",
         path: "/adm/member/active",
-        roles: [ROLES.SUPER_ADMIN],
+        roles: [ROLES.MANAGER, ROLES.SUPER_ADMIN],
       },
       {
+        idx: 2,
         title: "탈퇴 회원",
         path: "/adm/member/withdrawn",
         roles: [ROLES.SUPER_ADMIN],
@@ -67,10 +72,73 @@ export const ADMIN_MENUS: Menu[] = [
   },
   {
     idx: 104,
-    title: "마이페이지",
-    path: "/adm",
-    icon: <ManageAccountsIcon sx={{ width: 22 }} />,
-    roles: [ROLES.EDITOR, ROLES.MANAGER, ROLES.SUPER_ADMIN],
+    title: "계정관리",
+    path: "/adm/account",
+    icon: <PersonIcon sx={{ width: 22 }} />,
+    roles: [ROLES.MANAGER, ROLES.SUPER_ADMIN],
+    children: [
+      {
+        idx:1,
+        title: "본사",
+        path: "/adm/account/head",
+        roles: [ROLES.MANAGER, ROLES.SUPER_ADMIN],
+      },
+      {
+        idx: 2,
+        title: "외부 업체",
+        path: "/adm/account/partner",
+        roles: [ROLES.SUPER_ADMIN],
+      },
+    ]
+  },
+  // {
+  //   idx: 105,
+  //   title: "마이페이지",
+  //   path: "/adm",
+  //   icon: <ManageAccountsIcon sx={{ width: 22 }} />,
+  //   roles: [ROLES.EDITOR, ROLES.MANAGER, ROLES.SUPER_ADMIN],
+  // },
+  {
+    idx: 106,
+    title: "기본설정",
+    path: "/adm/setting",
+    icon: <BuildIcon sx={{ width: 22 }} />,
+    roles: [ROLES.MANAGER, ROLES.SUPER_ADMIN],
+    children: [
+      {
+        idx: 1,
+        title: "역할 권한",
+        path: "/adm/setting/auth",
+        roles: [ROLES.SUPER_ADMIN],
+      },
+      {
+        idx: 2,
+        title: "정책",
+        path: "/adm/policy",
+        roles: [ROLES.SUPER_ADMIN],
+      },
+      {
+        idx: 3,
+        title: "이용약관",
+        path: "/adm/terms",
+        roles: [ROLES.SUPER_ADMIN],
+      },
+    ]
+  },
+  {
+    idx: 107,
+    title: "개발자 설정",
+    path: "/adm/dev",
+    icon: <CodeIcon sx={{ width: 22 }} />,
+    roles: [ROLES.MANAGER, ROLES.SUPER_ADMIN],
+    children: [
+      {
+        idx: 1,
+        title: "공통 코드",
+        path: "/adm/dev/code",
+        roles: [ROLES.SUPER_ADMIN],
+      },
+    ]
   },
 ];
 

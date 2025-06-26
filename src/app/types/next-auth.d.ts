@@ -33,6 +33,7 @@ export type Role = typeof ROLES[keyof typeof ROLES];
 
 // 메뉴 아이템에 대한 인터페이스(타입) 정의
 export interface SubMenu {
+  idx: number;
   title: string;
   path: string;
   roles?: Role[]; // roles는 필수입니다.
