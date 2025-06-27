@@ -2,12 +2,14 @@
 
 import { ReactNode } from 'react';
 import { SnackbarProvider } from 'notistack';
-import FirebaseMessageHandler from '@/adm/_component/common/FirebaseMessageHandler';
+import WebPushMessageListener from '@/utils/WebPushMessageListener';
+import FcmTokenInitializer from '@/utils/FcmTokenInitializer';
 
 type Props = {
   children: ReactNode;
 };
 
+/* ✅ 클라이언트 프로바이더 및 리스너 등을 모아두는 공통 Porvider 컴포넌트 */
 export default function ClientProviders({ children }: Props) {
   return (
     <SnackbarProvider
@@ -19,8 +21,8 @@ export default function ClientProviders({ children }: Props) {
       }}
     >
       {children}
-      {/* FirebaseMessageHandler도 클라이언트 훅(useEffect)을 사용하므로 여기에 두는 것이 좋습니다. */}
-      <FirebaseMessageHandler />
+      <WebPushMessageListener /> {/* Firebase 웹푸시 Listener */}
+      <FcmTokenInitializer /> {/* 웹푸시 권한 및 토큰 상태 갱신 Initializer */}
     </SnackbarProvider>
   );
 }
