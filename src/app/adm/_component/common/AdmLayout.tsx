@@ -382,7 +382,7 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
             }
           </DrawerHeaderStyled>
           <DrawerContent drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} isMobile={false}/>
-          <NotificationButton />
+          {/*<NotificationButton />*/}
         </DesktopStyledDrawer>
       )}
 

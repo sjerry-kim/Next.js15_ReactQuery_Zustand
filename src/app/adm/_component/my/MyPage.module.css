@@ -1,0 +1,134 @@
+.form_wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  border: 1px solid;
+  overflow: hidden;
+  box-sizing: border-box;
+  @apply border-neutral-250 rounded-xl
+}
+
+.top {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 19px;
+  height: 55px;
+  border-bottom: 1px solid;
+  @apply border-neutral-250
+}
+
+.top h3 {
+  @apply text-neutral-700 text-base;
+}
+
+.bottom {
+  display: flex;
+  flex-direction: column;
+  padding: 19px;
+}
+
+.content_container {
+  height: fit-content;
+  overflow-y: auto;
+}
+
+.content_container {
+  display: flex;
+  flex-direction: column;
+  @apply gap-3
+}
+
+.content_container > li {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.label {
+  @apply font-bold text-md;
+}
+
+/* profile */
+.profile_box {
+  align-items: center;
+  @apply gap-3 !important
+}
+
+.profile_set {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: 100px;
+  padding: 10px;
+}
+
+.avatarSkeleton {
+  width: 120px;
+  height: 120px;
+  animation: pulse 1.5s infinite;
+  @apply rounded-full bg-neutral-300
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.inner_column {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  @apply gap-3
+}
+
+.inner_row {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  @apply gap-1
+}
+
+/* inner_one_row - 한 줄에 인풋, 버튼 여러개 */
+.inner_one_row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  @apply gap-1
+}
+
+.inner_row_set {
+  display: flex;
+  flex-direction: row;
+  @apply gap-2
+}
+
+.inner_row_set > input {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.inner_row_set > button:hover {
+  @apply bg-primary-dark
+}
+
+/* input-box: label-input 한쌍씩 */
+.input_box {
+  display: flex;
+  flex-direction: column;
+  @apply gap-1
+}
+
+.input_box > textarea {
+  height: 250px;
+}
+
+/* button */
+.button {
+  padding: 0 16px;
+  height: 100%;
+  @apply bg-primary text-surface
+}
