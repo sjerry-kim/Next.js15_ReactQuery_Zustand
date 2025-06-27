@@ -1,7 +1,7 @@
 import { verifyAccessToken, verifyRefreshToken } from '@/lib/jwt';
 import {TokenPayload} from '@/types/next-auth';
 import { NextRequest, NextResponse } from 'next/server';
-import { PROTECTED_PATHS } from '@/_auth/menu-access';
+import { PROTECTED_PATHS } from '@/_auth/path-auth';
 
 export const config = {
   matcher: [
@@ -9,6 +9,7 @@ export const config = {
     '/((?!api|_next/static|_next/image|favicon.ico|fonts|\\.well-known).*)',
     // 필수 경로
     '/api/protected/:path*',
+    '/api//firebase-messaging-sw.js',
     '/adm/:path*',
     '/my/:path*',
   ],
@@ -101,6 +102,11 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL('/403', req.url));
       }
 
+      // /adm -> /adm/dash 리디렉션
+      if(pathname === "/adm") {
+        return NextResponse.redirect(new URL('/adm/dash', req.url));
+      }
+
       // 1차 권한 체크를 통과한 경우, 페이지 접근을 허용
       // 그 다음, 클라이언트의 AuthInitializer가 이후의 완전한 토큰 재발급을 처리함
       // console.log(`[Middleware] 페이지 접근 허용 (RefreshToken 기반): ${rtPayload.email} -> ${pathname}`);
@@ -130,6 +136,11 @@ export async function middleware(req: NextRequest) {
   if (matchedPath && !matchedPath.roles?.includes(payload.role)) {
     // console.log(`[Middleware] 접근 거부 : ${rtPayload.email}(${rtPayload.role}) -> ${pathname}`);
     return NextResponse.redirect(new URL('/403', req.url));
+  }
+
+  // /adm -> /adm/dash 리디렉션
+  if(pathname === "/adm") {
+    return NextResponse.redirect(new URL('/adm/dash', req.url));
   }
 
   // 6. 모든 검증 통과 시 요청 진행
