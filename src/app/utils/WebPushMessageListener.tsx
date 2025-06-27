@@ -4,9 +4,11 @@ import { useEffect } from 'react';
 import { onMessage } from 'firebase/messaging';
 import { useSnackbar } from 'notistack';
 import { messaging } from '@/lib/firebase';
+import { useRouter } from 'next/navigation';
 
 /* ✅ 앱 전체에서 Firebase 푸시 메시지를 수신하고 처리하는 역할을 하는 컴포넌트 */
 export default function WebPushMessageListener() {
+  const router = useRouter();
   const { enqueueSnackbar } = useSnackbar(); // 스낵바 알림을 띄우기 위한 훅
 
   useEffect(() => {
@@ -44,15 +46,25 @@ export default function WebPushMessageListener() {
       const unsubscribe = onMessage(messaging, (payload) => {
         console.log('포어그라운드 메시지를 수신했습니다:', payload);
 
-        // ✨ 수정 포인트: 스낵바 대신, Notification API를 사용해 직접 OS 알림을 생성합니다.
-        // 이렇게 하면 백그라운드 알림과 동일한 경험을 제공할 수 있습니다.
         const notificationTitle = payload.notification?.title || '새로운 알림';
         const notificationOptions = {
           body: payload.notification?.body || '새로운 메시지가 도착했습니다.',
-          // icon: '/icons/icon-192x192.png', // public 폴더에 아이콘
+          // icon: '/icons/icon-192x192.png', // public 폴더에 아이콘,
+          data: payload.data,
         };
 
-        new Notification(notificationTitle, notificationOptions);
+        const notification = new Notification(notificationTitle, notificationOptions);
+
+        notification.onclick = (event) => {
+          event.preventDefault();
+
+          const path = payload.data?.path;
+          if (path) {
+            router.push(path);
+          } else {
+            window.focus();
+          }
+        };
       });
 
       // 2-3. 메모리 누수 방지
