@@ -1,6 +1,6 @@
-// import NextAuth, { DefaultSession, DefaultUser } from "next-auth";
-// import { DefaultJWT } from "next-auth/jwt";
-import { Role } from "@/lib/auth/auth-config";
+// import NextAuth, { DefaultSession, DefaultUser } from "next-_auth";
+// import { DefaultJWT } from "next-_auth/jwt";
+import { Role } from "@/_auth/auth-config";
 import { ReactElement } from 'react';
 import { SvgIconProps } from '@mui/material'; // 2단계에서 만들 Role 타입을 import
 

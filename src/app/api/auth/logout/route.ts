@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyRefreshToken } from '@/utils/jwt';
+import { verifyRefreshToken } from '@/lib/jwt';
 import prisma from '@/lib/prisma';
 import {TokenPayload} from '@/types/next-auth';
 

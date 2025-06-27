@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
 
-// Styles
-import '@/Styles/globals.css';
-import '@/Styles/ckEditor.css'
-import '@/Styles/ckContentStyles.css'
+// styles
+import '@/styles/globals.css';
+import '@/styles/ckEditor.css'
+import '@/styles/ckContentStyles.css'
 
 // React-Query
 import ReactQueryProviders from '@/providers/ReactQueryProvider';
-import MuiThemeRegistry from './Styles/MuiThemeRegistry';
+import MuiThemeRegistry from '@/styles/MuiThemeRegistry';
 import AuthInitializer from '@/providers/AuthInitializer';
 import ClientProviders from '@/providers/ClientProviders';
 

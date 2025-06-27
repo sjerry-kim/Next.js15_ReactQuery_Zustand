@@ -1,7 +1,7 @@
-import { verifyAccessToken, verifyRefreshToken } from '@/utils/jwt';
+import { verifyAccessToken, verifyRefreshToken } from '@/lib/jwt';
 import {TokenPayload} from '@/types/next-auth';
 import { NextRequest, NextResponse } from 'next/server';
-import { PROTECTED_PATHS } from '@/lib/auth/menu-access';
+import { PROTECTED_PATHS } from '@/_auth/menu-access';
 
 export const config = {
   matcher: [

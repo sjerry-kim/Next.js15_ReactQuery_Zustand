@@ -1,7 +1,7 @@
 import React from 'react';
 import Modify from '@/adm/_component/board/Modify';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
-import { getBoard } from '@/lib/queries/boardQuery';
+import { getBoard } from '@/services/boardService';
 import ReactQueryProviders from '@/providers/ReactQueryProvider';
 
 type PageParams = { params: { id: string } };

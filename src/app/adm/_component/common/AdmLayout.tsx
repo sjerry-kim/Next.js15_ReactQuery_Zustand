@@ -35,7 +35,7 @@ import { COLORS } from '@/_constant/colorConstants';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
-import { ADMIN_MENUS, getAuthorizedMenus } from '@/lib/auth/auth-config';
+import { ADMIN_MENUS, getAuthorizedMenus } from '@/_auth/auth-config';
 import { useUserStore } from '@/zustand/userStore';
 import { LuDot } from 'react-icons/lu';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';

@@ -4,7 +4,7 @@ import {
   generateAccessToken,
   generateRefreshToken,
   verifyRefreshToken,
-} from '@/utils/jwt';
+} from '@/lib/jwt';
 import prisma from '@/lib/prisma';
 import {TokenPayload} from '@/types/next-auth';
 

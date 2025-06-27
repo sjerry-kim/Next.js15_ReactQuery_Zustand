@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { supabase } from '@/lib/supabase';
-import { generateAccessToken, generateRefreshToken, } from '@/utils/jwt';
+import { generateAccessToken, generateRefreshToken, } from '@/lib/jwt';
 import prisma from '@/lib/prisma';
 import {TokenPayload} from '@/types/next-auth';
 

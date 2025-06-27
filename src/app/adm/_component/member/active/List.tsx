@@ -3,7 +3,7 @@
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { FormEvent, useCallback, useEffect, useState } from 'react';
-import { getBoardList } from '@/lib/queries/boardQuery';
+import { getBoardList } from '@/services/boardService';
 import type { Board, PaginatedBoardResponse } from '@/types/board';
 import Pagination from '@/adm/_component/common/Pagination';
 import styles from "./List.module.css";
