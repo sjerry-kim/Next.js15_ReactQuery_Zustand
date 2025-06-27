@@ -51,7 +51,7 @@ export const ADMIN_MENUS: Menu[] = [
   },
   {
     idx: 103,
-    title: "회원관리",
+    title: "회원",
     path: "/adm/member",
     icon: <FaceIcon sx={{ width: 22 }} />,
     roles: [ROLES.MANAGER, ROLES.SUPER_ADMIN],
@@ -72,7 +72,7 @@ export const ADMIN_MENUS: Menu[] = [
   },
   {
     idx: 104,
-    title: "계정관리",
+    title: "계정",
     path: "/adm/account",
     icon: <PersonIcon sx={{ width: 22 }} />,
     roles: [ROLES.MANAGER, ROLES.SUPER_ADMIN],
@@ -100,7 +100,7 @@ export const ADMIN_MENUS: Menu[] = [
   },
   {
     idx: 106,
-    title: "기본설정",
+    title: "기본 설정",
     path: "/adm/setting",
     icon: <BuildIcon sx={{ width: 22 }} />,
     roles: [ROLES.MANAGER, ROLES.SUPER_ADMIN],
