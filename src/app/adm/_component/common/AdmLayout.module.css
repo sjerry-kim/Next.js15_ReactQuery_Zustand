@@ -30,3 +30,13 @@
   @apply cursor-pointer;
 }
 
+/* BreadCrumbs */
+.MuiBreadcrumbs-li > p {
+  color: red;
+  @apply text-primary !important;
+}
+
+/* title */
+.page_title {
+  padding: 3px 30px 5px 30px;
+}

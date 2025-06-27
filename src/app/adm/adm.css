@@ -2,9 +2,9 @@ main {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  padding: 24px 30px;
+  padding: 10px 30px 24px 30px;
   width: 100%;
-  height: calc(100dvh - 64px);
+  /*height: calc(100dvh - 64px);*/
   overflow-y: auto;
 }
 button {
@@ -82,4 +82,11 @@ textarea {
 }
 .ck.ck-editor__editable:not(.ck-editor__nested-editable), .ck-source-editing-area {
   margin-bottom: 0 !important;
+}
+
+@media (max-width: 767px) {
+  main {
+    padding: 8px 30px 24px 30px;
+    height: calc(100dvh - 64px);
+  }
 }

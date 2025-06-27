@@ -40,11 +40,6 @@ export default function NotificationButton() {
     setPermission(Notification.permission);
   };
 
-  useEffect(() => {
-    console.log(permission);
-    console.log(isSubscribed);
-  }, [permission, isSubscribed]);
-
   if (permission === 'denied') {
     return (
       <Tooltip title="알림이 차단되었습니다. 브라우저 설정을 확인해주세요.">

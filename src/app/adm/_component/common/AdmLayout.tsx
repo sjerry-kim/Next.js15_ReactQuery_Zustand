@@ -23,13 +23,17 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {
-  ClickAwayListener, Collapse,
+  Breadcrumbs,
+  ClickAwayListener,
+  Collapse,
   Grow,
+  Link,
   MenuItem,
   MenuList,
   Paper,
   Popper,
   SwipeableDrawer,
+  Typography,
 } from '@mui/material';
 import { COLORS } from '@/_constant/colorConstants';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
@@ -39,9 +43,11 @@ import { ADMIN_MENUS, getAuthorizedMenus } from '@/_auth/auth-config';
 import { useUserStore } from '@/zustand/userStore';
 import { LuDot } from 'react-icons/lu';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useAuthStore } from '@/zustand/authStore';
 import { useQueryClient } from '@tanstack/react-query';
 import NotificationButton from '@/adm/_component/common/NotificationButton';
+import { getBreadcrumbsFromPath } from '@/utils/breadCrumbPathMaker';
 
 interface AdmLayoutProps {
   children: ReactNode;
@@ -235,12 +241,14 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
   const router = useRouter();
   const theme = useTheme();
   const queryClient = useQueryClient();
+  const pathname = usePathname();
   const [drawerOpen, setDrawerOpen] = useState(false); // Drawer
   const [toggleOpen, setToggleOpen] = useState(false); // Drawer
   const user = useUserStore((state) => state.user);
   const anchorRef = useRef<HTMLButtonElement>(null);
   const prevOpen = useRef(toggleOpen);
   const { isMobile } = useWindowSize();
+  const breadcrumbsPath = getBreadcrumbsFromPath(pathname);
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -456,6 +464,61 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
             </Popper>
           </div>
         </header>
+        {
+          // 대시보드가 아니고 && 모바일버전에서만 노출
+          (pathname !== '/adm/dash') &&
+          <>
+            <Breadcrumbs
+              separator={<NavigateNextIcon sx={{width: "18px", color: "#7E7E7E"}} />}
+              // separator=""
+              aria-label="breadcrumb"
+              sx={{
+                // position: "relative",
+                // top: "5px",
+                padding: "5px 30px 0 30px",
+                '& .MuiBreadcrumbs-separator': {
+                  mx: 0,
+                },
+              }}
+            >
+              {breadcrumbsPath.map((item, idx) => {
+                const isLast = idx === breadcrumbsPath.length - 1;
+                return (
+                  idx === 0 ?
+                    <Typography
+                      key={item.path}
+                      sx={{ cursor: 'pointer', color: '#7E7E7E', fontSize: "14px" }}
+                      onClick={()=>router.push(item.path)}
+                    >
+                      {item.title}
+                    </Typography> :
+                    isLast ?
+                      <Typography
+                        key={item.path}
+                        sx={{ color: '#A5B4FC', fontSize: "14px", fontWeight: "500" }}
+                      >
+                        {item.title}
+                      </Typography> :
+                      <Typography
+                        key={item.path}
+                        sx={{ color: '#7E7E7E', fontSize: "14px" }}
+                      >
+                        {item.title}
+                      </Typography>
+                )
+              })}
+            </Breadcrumbs>
+            {/*{*/}
+            {/*  isMobile &&*/}
+            {/*  <h2 className={styles.page_title}>*/}
+            {/*    {breadcrumbsPath.map((item, idx) => {*/}
+            {/*      const isLast = idx === breadcrumbsPath.length - 1;*/}
+            {/*      return isLast && item.title*/}
+            {/*    })}*/}
+            {/*  </h2>*/}
+            {/*}*/}
+          </>
+        }
         {children}
       </Box>
     </Box>

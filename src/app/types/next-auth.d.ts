@@ -36,15 +36,15 @@ export interface SubMenu {
   idx: number;
   title: string;
   path: string;
-  roles?: Role[]; // roles는 필수입니다.
+  roles: Role[];
 }
 
 export interface Menu {
   idx: number;
   title: string;
-  icon: ReactElement<SvgIconProps>;
+  icon?: ReactElement<SvgIconProps>;
   roles: Role[];
-  path?: string;
+  path: string;
   children?: SubMenu[];
 }
 

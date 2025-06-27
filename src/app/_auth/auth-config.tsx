@@ -31,7 +31,7 @@ export const ADMIN_MENUS: Menu[] = [
   {
     idx: 100,
     title: "대시보드",
-    path: "/adm",
+    path: "/adm/dash",
     icon: <DashboardIcon sx={{ width: 22 }} />,
     roles: [ROLES.EDITOR, ROLES.MANAGER, ROLES.SUPER_ADMIN],
   },
@@ -91,13 +91,13 @@ export const ADMIN_MENUS: Menu[] = [
       },
     ]
   },
-  // {
-  //   idx: 105,
-  //   title: "마이페이지",
-  //   path: "/adm",
-  //   icon: <ManageAccountsIcon sx={{ width: 22 }} />,
-  //   roles: [ROLES.EDITOR, ROLES.MANAGER, ROLES.SUPER_ADMIN],
-  // },
+  {
+    idx: 105,
+    title: "마이페이지",
+    path: "/adm/my",
+    icon: <ManageAccountsIcon sx={{ width: 22 }} />,
+    roles: [ROLES.EDITOR, ROLES.MANAGER, ROLES.SUPER_ADMIN],
+  },
   {
     idx: 106,
     title: "기본설정",

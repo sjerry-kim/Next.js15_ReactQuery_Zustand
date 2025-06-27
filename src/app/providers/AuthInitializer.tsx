@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { PROTECTED_PATHS } from '@/_auth/menu-access';
+import { PROTECTED_PATHS } from '@/_auth/path-auth';
 import { useUserStore } from '@/zustand/userStore';
 import { useAuthStore } from '@/zustand/authStore';
 
