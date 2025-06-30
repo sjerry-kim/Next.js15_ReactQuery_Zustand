@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { ButtonProps } from '@/types/components';
 
 export interface CommonModalButton {
   text: string;
@@ -11,7 +12,7 @@ export interface CommonModalProps {
   modalTitle?: string;
   onClose: () => void;
   children: ReactNode;
-  buttons?: CommonModalButton[];
+  buttons?: ButtonProps[];
   width?: string | number;
   maxWidth?: string | number;
   minWidth?: string | number;
@@ -24,7 +25,7 @@ export interface CommonModalState {
   isOpen: boolean;
   type: string;
   modalTitle: string;
-  buttons: CommonModalButton[];
+  buttons: ButtonProps[];
   width?: string | number;
   maxWidth?: string | number;
   minWidth?: string | number;
@@ -36,7 +37,7 @@ export interface CommonModalState {
 export interface ModalConfig {
   type: string;
   title: string;
-  buttons?: CommonModalButton[];
+  buttons?: ButtonProps[];
   width?: string | number;
   maxWidth?: string | number;
   minWidth?: string | number;

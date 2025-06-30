@@ -10,7 +10,8 @@ import onTextChange from '@/utils/onTextChange';
 import { Board } from '@/types/board';
 import CommonModal from '@/adm/_component/common/modal/CommonModal';
 import Editor from '@/adm/_component/common/inputs/Editor';
-import { CommonModalButton } from '@/types/modal';
+import {ButtonProps} from '@/types/components'
+
 
 type PageProps = {
   id: string;
@@ -31,8 +32,7 @@ export default function Page({ id }: PageProps) {
     content: data?.content || '',
   });
   const {handleChange, handleCustomChange} = onTextChange(jsonData, setJsonData);
-  const confirmationButtons: CommonModalButton[] = [
-    // variant와 color를 생략하면 기본값(contained, primary)이 적용
+  const confirmationButtons: ButtonProps[] = [
     {
       text: '정지',
       onClick: () => {
@@ -48,6 +48,7 @@ export default function Page({ id }: PageProps) {
       },
       variant: 'contained',
       color: 'danger',
+      size: "md",
     },
   ];
 

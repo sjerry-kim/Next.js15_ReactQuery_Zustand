@@ -2,8 +2,9 @@
 
 import styles from './CommonModal.module.css';
 import CloseIcon from '@mui/icons-material/Close';
-import { ReactNode, CSSProperties } from 'react';
-import { CommonModalProps } from '@/types/modal'; // CSSProperties 타입을 import
+import { CSSProperties } from 'react';
+import { CommonModalProps } from '@/types/modal';
+import Button from '@/adm/_component/common/Button'
 
 export default function CommonModal({
                                       children,
@@ -43,23 +44,30 @@ export default function CommonModal({
 
         {buttons.length > 0 && (
           <div className={styles.bottom_container}>
-            {buttons.map((button, index) => {
-              const buttonClasses = [
-                styles.button,
-                styles[button.variant || 'outlined'],
-                styles[button.color || 'white'],
-              ].join(' ');
+            {/*{buttons.map((button, index) => {*/}
+            {/*  const buttonClasses = [*/}
+            {/*    styles.button,*/}
+            {/*    styles[button.variant || 'outlined'],*/}
+            {/*    styles[button.color || 'white'],*/}
+            {/*  ].join(' ');*/}
 
-              return (
-                <button
-                  key={`${button.text}-${index}`}
-                  className={buttonClasses}
-                  onClick={button.onClick}
-                >
-                  {button.text}
-                </button>
-              );
-            })}
+            {/*  return (*/}
+            {/*    <button*/}
+            {/*      key={`${button.text}-${index}`}*/}
+            {/*      className={buttonClasses}*/}
+            {/*      onClick={button.onClick}*/}
+            {/*    >*/}
+            {/*      {button.text}*/}
+            {/*    </button>*/}
+            {/*  );*/}
+            {/*})}*/}
+
+            {buttons.map((buttonProps, index) => (
+              <Button
+                key={`${buttonProps.text}-${index}`}
+                {...buttonProps}
+              />
+            ))}
           </div>
         )}
       </div>
