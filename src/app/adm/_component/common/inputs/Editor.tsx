@@ -1,7 +1,7 @@
 "use client";
 
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import * as ClassicEditor from "../../../../../ckeditor5-40.0.0/build/ckeditor"; // import 방식 수정
+import * as ClassicEditor from "../../../../../../ckeditor5-40.0.0"; // import 방식 수정
 import { useCallback } from "react";
 
 interface EditorProps {

@@ -8,8 +8,8 @@ import { getBoard } from '@/services/boardService';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import onTextChange from '@/utils/onTextChange';
 import { Board } from '@/types/board';
-import CommonModal from '@/adm/_component/common/CommonModal';
-import Editor from '@/adm/_component/common/Editor';
+import CommonModal from '@/adm/_component/common/modal/CommonModal';
+import Editor from '@/adm/_component/common/inputs/Editor';
 import { CommonModalButton } from '@/types/modal';
 
 type PageProps = {

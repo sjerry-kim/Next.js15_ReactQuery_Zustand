@@ -9,7 +9,7 @@ import useWindowSize from '@/hooks/useWindowSize.';
 import { LuSearch } from "react-icons/lu";
 import { MdOutlineReplay } from "react-icons/md";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import CommonModal from '@/adm/_component/common/CommonModal';
+import CommonModal from '@/adm/_component/common/modal/CommonModal';
 import { CommonModalButton } from '@/types/modal';
 import TimelineFilterControls, { FilterState } from './TimelineFilterControls';
 import CategoricalFilterControls from './CategoricalFilterControls';
