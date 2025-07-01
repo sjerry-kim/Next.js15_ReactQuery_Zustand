@@ -98,7 +98,7 @@ export default function ChartFrame({ title, children, filterUIType }: ChartFrame
     setIsModalOpen(true);
   };
 
-  const modalButtons: CommonModalButton[] = [{ text: '필터 적용', onClick: handleSearch, color: 'grey' }];
+  const modalButtons: CommonModalButton[] = [{ text: '필터 적용', onClick: handleSearch, variant: "outlined", color: 'grey' }];
 
   // filterControls 컴포넌트들에 내려줄 props
   const filterControlsProps = {

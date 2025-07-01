@@ -142,16 +142,6 @@
   min-width: 0;
 }
 
-.inner_row_set > button {
-  padding: 0 16px;
-  height: 100%;
-  @apply bg-primary text-surface
-}
-
-.inner_row_set > button:hover {
-  @apply bg-primary-dark
-}
-
 /* input-box: label-input 한쌍씩 */
 .input_box {
   display: flex;

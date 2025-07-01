@@ -10,6 +10,7 @@ import onTextChange from '@/utils/onTextChange';
 import { Board } from '@/types/board';
 import CommonModal from '@/adm/_component/common/modal/CommonModal';
 import Editor from '@/adm/_component/common/inputs/Editor';
+import Button from '@/adm/_component/common/Button'
 import {ButtonProps} from '@/types/components'
 
 
@@ -163,7 +164,14 @@ export default function Page({ id }: PageProps) {
               <div className={styles.inner_row_set}>
                 <input type="password" placeholder="새 비밀번호" className={styles.input} />
                 <input type="password" placeholder="비밀번호 확인" className={styles.input} />
-                <button className={styles.button}>변경</button>
+                <Button
+                  text="변경"
+                  variant="contained"
+                  color="primary"
+                  size="md"
+                  height="100%"
+                  onClick={()=>console.log("확인")}
+                />
               </div>
             </div>
           </li>

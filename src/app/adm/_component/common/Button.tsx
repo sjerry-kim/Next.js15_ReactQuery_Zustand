@@ -11,6 +11,7 @@ export default function Button({
   width, // size보다 우선 적용
   height, // size보다 우선 적용
   size = 'md',
+  disabled = false,
   ...props
 }: ButtonProps) {
 
@@ -19,6 +20,7 @@ export default function Button({
     styles[variant],
     styles[color],
     styles[size],
+    disabled ? styles.disabled : '',
   ].join(' ');
 
   // width나 height prop이 존재하면 항상 적용
@@ -34,6 +36,7 @@ export default function Button({
     <button
       className={buttonClasses}
       style={customStyle} // 인라인 스타일이 CSS 클래스보다 우선 적용
+      disabled={disabled}
       {...props}
     >
       {text}

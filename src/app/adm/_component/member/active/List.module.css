@@ -223,16 +223,6 @@
   height: fit-content;
 }
 
-.bottom_wrapper .add_btn {
-  border: 1px solid;
-  @apply text-sm text-neutral-700
-  leading-relaxed tracking-tight border-neutral-250;
-}
-
-.bottom_wrapper .add_btn:hover {
-  @apply bg-neutral-150;
-}
-
 @media (max-width: 1280px) {
   /* table */
   .table_wrapper {

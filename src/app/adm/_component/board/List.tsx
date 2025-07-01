@@ -12,6 +12,7 @@ import { LuSearch } from "react-icons/lu";
 import { MdOutlineReplay } from "react-icons/md";
 import useWindowSize from '@/hooks/useWindowSize.';
 import onTextChange from '@/utils/onTextChange';
+import Button from '@/adm/_component/common/Button';
 
 interface JsonData {
   searchType: string;
@@ -91,7 +92,7 @@ export default function BoardListPage() {
 
   const handleRowClick = (itemId: number) => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
-    const destination = `/adm/member/active/${itemId}?${newSearchParams.toString()}`;
+    const destination = `/adm/board/${itemId}?${newSearchParams.toString()}`;
     router.push(destination);
   };
 
@@ -236,13 +237,13 @@ export default function BoardListPage() {
             pageNumbersToShow={isMobile ? 3 : 5}
           />
         )}
-
-        <button
-          className={styles.add_btn}
-          onClick={() => handleAddClick()}
-        >
-          글쓰기
-        </button>
+        <Button
+          text="글쓰기"
+          variant="outlined"
+          size="sm"
+          color="grey"
+          onClick={handleAddClick}
+        />
       </section>
     </main>
   );

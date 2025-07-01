@@ -12,6 +12,7 @@ import { MdOutlineReplay } from "react-icons/md";
 import useWindowSize from '@/hooks/useWindowSize.';
 import onTextChange from '@/utils/onTextChange';
 import { ITEMS_PER_PAGE } from '@/_constant/pagination';
+import Button from '@/adm/_component/common/Button';
 // import MenuModal from '@/adm/_component/common/MenuModal';
 
 interface JsonData {
@@ -97,8 +98,11 @@ export default function BoardListPage() {
   };
 
   const handleAddClick = () => {
-    const newSearchParams = new URLSearchParams(searchParams.toString());
+    const newSearchParams = new URLSearchParams(searchParams);
+    // todo 임시로 board 경로로 넣어둠 추후 변경 필요
     const destination = `/adm/board/add?${newSearchParams.toString()}`;
+
+    console.log(destination);
     router.push(destination);
   };
 
@@ -239,12 +243,13 @@ export default function BoardListPage() {
             />
           )}
 
-          <button
-            className={styles.add_btn}
+          <Button
+            text="글쓰기"
+            variant="outlined"
+            size="sm"
+            color="grey"
             onClick={handleAddClick}
-          >
-            글쓰기
-          </button>
+          />
         </section>
       </main>
     </>

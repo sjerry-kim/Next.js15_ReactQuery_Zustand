@@ -4,25 +4,30 @@
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
-  @apply rounded-md font-medium inline-flex items-center justify-center;
+  word-break: keep-all;
+  @apply rounded-md inline-flex items-center justify-center;
 }
+
+/* --- Disabled --- */
+.disabled {
+  cursor: unset;
+  pointer-events: none;
+}
+
 
 /* --- Variants: Size --- */
 .sm {
-  height: 36px; /* Small size */
-  padding: 0 12px;
+  height: 34px; /* Small size */
   @apply text-sm;
 }
 
 .md {
   height: 36px; /* Medium (기존 기본값) */
-  padding: 0 16px;
-  @apply text-sm;
+  @apply text-md;
 }
 
 .lg {
-  height: 36px; /* Large size */
-  padding: 0 24px;
+  height: 38px; /* Large size */
   @apply text-base;
 }
 

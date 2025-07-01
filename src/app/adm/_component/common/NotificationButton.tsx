@@ -1,13 +1,14 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { Button, CircularProgress, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import NotificationsOffIcon from '@mui/icons-material/NotificationsOff';
 import { useMutation } from '@tanstack/react-query';
 import { useWebPushStore } from '@/zustand/webPushStore';
 import { requestPermissionAndGetToken } from '@/lib/firebase';
 import { savePushSubscription  } from '@/services/webPushService';
+import Button from '@/adm/_component/common/Button';
 
 export default function NotificationButton() {
   const { permission, isSubscribed, setPermission, setIsSubscribed, setFcmToken } = useWebPushStore();
@@ -15,7 +16,7 @@ export default function NotificationButton() {
   const { mutate: subscribe, isPending } = useMutation<any, Error, string>({
     mutationFn: savePushSubscription ,
     onSuccess: (data) => {
-      console.log("구독 정보 저장이 성공했습니다:", data);
+      // console.log("구독 정보 저장이 성공했습니다:", data);
       setIsSubscribed(true);
     },
     onError: (error) => {
@@ -44,7 +45,7 @@ export default function NotificationButton() {
     return (
       <Tooltip title="알림이 차단되었습니다. 브라우저 설정을 확인해주세요.">
         <span>
-          <Button variant="outlined" startIcon={<NotificationsOffIcon />}>
+          <Button text="알림 차단됨" variant="outlined" color="grey" size="md" height="100%" disabled={true}>
             알림 차단됨
           </Button>
         </span>
@@ -54,7 +55,7 @@ export default function NotificationButton() {
 
   if (isSubscribed) {
     return (
-      <Button variant="contained" color="success" startIcon={<NotificationsActiveIcon />}>
+      <Button text="알림 구독중" variant="contained" color="success" size="md" height="100%" disabled={true}>
         알림 구독중
       </Button>
     );
@@ -62,13 +63,12 @@ export default function NotificationButton() {
 
   return (
     <Button
+      text={isPending ? '처리중...' : '알림 받기'}
       variant="contained"
+      color={isPending ? 'grey' : 'primary'}
+      size="md"
+      height="100%"
       onClick={handleSubscribeClick}
-      // @ts-ignore
-      disabled={isPending || permission === 'denied'}
-      startIcon={isPending ? <CircularProgress size={20} color="inherit" /> : <NotificationsActiveIcon />}
-    >
-      {isPending ? '처리중...' : '알림 받기'}
-    </Button>
+    />
   );
 }

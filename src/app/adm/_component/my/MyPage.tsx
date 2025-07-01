@@ -2,6 +2,7 @@
 
 import styles from './MyPage.module.css';
 import NotificationButton from '@/adm/_component/common/NotificationButton';
+import Button from '@/adm/_component/common/Button';
 
 export default function MyPage() {
 
@@ -36,7 +37,14 @@ export default function MyPage() {
                   <input type="password" placeholder="현재 비밀번호" className={styles.input} />
                   <input type="password" placeholder="새 비밀번호" className={styles.input} />
                   <input type="password" placeholder="비밀번호 확인" className={styles.input} />
-                  <button className={styles.button}>변경</button>
+                  <Button
+                    text="변경"
+                    variant="contained"
+                    color="primary"
+                    size="md"
+                    height="100%"
+                    onClick={()=>console.log("확인")}
+                  />
                 </div>
               </div>
             </li>
@@ -53,7 +61,7 @@ export default function MyPage() {
 
             <li className={styles.one_row_box}>
               <div className={styles.inner_row}>
-                <label className={styles.label}>푸시 알림 설정</label>
+                <label className={styles.label}>웹 푸시 알림 설정</label>
                 <NotificationButton />
               </div>
             </li>
