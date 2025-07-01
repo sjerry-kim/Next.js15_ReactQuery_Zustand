@@ -74,10 +74,7 @@ export default function Page({}) {
 
     <CommonModal
       modalTitle="글쓰기"
-      submitText="등록"
-      showSubmit={true}
       onClose={() => router.back()}
-      onSubmit={() => createMutation.mutate()}
     >
       <ul className={styles.content_box}>
         <li>
