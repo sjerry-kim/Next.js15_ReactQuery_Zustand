@@ -11,13 +11,14 @@ import styles from "./List.module.css";
 import { MdOutlineReplay } from "react-icons/md";
 import useWindowSize from '@/hooks/useWindowSize.';
 import onTextChange from '@/utils/onTextChange';
-import Button from '@/adm/_component/common/Button';
+import Button from '@/adm/_component/common/buttons/Button';
 import Select from '@/adm/_component/common/inputs/Select';
 import SearchBar from '@/adm/_component/common/inputs/SearchBar';
 import moment, { Moment } from 'moment';
-import CommonModal from '@/adm/_component/common/modal/CommonModal';
+import CommonModal from '@/adm/_component/common/modals/CommonModal';
 import DateRangePicker from '@/adm/_component/common/inputs/DateRangePicker';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 
 interface JsonData {
   searchType: string;
@@ -39,6 +40,7 @@ export default function BoardListPage() {
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const [draftStartDate, setDraftStartDate] = useState<Moment | null>(null);
   const [draftEndDate, setDraftEndDate] = useState<Moment | null>(null);
+  const [draftSortOrder, setDraftSortOrder] = useState('desc');
   const searchOptions = [
     { value: "", label: "전체" },
     { value: "id", label: "게시물코드" },
@@ -59,8 +61,9 @@ export default function BoardListPage() {
   const searchKeywordFromUrl = searchParams.get('searchKeyword') || "";
   const startDateFromUrl = searchParams.get('startDate') || "";
   const endDateFromUrl = searchParams.get('endDate') || "";
+  const sortOrderFromUrl = searchParams.get('sortOrder') || 'desc';
 
-  const queryKey = ['boardList', currentPage, ITEMS_PER_PAGE, searchTypeFromUrl, searchKeywordFromUrl, startDateFromUrl, endDateFromUrl];
+  const queryKey = ['boardList', currentPage, ITEMS_PER_PAGE, searchTypeFromUrl, searchKeywordFromUrl, startDateFromUrl, endDateFromUrl, sortOrderFromUrl];
 
   const {
     data: paginatedData,
@@ -76,6 +79,7 @@ export default function BoardListPage() {
       searchKeyword: searchKeywordFromUrl,
       startDate: startDateFromUrl,
       endDate: endDateFromUrl,
+      sortOrder: sortOrderFromUrl,
     }),
     staleTime: 60 * 1000,
     gcTime: 5 * 60 * 1000,
@@ -148,6 +152,7 @@ export default function BoardListPage() {
     // 모달을 열 때, 현재 URL에 적용된 날짜를 임시 상태의 초기값으로 설정
     setDraftStartDate(startDateFromUrl ? moment(startDateFromUrl) : null);
     setDraftEndDate(endDateFromUrl ? moment(endDateFromUrl) : null);
+    setDraftSortOrder(sortOrderFromUrl);
     setIsDateModalOpen(true);
   };
 
@@ -167,6 +172,8 @@ export default function BoardListPage() {
     } else {
       newSearchParams.delete('endDate');
     }
+
+    newSearchParams.set('sortOrder', draftSortOrder);
 
     router.push(`${pathname}?${newSearchParams.toString()}`);
     setIsDateModalOpen(false); // 모달 닫기
@@ -321,6 +328,7 @@ export default function BoardListPage() {
               onClick: () => {
                 setDraftStartDate(null);
                 setDraftEndDate(null);
+                setDraftStartDate(null);
               }
             },
             {
@@ -334,17 +342,43 @@ export default function BoardListPage() {
           maxWidth="90%"
           height="350px"
         >
-          <label>작성일</label>
-          <DateRangePicker
-            datePikcerWidth='100%'
-            startDate={draftStartDate}
-            endDate={draftEndDate}
-            onStartDateChange={setDraftStartDate}
-            onEndDateChange={setDraftEndDate}
-          />
-
-          <label>정렬</label>
-
+          <ul className={styles.content_container}>
+            <li className={styles.modal_row}>
+              <label className={styles.modal_label}>옵션</label>
+              <FormGroup row>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={draftSortOrder === 'desc'}
+                      onChange={() => setDraftSortOrder('desc')}
+                      value="desc"
+                    />
+                  }
+                  label="A옵션"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={draftSortOrder === 'asc'}
+                      onChange={() => setDraftSortOrder('asc')}
+                      value="asc"
+                    />
+                  }
+                  label="B옵션"
+                />
+              </FormGroup>
+            </li>
+            <li className={styles.modal_row}>
+              <label className={styles.modal_label}>작성일</label>
+              <DateRangePicker
+                width='100%'
+                startDate={draftStartDate}
+                endDate={draftEndDate}
+                onStartDateChange={setDraftStartDate}
+                onEndDateChange={setDraftEndDate}
+              />
+            </li>
+          </ul>
         </CommonModal>
       )}
     </>
