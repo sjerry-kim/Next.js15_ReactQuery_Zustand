@@ -11,8 +11,8 @@ import { getBoardList } from '@/services/boardService';
 import { Board } from '@/types/board';
 
 import CloseIcon from '@mui/icons-material/Close';
-import CommonModal from '@/adm/_component/common/modal/CommonModal';
-import MenuModal from '@/adm/_component/common/modal/MenuModal';
+import CommonModal from '@/adm/_component/common/modals/CommonModal';
+import MenuModal from '@/adm/_component/common/modals/MenuModal';
 
 const Editor = dynamic(() => import('@/adm/_component/common/inputs/Editor'), {
   ssr: false,

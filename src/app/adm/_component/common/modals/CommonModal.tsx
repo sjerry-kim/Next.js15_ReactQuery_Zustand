@@ -4,7 +4,7 @@ import styles from './CommonModal.module.css';
 import CloseIcon from '@mui/icons-material/Close';
 import { CSSProperties } from 'react';
 import { CommonModalProps } from '@/types/modal';
-import Button from '@/adm/_component/common/Button'
+import Button from '@/adm/_component/common/buttons/Button'
 
 export default function CommonModal({
                                       children,
