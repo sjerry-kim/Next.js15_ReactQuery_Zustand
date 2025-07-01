@@ -20,3 +20,8 @@ type Option = {
 export interface SelectProps extends ComponentProps<'select'> {
   options: Option[];
 }
+
+/* Input */
+export interface SearchBarProps extends ComponentProps<'input'> {
+  width?: string | number;
+}

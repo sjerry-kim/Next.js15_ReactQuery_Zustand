@@ -1,0 +1,57 @@
+/* 컴포넌트의 최상위 wrapper 스타일 (기존 .searchbar_box) */
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px 0 15px;
+  min-width: 208px;
+  height: 36px;
+  border: 1px solid;
+  @apply gap-1 rounded-md border-neutral-250;
+}
+
+.wrapper:hover {
+  @apply border-primary-light transition duration-300;
+}
+
+.wrapper:focus-within {
+  @apply border-primary-light transition duration-300;
+}
+
+.wrapper input {
+  padding: 10px 0;
+  min-width: 110px;
+  height: 100%;
+  border: none;
+  background-color: transparent;
+  outline: none;
+  flex-grow: 1;
+  @apply text-sm text-neutral-700;
+}
+
+.wrapper button {
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 767px) {
+  .wrapper {
+    width: 100%;
+    min-width: 140px;
+  }
+
+  .wrapper input {
+    min-width: 90px;
+  }
+}
+
+@media (max-width: 375px) {
+  .wrapper {
+    padding: 0 7px;
+  }
+}

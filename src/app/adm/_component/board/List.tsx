@@ -14,6 +14,7 @@ import useWindowSize from '@/hooks/useWindowSize.';
 import onTextChange from '@/utils/onTextChange';
 import Button from '@/adm/_component/common/Button';
 import Select from '@/adm/_component/common/inputs/Select';
+import SearchBar from '@/adm/_component/common/inputs/SearchBar';
 
 interface JsonData {
   searchType: string;
@@ -175,12 +176,12 @@ export default function BoardListPage() {
             onChange={handleChange}
             options={searchOptions}
           />
-          <div className={styles.searchbar_box}>
-            <input name="searchKeyword" value={jsonData.searchKeyword} placeholder="검색어를 입력하세요" onChange={handleChange}/>
-            <button type="submit">
-              <LuSearch />
-            </button>
-          </div>
+          <SearchBar
+            name="searchKeyword"
+            value={jsonData.searchKeyword}
+            placeholder="검색어를 입력하세요"
+            onChange={handleChange}
+          />
           <div title={"초기화"} className={styles.search_reset_box}>
             <MdOutlineReplay />
           </div>
