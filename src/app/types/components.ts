@@ -29,6 +29,7 @@ export interface SearchBarProps extends ComponentProps<'input'> {
 
 /* DatePicker*/
 export interface DateRangePickerProps {
+  datePikcerWidth: string | number;
   startDate: Moment | null;
   endDate: Moment | null;
   onStartDateChange: (date: Moment | null) => void;

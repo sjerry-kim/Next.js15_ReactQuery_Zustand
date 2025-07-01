@@ -9,6 +9,16 @@
   height: fit-content;
 }
 
+.top_wrapper svg {
+  min-width: 18px;
+  @apply text-lg text-neutral-500
+  transition duration-300 cursor-pointer;
+}
+
+.top_wrapper svg:hover {
+  @apply text-primary-light transition duration-300;
+}
+
 .status_container {
   display: flex;
   flex-direction: row;
@@ -74,16 +84,6 @@
   width: 50%;
   height: 36px;
   @apply gap-2 z-110;
-}
-
-.search_container svg {
-  min-width: 18px;
-  @apply text-lg text-neutral-500
-  transition duration-300 cursor-pointer;
-}
-
-.search_container svg:hover {
-  @apply text-primary-light transition duration-300;
 }
 
 .search_reset_box {

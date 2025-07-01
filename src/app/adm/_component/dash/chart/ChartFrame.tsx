@@ -133,7 +133,7 @@ export default function ChartFrame({ title, children, filterUIType }: ChartFrame
   useEffect(() => { setAppliedFilters(initialFilters); }, []);
 
   return (
-    <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="ko">
+    <>
       <div className={styles.chart_top_wrapper}>
         <h4>{title}</h4>
         <div className={styles.filter_container}>
@@ -162,8 +162,8 @@ export default function ChartFrame({ title, children, filterUIType }: ChartFrame
             </>
           ) : (
             <>
-              <button title={"필터"} className={styles.filter_btn} onClick={handleModalOpen}><FilterAltIcon /></button>
               <div title={"필터 초기화"} className={styles.filter_btn} onClick={handleReset}><MdOutlineReplay /></div>
+              <button title={"필터"} className={styles.filter_btn} onClick={handleModalOpen}><FilterAltIcon /></button>
             </>
           )}
         </div>
@@ -201,6 +201,6 @@ export default function ChartFrame({ title, children, filterUIType }: ChartFrame
           </div>
         </CommonModal>
       )}
-    </LocalizationProvider>
+    </>
   );
 }

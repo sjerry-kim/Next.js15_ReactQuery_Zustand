@@ -5,7 +5,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { FilterState } from '@/adm/_component/dash/chart/TimelineFilterControls';
 import styles from './CategoricalFilterControls.module.css';
 import Select from '@/adm/_component/common/inputs/Select';
-import DateRangePicker from '@/adm/_component/common/inputs/DateRangePicker'; // 1. Select 컴포넌트 import
+import DateRangePicker from '@/adm/_component/common/inputs/DateRangePicker';
+import useWindowSize from '@/hooks/useWindowSize.'; // 1. Select 컴포넌트 import
 
 interface WeekOption {
   value: number;
@@ -26,7 +27,7 @@ export default function CategoricalFilterControls({
   filters, onFilterChange, yearOptions, weekOptions,
   // commonDatePickerStyle, openPickerButtonStyle, openPickerIconStyle,
 }: CategoricalFilterControlsProps) {
-
+  const { isDesktop } = useWindowSize();
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
     onFilterChange(name as keyof FilterState, Number(value));
@@ -120,6 +121,7 @@ export default function CategoricalFilterControls({
         //   />
         // </div>
         <DateRangePicker
+          datePikcerWidth={isDesktop ? '110px' : '100%'}
           startDate={filters.startDate}
           endDate={filters.endDate}
           onStartDateChange={(val) => onFilterChange('startDate', val)}

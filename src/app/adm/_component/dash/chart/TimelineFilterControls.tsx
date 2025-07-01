@@ -2,10 +2,10 @@
 
 import React from 'react';
 import { Moment } from 'moment';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import styles from './TimelineFilterControls.module.css';
 import Select from '@/adm/_component/common/inputs/Select';
 import DateRangePicker from '@/adm/_component/common/inputs/DateRangePicker';
+import useWindowSize from '@/hooks/useWindowSize.';
 
 export interface FilterState {
   type: string;
@@ -29,7 +29,7 @@ export default function TimelineFilterControls({
   filters, onFilterChange, yearOptions,
   // commonDatePickerStyle, openPickerButtonStyle, openPickerIconStyle,
 }: FilterControlsProps) {
-
+  const { isDesktop } = useWindowSize();
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
     onFilterChange(name as keyof FilterState, Number(value));
@@ -94,6 +94,7 @@ export default function TimelineFilterControls({
         //   />
         // </div>
         <DateRangePicker
+          datePikcerWidth={isDesktop ? '110px' : '100%'}
           startDate={filters.startDate}
           endDate={filters.endDate}
           onStartDateChange={(val) => onFilterChange('startDate', val)}

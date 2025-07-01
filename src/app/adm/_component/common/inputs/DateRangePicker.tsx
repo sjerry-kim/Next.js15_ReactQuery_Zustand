@@ -7,11 +7,12 @@ import useWindowSize from '@/hooks/useWindowSize.';
 import {DateRangePickerProps} from '@/types/components';
 
 export default function DateRangePicker({
-                                          startDate,
-                                          endDate,
-                                          onStartDateChange,
-                                          onEndDateChange,
-                                        }: DateRangePickerProps) {
+  datePikcerWidth,
+  startDate,
+  endDate,
+  onStartDateChange,
+  onEndDateChange,
+}: DateRangePickerProps) {
 
   // 기존 컴포넌트에 있던 스타일 객체들을 여기로 가져옵니다.
   // isDesktop 같은 의존성도 이 컴포넌트 안에서 처리하여 독립적으로 만듭니다.
@@ -25,7 +26,8 @@ export default function DateRangePicker({
   const commonDatePickerStyle = {
     size: 'small', fullWidth: false, variant: 'outlined', inputProps: { readOnly: false }, InputLabelProps: { shrink: true },
     sx: {
-      width: isDesktop ? '110px' : '100%', border: '1px solid #D0D4DA', borderRadius: '0.375rem', padding: '1px 8px', backgroundColor: '#FFF',
+      // width: isDesktop ? '110px' : '100%', border: '1px solid #D0D4DA', borderRadius: '0.375rem', padding: '1px 8px', backgroundColor: '#FFF',
+      width: datePikcerWidth, border: '1px solid #D0D4DA', borderRadius: '0.375rem', padding: '1px 8px', backgroundColor: '#FFF',
       fontSize: '0.75rem', letterSpacing: '-0.35px', color: '#4b4b4b', backgroundImage: 'none', backgroundRepeat: 'no-repeat',
       backgroundPosition: 'right 12px center', backgroundSize: '12px',
       '& input': { all: 'unset', width: '100%', fontSize: '0.75rem', letterSpacing: '-0.35px', color: '#4b4b4b', lineHeight: 1.625 },

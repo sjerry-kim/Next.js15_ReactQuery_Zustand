@@ -8,13 +8,16 @@ import type { Board, PaginatedBoardResponse } from '@/types/board';
 import Pagination from '@/adm/_component/common/Pagination';
 import { ITEMS_PER_PAGE } from '@/_constant/pagination';
 import styles from "./List.module.css";
-import { LuSearch } from "react-icons/lu";
 import { MdOutlineReplay } from "react-icons/md";
 import useWindowSize from '@/hooks/useWindowSize.';
 import onTextChange from '@/utils/onTextChange';
 import Button from '@/adm/_component/common/Button';
 import Select from '@/adm/_component/common/inputs/Select';
 import SearchBar from '@/adm/_component/common/inputs/SearchBar';
+import moment, { Moment } from 'moment';
+import CommonModal from '@/adm/_component/common/modal/CommonModal';
+import DateRangePicker from '@/adm/_component/common/inputs/DateRangePicker';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
 
 interface JsonData {
   searchType: string;
@@ -33,6 +36,9 @@ export default function BoardListPage() {
     id: searchParams.get("id") || "0",
     content: searchParams.get("content") || "",
   });
+  const [isDateModalOpen, setIsDateModalOpen] = useState(false);
+  const [draftStartDate, setDraftStartDate] = useState<Moment | null>(null);
+  const [draftEndDate, setDraftEndDate] = useState<Moment | null>(null);
   const searchOptions = [
     { value: "", label: "전체" },
     { value: "id", label: "게시물코드" },
@@ -51,8 +57,10 @@ export default function BoardListPage() {
   const currentPage = getPageFromUrl();
   const searchTypeFromUrl = searchParams.get('searchType') || "";
   const searchKeywordFromUrl = searchParams.get('searchKeyword') || "";
+  const startDateFromUrl = searchParams.get('startDate') || "";
+  const endDateFromUrl = searchParams.get('endDate') || "";
 
-  const queryKey = ['boardList', currentPage, ITEMS_PER_PAGE, searchTypeFromUrl, searchKeywordFromUrl];
+  const queryKey = ['boardList', currentPage, ITEMS_PER_PAGE, searchTypeFromUrl, searchKeywordFromUrl, startDateFromUrl, endDateFromUrl];
 
   const {
     data: paginatedData,
@@ -65,7 +73,9 @@ export default function BoardListPage() {
     queryKey: queryKey,
     queryFn: () => getBoardList(currentPage, ITEMS_PER_PAGE, {
       searchType: searchTypeFromUrl,
-      searchKeyword: searchKeywordFromUrl
+      searchKeyword: searchKeywordFromUrl,
+      startDate: startDateFromUrl,
+      endDate: endDateFromUrl,
     }),
     staleTime: 60 * 1000,
     gcTime: 5 * 60 * 1000,
@@ -110,17 +120,57 @@ export default function BoardListPage() {
     router.push(destination);
   };
 
+  // const handleSearch = (event: FormEvent) => {
+  //   event.preventDefault();
+  //
+  //   const queryString = new URLSearchParams({
+  //     searchType: jsonData.searchType,
+  //     searchKeyword: jsonData.searchKeyword,
+  //     page: '1',
+  //   }).toString();
+  //
+  //   router.push(`${location.pathname}?${queryString}`);
+  // }
+
   const handleSearch = (event: FormEvent) => {
     event.preventDefault();
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set('page', '1');
+    newSearchParams.set('searchType', jsonData.searchType);
+    newSearchParams.set('searchKeyword', jsonData.searchKeyword);
+    // 키워드/타입 검색 시에도 기존 기간 필터는 URL에 유지되도록 합니다.
+    // (searchParams.toString()이 이미 이 작업을 처리해줍니다.)
+    router.push(`${pathname}?${newSearchParams.toString()}`);
+  };
 
-    const queryString = new URLSearchParams({
-      searchType: jsonData.searchType,
-      searchKeyword: jsonData.searchKeyword,
-      page: '1',
-    }).toString();
+  // 8. 기간 필터 모달을 여는 핸들러
+  const handleOpenDateModal = () => {
+    // 모달을 열 때, 현재 URL에 적용된 날짜를 임시 상태의 초기값으로 설정
+    setDraftStartDate(startDateFromUrl ? moment(startDateFromUrl) : null);
+    setDraftEndDate(endDateFromUrl ? moment(endDateFromUrl) : null);
+    setIsDateModalOpen(true);
+  };
 
-    router.push(`${location.pathname}?${queryString}`);
-  }
+  // 9. 기간 필터 모달에서 '적용'을 눌렀을 때 실행될 핸들러
+  const handleApplyDateFilter = () => {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set('page', '1'); // 필터 적용 시 1페이지로 이동
+
+    if (draftStartDate) {
+      newSearchParams.set('startDate', draftStartDate.format('YYYY-MM-DD'));
+    } else {
+      newSearchParams.delete('startDate');
+    }
+
+    if (draftEndDate) {
+      newSearchParams.set('endDate', draftEndDate.format('YYYY-MM-DD'));
+    } else {
+      newSearchParams.delete('endDate');
+    }
+
+    router.push(`${pathname}?${newSearchParams.toString()}`);
+    setIsDateModalOpen(false); // 모달 닫기
+  };
 
   // 다음 페이지 prefetch용 effect
   useEffect(() => {
@@ -156,103 +206,147 @@ export default function BoardListPage() {
   }
 
   return (
-    <main>
-      <section className={styles.top_wrapper}>
-        <div className={styles.status_container}>
-          <ul className={styles.status_box}>
-            <li>전체</li>
-            <li>대기</li>
-            <li>예약</li>
-            <li>구매</li>
-            <li>취소</li>
-          </ul>
-          <div className={styles.gradient_overlay}></div>
-        </div>
-
-        <form className={styles.search_container} onSubmit={handleSearch}>
-          <Select
-            name="searchType"
-            value={jsonData.searchType}
-            onChange={handleChange}
-            options={searchOptions}
-          />
-          <SearchBar
-            name="searchKeyword"
-            value={jsonData.searchKeyword}
-            placeholder="검색어를 입력하세요"
-            onChange={handleChange}
-          />
-          <div title={"초기화"} className={styles.search_reset_box}>
-            <MdOutlineReplay />
+    <>
+      <main>
+        <section className={styles.top_wrapper}>
+          <div className={styles.status_container}>
+            <ul className={styles.status_box}>
+              <li>전체</li>
+              <li>대기</li>
+              <li>예약</li>
+              <li>구매</li>
+              <li>취소</li>
+            </ul>
+            <div className={styles.gradient_overlay}></div>
           </div>
-        </form>
-      </section>
 
-      <section className={styles.table_wrapper}>
-        {isFetching && isPlaceholderData && <div className={styles.fetching_indicator}>페이지 로딩중...</div>}
+          <form className={styles.search_container} onSubmit={handleSearch}>
+            <Select
+              name="searchType"
+              value={jsonData.searchType}
+              onChange={handleChange}
+              options={searchOptions}
+            />
+            <SearchBar
+              name="searchKeyword"
+              value={jsonData.searchKeyword}
+              placeholder="검색어를 입력하세요"
+              onChange={handleChange}
+            />
+            <div title={"초기화"} className={styles.search_reset_box}>
+              <MdOutlineReplay />
+            </div>
+            <div title={"필터 추가"} className={styles.search_reset_box} onClick={handleOpenDateModal}>
+              <FilterAltIcon />
+            </div>
+          </form>
+        </section>
 
-        <table className={styles.table}>
-          <thead>
-          <tr>
-            <th>No.</th>
-            <th>ID</th>
-            <th>제목 (내용)</th>
-            <th>금액</th>
-            <th>작성일</th>
-            <th>수정일</th>
-          </tr>
-          </thead>
-          <tbody>
-          {isLoading ? ( // Initial load
+        <section className={styles.table_wrapper}>
+          {isFetching && isPlaceholderData && <div className={styles.fetching_indicator}>페이지 로딩중...</div>}
+
+          <table className={styles.table}>
+            <thead>
             <tr>
-              <td colSpan={6} style={{ textAlign: 'center', padding: '20px' }}>
-                <h1>로딩중...</h1>
-              </td>
+              <th>No.</th>
+              <th>ID</th>
+              <th>제목 (내용)</th>
+              <th>금액</th>
+              <th>작성일</th>
+              <th>수정일</th>
             </tr>
-          ) : boardsToDisplay.length > 0 ? (
-            boardsToDisplay.map((item: Board) => (
-              <tr
-                key={item.id.toString()}
-                style={{ cursor: 'pointer' }}
-                onClick={() => handleRowClick(item.id)}
-              >
-                <td>{item.rn}</td>
-                <td>{item.id.toString()}</td>
-                <td>{item.content || '내용 없음'}</td>
-                <td className={styles.need_right}>10,000원</td>
-                <td>{item.created_at ? new Date(item.created_at).toLocaleDateString() : '-'}</td>
-                <td>{item.updated_at ? new Date(item.updated_at).toLocaleDateString() : '-'}</td>
+            </thead>
+            <tbody>
+            {isLoading ? ( // Initial load
+              <tr>
+                <td colSpan={6} style={{ textAlign: 'center', padding: '20px' }}>
+                  <h1>로딩중...</h1>
+                </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={6} style={{ textAlign: 'center', padding: '20px' }}>
-                <h1>데이터가 없습니다.</h1>
-              </td>
-            </tr>
-          )}
-          </tbody>
-        </table>
-      </section>
+            ) : boardsToDisplay.length > 0 ? (
+              boardsToDisplay.map((item: Board) => (
+                <tr
+                  key={item.id.toString()}
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => handleRowClick(item.id)}
+                >
+                  <td>{item.rn}</td>
+                  <td>{item.id.toString()}</td>
+                  <td>{item.content || '내용 없음'}</td>
+                  <td className={styles.need_right}>10,000원</td>
+                  <td>{item.created_at ? new Date(item.created_at).toLocaleDateString() : '-'}</td>
+                  <td>{item.updated_at ? new Date(item.updated_at).toLocaleDateString() : '-'}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={6} style={{ textAlign: 'center', padding: '20px' }}>
+                  <h1>데이터가 없습니다.</h1>
+                </td>
+              </tr>
+            )}
+            </tbody>
+          </table>
+        </section>
 
-      <section className={styles.bottom_wrapper}>
-        {totalPages > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-            totalItems={totalItems}
-            pageNumbersToShow={isMobile ? 3 : 5}
+        <section className={styles.bottom_wrapper}>
+          {totalPages > 0 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+              totalItems={totalItems}
+              pageNumbersToShow={isMobile ? 3 : 5}
+            />
+          )}
+          <Button
+            text="글쓰기"
+            variant="outlined"
+            size="sm"
+            color="grey"
+            onClick={handleAddClick}
           />
-        )}
-        <Button
-          text="글쓰기"
-          variant="outlined"
-          size="sm"
-          color="grey"
-          onClick={handleAddClick}
-        />
-      </section>
-    </main>
+        </section>
+      </main>
+
+      {isDateModalOpen && (
+        <CommonModal
+          modalTitle="필터 추가"
+          onClose={() => setIsDateModalOpen(false)}
+          buttons={[
+            {
+              text: '초기화',
+              variant: 'outlined',
+              color: 'grey',
+              onClick: () => {
+                setDraftStartDate(null);
+                setDraftEndDate(null);
+              }
+            },
+            {
+              text: '적용',
+              variant: 'contained',
+              color: 'primary',
+              onClick: handleApplyDateFilter,
+            }
+          ]}
+          width="400px"
+          maxWidth="90%"
+          height="350px"
+        >
+          <label>작성일</label>
+          <DateRangePicker
+            datePikcerWidth='100%'
+            startDate={draftStartDate}
+            endDate={draftEndDate}
+            onStartDateChange={setDraftStartDate}
+            onEndDateChange={setDraftEndDate}
+          />
+
+          <label>정렬</label>
+
+        </CommonModal>
+      )}
+    </>
   );
 }
