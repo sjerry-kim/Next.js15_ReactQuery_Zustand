@@ -14,6 +14,7 @@ import { CommonModalButton } from '@/types/modal';
 import TimelineFilterControls, { FilterState } from './TimelineFilterControls';
 import CategoricalFilterControls from './CategoricalFilterControls';
 import styles from './ChartFrame.module.css';
+import Select from '@/adm/_component/common/inputs/Select';
 
 interface ChartFrameProps {
   title: string;
@@ -42,6 +43,12 @@ export default function ChartFrame({ title, children, filterUIType }: ChartFrame
   const [draftFilters, setDraftFilters] = useState<FilterState>(initialFilters); // 적용 전 필터
   const [appliedFilters, setAppliedFilters] = useState<FilterState>(initialFilters); // 적용 필터
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const searchOptions = [
+    { value: "yearly", label: "연도별 보기" },
+    { value: "monthly", label: "월별 보기" },
+    { value: "weekly", label: "주별 보기" },
+    { value: "custom", label: "기간 직접 선택" },
+  ];
   const { isDesktop } = useWindowSize();
   /* mui datepicker 커스텀 */
   const openPickerButtonStyle = {
@@ -132,9 +139,23 @@ export default function ChartFrame({ title, children, filterUIType }: ChartFrame
         <div className={styles.filter_container}>
           { isDesktop ? (
             <>
-              <select name="type" className={styles.select} value={draftFilters.type} onChange={(e) => handleFilterChange('type', e.target.value)}>
-                <option value="yearly">연도별 보기</option><option value="monthly">월별 보기</option><option value="weekly">주별 보기</option><option value="custom">기간 직접 선택</option>
-              </select>
+              {/*<select*/}
+              {/*  name="type"*/}
+              {/*  className={styles.select}*/}
+              {/*  value={draftFilters.type}*/}
+              {/*  onChange={(e) => handleFilterChange('type', e.target.value)}*/}
+              {/*>*/}
+              {/*  <option value="yearly">연도별 보기</option>*/}
+              {/*  <option value="monthly">월별 보기</option>*/}
+              {/*  <option value="weekly">주별 보기</option>*/}
+              {/*  <option value="custom">기간 직접 선택</option>*/}
+              {/*</select>*/}
+              <Select
+                name="type"
+                value={draftFilters.type}
+                onChange={(e) => handleFilterChange('type', e.target.value)}
+                options={searchOptions}
+              />
               {renderCorrectFilters()}
               <div title={"필터 적용"} className={styles.filter_btn} onClick={handleSearch}><LuSearch /></div>
               <div title={"필터 초기화"} className={styles.filter_btn} onClick={handleReset}><MdOutlineReplay /></div>
@@ -162,12 +183,18 @@ export default function ChartFrame({ title, children, filterUIType }: ChartFrame
           onClose={() => setIsModalOpen(false)}
         >
           <div className={styles.content_container}>
-            <select name="type" className={styles.select} value={draftFilters.type} onChange={(e) => handleFilterChange('type', e.target.value as keyof FilterState)}>
-              <option value="yearly">연도별 보기</option>
-              <option value="monthly">월별 보기</option>
-              <option value="weekly">주별 보기</option>
-              <option value="custom">기간 직접 선택</option>
-            </select>
+            {/*<select name="type" className={styles.select} value={draftFilters.type} onChange={(e) => handleFilterChange('type', e.target.value as keyof FilterState)}>*/}
+            {/*  <option value="yearly">연도별 보기</option>*/}
+            {/*  <option value="monthly">월별 보기</option>*/}
+            {/*  <option value="weekly">주별 보기</option>*/}
+            {/*  <option value="custom">기간 직접 선택</option>*/}
+            {/*</select>*/}
+            <Select
+              name="type"
+              value={draftFilters.type}
+              onChange={(e) => handleFilterChange('type', e.target.value)}
+              options={searchOptions}
+            />
             <div className={styles.filter_bottom_box}>
               {renderCorrectFilters()}
             </div>

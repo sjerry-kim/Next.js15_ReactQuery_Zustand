@@ -32,17 +32,18 @@ select {
   background-color: #FFF;
   border: 1px solid #D0D4DA;
   padding: 8px 12px;
-  font-size: 14px;
   letter-spacing: -0.35px;
   color: #333;
   cursor: pointer;
-
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M12 6L8 10L4 6' stroke='%23414651' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
   background-size: 12px;
-
   padding-right: 36px; /* 오른쪽 여백 확보 */
+  height: 100%;
+  font-size: 0.75rem;
+  @apply text-sm text-neutral-700
+  leading-relaxed tracking-tight rounded-md ;
 }
 select:hover, input:hover, textarea:hover, select:focus, input:focus, textarea:focus {
   border: 1px solid;

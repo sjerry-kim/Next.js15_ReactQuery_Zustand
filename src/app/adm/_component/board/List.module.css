@@ -76,13 +76,6 @@
   @apply gap-2 z-110;
 }
 
-.search_container select {
-  height: 100%;
-  font-size: 0.75rem;
-  @apply text-sm text-neutral-700
-  leading-relaxed tracking-tight rounded-lg ;
-}
-
 .search_container svg {
   min-width: 18px;
   @apply text-lg text-neutral-500

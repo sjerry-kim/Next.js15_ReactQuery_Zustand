@@ -1,5 +1,6 @@
 import { ComponentProps } from 'react';
 
+/* Button */
 export interface ButtonProps extends ComponentProps<'button'> {
   text: string;
   variant?: 'outlined' | 'contained';
@@ -8,4 +9,14 @@ export interface ButtonProps extends ComponentProps<'button'> {
   width?: string | number;
   height?: string | number;
   onClick?: () => void;
+}
+
+/* Select */
+type Option = {
+  value: string | number;
+  label: string;
+};
+
+export interface SelectProps extends ComponentProps<'select'> {
+  options: Option[];
 }

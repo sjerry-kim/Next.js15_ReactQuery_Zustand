@@ -4,6 +4,7 @@ import React from 'react';
 import { Moment } from 'moment';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import styles from './TimelineFilterControls.module.css';
+import Select from '@/adm/_component/common/inputs/Select';
 
 export interface FilterState {
   type: string;
@@ -33,26 +34,39 @@ export default function TimelineFilterControls({
     onFilterChange(name as keyof FilterState, Number(value));
   };
 
+  const yearSelectOptions = yearOptions.map(year => ({ value: year, label: `${year}년` }));
+  const monthSelectOptions = Array.from({ length: 12 }, (_, i) => ({ value: i + 1, label: `${i + 1}월` }));
+
   // 조회 단위에 따라 다른 필터를 return
   switch (filters.type) {
     case 'yearly': return null;
     case 'monthly':
       return (
-        <select name="year" value={filters.year} className={styles.select} onChange={handleSelectChange}>
-          {yearOptions.map(year => (<option key={year} value={year}>{year}년</option>))}
-        </select>
+        <Select
+          name="year"
+          value={filters.year}
+          className={styles.select}
+          onChange={handleSelectChange}
+          options={yearSelectOptions}
+        />
       );
     case 'weekly':
       return (
         <>
-          <select name="year" value={filters.year} className={styles.select} onChange={handleSelectChange}>
-            {yearOptions.map(year => (<option key={year} value={year}>{year}년</option>))}
-          </select>
-          <select name="month" value={filters.month} className={styles.select} onChange={handleSelectChange}>
-            {Array.from({ length: 12 }, (_, i) => i + 1).map(month => (
-              <option key={month} value={month}>{month}월</option>
-            ))}
-          </select>
+          <Select
+            name="year"
+            value={filters.year}
+            className={styles.select}
+            onChange={handleSelectChange}
+            options={yearSelectOptions}
+          />
+          <Select
+            name="month"
+            value={filters.month}
+            className={styles.select}
+            onChange={handleSelectChange}
+            options={monthSelectOptions}
+          />
         </>
       );
     case 'custom':
@@ -65,7 +79,7 @@ export default function TimelineFilterControls({
               textField: { placeholder: '시작일 선택', ...commonDatePickerStyle } as any,
               openPickerButton: openPickerButtonStyle, openPickerIcon: openPickerIconStyle,
             }}
-            desktopModeMediaQuery="@media (min-width: 0px)" // mobile모드와 desktop모드에 동일한 옵션을 적용
+            desktopModeMediaQuery="@media (min-width: 0px)"
           />
           <span>~</span>
           <DatePicker

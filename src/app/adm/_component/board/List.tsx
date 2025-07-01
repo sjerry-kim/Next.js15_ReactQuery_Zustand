@@ -13,6 +13,7 @@ import { MdOutlineReplay } from "react-icons/md";
 import useWindowSize from '@/hooks/useWindowSize.';
 import onTextChange from '@/utils/onTextChange';
 import Button from '@/adm/_component/common/Button';
+import Select from '@/adm/_component/common/inputs/Select';
 
 interface JsonData {
   searchType: string;
@@ -31,6 +32,11 @@ export default function BoardListPage() {
     id: searchParams.get("id") || "0",
     content: searchParams.get("content") || "",
   });
+  const searchOptions = [
+    { value: "", label: "전체" },
+    { value: "id", label: "게시물코드" },
+    { value: "content", label: "내용" },
+  ];
   const queryClient = useQueryClient();
   const {handleChange} = onTextChange(jsonData, setJsonData);
   const { isMobile } = useWindowSize();
@@ -163,11 +169,12 @@ export default function BoardListPage() {
         </div>
 
         <form className={styles.search_container} onSubmit={handleSearch}>
-          <select name="searchType" value={jsonData.searchType} onChange={handleChange}>
-            <option value={""}>전체</option>
-            <option value={"id"}>게시물코드</option>
-            <option value={"content"}>내용</option>
-          </select>
+          <Select
+            name="searchType"
+            value={jsonData.searchType}
+            onChange={handleChange}
+            options={searchOptions}
+          />
           <div className={styles.searchbar_box}>
             <input name="searchKeyword" value={jsonData.searchKeyword} placeholder="검색어를 입력하세요" onChange={handleChange}/>
             <button type="submit">
