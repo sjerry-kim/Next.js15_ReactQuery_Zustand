@@ -8,7 +8,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useWebPushStore } from '@/zustand/webPushStore';
 import { requestPermissionAndGetToken } from '@/lib/firebase';
 import { savePushSubscription  } from '@/services/webPushService';
-import Button from '@/adm/_component/common/Button';
+import Button from '@/adm/_component/common/buttons/Button';
 
 export default function NotificationButton() {
   const { permission, isSubscribed, setPermission, setIsSubscribed, setFcmToken } = useWebPushStore();

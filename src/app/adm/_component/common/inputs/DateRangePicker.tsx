@@ -7,7 +7,7 @@ import useWindowSize from '@/hooks/useWindowSize.';
 import {DateRangePickerProps} from '@/types/components';
 
 export default function DateRangePicker({
-  datePikcerWidth,
+  width,
   startDate,
   endDate,
   onStartDateChange,
@@ -27,7 +27,7 @@ export default function DateRangePicker({
     size: 'small', fullWidth: false, variant: 'outlined', inputProps: { readOnly: false }, InputLabelProps: { shrink: true },
     sx: {
       // width: isDesktop ? '110px' : '100%', border: '1px solid #D0D4DA', borderRadius: '0.375rem', padding: '1px 8px', backgroundColor: '#FFF',
-      width: datePikcerWidth, border: '1px solid #D0D4DA', borderRadius: '0.375rem', padding: '1px 8px', backgroundColor: '#FFF',
+      width: width, border: '1px solid #D0D4DA', borderRadius: '0.375rem', padding: '1px 8px', backgroundColor: '#FFF',
       fontSize: '0.75rem', letterSpacing: '-0.35px', color: '#4b4b4b', backgroundImage: 'none', backgroundRepeat: 'no-repeat',
       backgroundPosition: 'right 12px center', backgroundSize: '12px',
       '& input': { all: 'unset', width: '100%', fontSize: '0.75rem', letterSpacing: '-0.35px', color: '#4b4b4b', lineHeight: 1.625 },

@@ -5,10 +5,14 @@ import styles from './SearchBar.module.css';
 import {SearchBarProps} from '@/types/components'
 import { CSSProperties } from 'react';
 
-export default function SearchBar({ width, ...props }: SearchBarProps) {
+export default function SearchBar({ width, height, ...props }: SearchBarProps) {
   const wrapperStyle: CSSProperties = {};
   if (width) {
     wrapperStyle.width = width;
+  }
+
+  if (height) {
+    wrapperStyle.height = height;
   }
 
   return (

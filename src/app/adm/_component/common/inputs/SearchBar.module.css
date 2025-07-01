@@ -39,6 +39,16 @@
   align-items: center;
 }
 
+.wrapper svg {
+  min-width: 18px;
+  @apply text-lg text-neutral-500
+  transition duration-300 cursor-pointer;
+}
+
+.wrapper svg:hover {
+  @apply text-primary-light transition duration-300;
+}
+
 @media (max-width: 767px) {
   .wrapper {
     width: 100%;

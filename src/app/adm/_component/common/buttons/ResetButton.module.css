@@ -1,0 +1,26 @@
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 36px;
+  height: 36px;
+  border: 1px solid;
+  background-color: transparent;
+  padding: 0;
+
+  @apply rounded-md border-neutral-250 cursor-pointer;
+}
+
+.button:hover {
+  @apply border-primary-light transition duration-300;
+}
+
+.button svg {
+  min-width: 18px;
+  @apply text-lg text-neutral-500
+  transition duration-300 cursor-pointer;
+}
+
+.button svg:hover {
+  @apply text-primary-light transition duration-300;
+}

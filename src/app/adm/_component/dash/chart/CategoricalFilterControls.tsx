@@ -121,7 +121,7 @@ export default function CategoricalFilterControls({
         //   />
         // </div>
         <DateRangePicker
-          datePikcerWidth={isDesktop ? '110px' : '100%'}
+          width={isDesktop ? '110px' : '100%'}
           startDate={filters.startDate}
           endDate={filters.endDate}
           onStartDateChange={(val) => onFilterChange('startDate', val)}

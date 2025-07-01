@@ -1,69 +1,13 @@
 /* top */
 .top_wrapper {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 8px;
   width: 100%;
   height: fit-content;
-}
-
-.status_container {
-  display: flex;
-  flex-direction: row;
-  width: 50%;
-  position: relative;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  @apply z-100;
-}
-
-.status_container::-webkit-scrollbar {
-  display: none;
-}
-
-.status_box {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  gap: 6px;
-  padding-right: 40px;
-  width: 100%;
-  height: 36px;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  position: relative;
-}
-
-.status_box::-webkit-scrollbar {
-  display: none;
-}
-
-.gradient_overlay {
-  position: absolute;
-  top: 0;
-  right: -1px;
-  width: 40px;
-  height: 100%;
-  pointer-events: none;
-  @apply bg-overlay-transparent-right;
-}
-
-.status_box li {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px 12px;
-  min-width: 47px;
-  border: 1px solid;
-  white-space: nowrap; /* 줄바꿈 방지 */
-  @apply text-sm text-neutral-700 rounded-md
-  leading-normal tracking-tight border-neutral-250 cursor-pointer;
-}
-
-.status_box li:hover {
-  @apply bg-neutral-150;
+  @apply gap-2
 }
 
 .search_container {
@@ -101,7 +45,155 @@
   @apply border-primary-light transition duration-300;
 }
 
-/* table */
+/* filter contianer  */
+.filter_top_container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: fit-content;
+  border: 1px solid;
+  @apply rounded-lg border-neutral-250;
+}
+
+.filter_row {
+  display: flex;
+  flex-direction: row;
+  height: 40px;
+  border-bottom: 1px solid;
+  @apply border-neutral-250;
+}
+
+.filter_row:last-child {
+  border-bottom: none;
+}
+
+.filter_row:last-child label {
+  border-bottom: none;
+}
+
+.filter_set {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+}
+
+.filter_set > label {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  min-width: 80px;
+  height: 40px;
+  border-right: 1px solid;
+  border-bottom: 1px solid;
+  box-sizing: border-box;
+  @apply bg-neutral-150 text-md font-bold border-neutral-250;
+}
+
+.first_label{
+  @apply rounded-tl-lg;
+}
+
+.last_label {
+  @apply rounded-bl-lg;
+}
+
+.middle_label {
+  border-left: 1px solid;
+  @apply border-neutral-250;
+}
+
+.filter_set > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 100%;
+  overflow: hidden;
+}
+
+.filter_set > div select {
+  border: none;
+  border-right: 1px solid;
+  @apply rounded-none border-neutral-250;
+}
+
+.filter_set > div > input {
+  border: none;
+  width: 95%;
+}
+
+.filter_bottom_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.status_box {
+  display: flex;
+  flex-direction: row;
+  width: 50%;
+  position: relative;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  @apply z-100;
+}
+
+.status_box::-webkit-scrollbar {
+  display: none;
+}
+
+.status_set {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 6px;
+  padding-right: 40px;
+  width: 100%;
+  height: 36px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  position: relative;
+}
+
+.status_set::-webkit-scrollbar {
+  display: none;
+}
+
+.gradient_overlay {
+  position: absolute;
+  top: 0;
+  right: -1px;
+  width: 40px;
+  height: 100%;
+  pointer-events: none;
+  @apply bg-overlay-transparent-right;
+}
+
+.status_set li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 12px;
+  min-width: 47px;
+  border: 1px solid;
+  white-space: nowrap; /* 줄바꿈 방지 */
+  @apply text-sm text-neutral-700 rounded-md
+  leading-normal tracking-tight border-neutral-250 cursor-pointer;
+}
+
+.status_set li:hover {
+  @apply bg-neutral-150;
+}
+
+.btn_box {
+  display: flex;
+  flex-direction: row;
+  @apply gap-2
+}
+
+  /* table */
 .table_wrapper {
   border: 1px solid;
   overflow: hidden;
@@ -249,17 +341,33 @@
     align-items: flex-end;
     @apply gap-2;
   }
-
-  .status_container {
-    width: 100%;
+  /* filter top container */
+  .filter_row {
+    flex-direction: column;
+    height: fit-content;
   }
 
+  .filter_set > label {
+    border-bottom: none;
+  }
+
+  .double_row_label {
+    border-bottom: 1px solid !important;
+    @apply border-neutral-250 !important;
+  }
+
+  .double_row_div {
+    border-bottom: 1px solid;
+    @apply border-neutral-250;
+  }
+
+  /* filter bottom container */
   .status_box {
-    padding: 0 10px 0 0;
+    width: 100%;
   }
 
-  .search_container {
-    width: 100%;
+  .status_set {
+    padding: 0 10px 0 0;
   }
 
   .bottom_wrapper {

@@ -2,7 +2,7 @@
 
 import styles from './MyPage.module.css';
 import NotificationButton from '@/adm/_component/common/NotificationButton';
-import Button from '@/adm/_component/common/Button';
+import Button from '@/adm/_component/common/buttons/Button';
 
 export default function MyPage() {
 

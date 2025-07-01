@@ -12,9 +12,13 @@ import { MdOutlineReplay } from "react-icons/md";
 import useWindowSize from '@/hooks/useWindowSize.';
 import onTextChange from '@/utils/onTextChange';
 import { ITEMS_PER_PAGE } from '@/_constant/pagination';
-import Button from '@/adm/_component/common/Button';
+import Button from '@/adm/_component/common/buttons/Button';
 import Select from '@/adm/_component/common/inputs/Select';
 import SearchBar from '@/adm/_component/common/inputs/SearchBar';
+import DateRangePicker from '@/adm/_component/common/inputs/DateRangePicker';
+import { Moment } from 'moment/moment';
+import SingleDatePicker from '@/adm/_component/common/inputs/SingleDatePicker';
+import ResetButton from '@/adm/_component/common/buttons/ResetButton';
 // import MenuModal from '@/adm/_component/common/MenuModal';
 
 interface JsonData {
@@ -39,6 +43,8 @@ export default function BoardListPage() {
     { value: "id", label: "게시물코드" },
     { value: "content", label: "내용" },
   ];
+  const [draftStartDate, setDraftStartDate] = useState<Moment | null>(null);
+  const [draftEndDate, setDraftEndDate] = useState<Moment | null>(null);
   const queryClient = useQueryClient();
   const {handleChange} = onTextChange(jsonData, setJsonData);
   const { isMobile } = useWindowSize();
@@ -162,45 +168,121 @@ export default function BoardListPage() {
     <>
       <main>
         <section className={styles.top_wrapper}>
-          <div className={styles.status_container}>
-            <ul className={styles.status_box}>
-              <li>전체</li>
-              <li>대기</li>
-              <li>예약</li>
-              <li>구매</li>
-              <li>취소</li>
-            </ul>
-            <div className={styles.gradient_overlay}></div>
-          </div>
+          {/*<div className={styles.status_container}>*/}
+          {/*  <ul className={styles.status_box}>*/}
+          {/*    <li>전체</li>*/}
+          {/*    <li>대기</li>*/}
+          {/*    <li>예약</li>*/}
+          {/*    <li>구매</li>*/}
+          {/*    <li>취소</li>*/}
+          {/*  </ul>*/}
+          {/*  <div className={styles.gradient_overlay}></div>*/}
+          {/*</div>*/}
 
-          <form className={styles.search_container} onSubmit={handleSearch}>
-            {/*<select name="searchType" value={jsonData.searchType} onChange={handleChange}>*/}
-            {/*  <option value={""}>전체</option>*/}
-            {/*  <option value={"id"}>게시물코드</option>*/}
-            {/*  <option value={"content"}>내용</option>*/}
-            {/*</select>*/}
-            <Select
-              name="searchType"
-              value={jsonData.searchType}
-              onChange={handleChange}
-              options={searchOptions}
-            />
-            {/*<div className={styles.searchbar_box}>*/}
-            {/*  <input name="searchKeyword" value={jsonData.searchKeyword} placeholder="검색어를 입력하세요" onChange={handleChange}/>*/}
-            {/*  <button type="submit">*/}
-            {/*    <LuSearch />*/}
-            {/*  </button>*/}
-            {/*</div>*/}
-            <SearchBar
-              name="searchKeyword"
-              value={jsonData.searchKeyword}
-              placeholder="검색어를 입력하세요"
-              onChange={handleChange}
-            />
-            <div title={"초기화"} className={styles.search_reset_box}>
-              <MdOutlineReplay />
+          {/*<form className={styles.search_container} onSubmit={handleSearch}>*/}
+          {/*  /!*<select name="searchType" value={jsonData.searchType} onChange={handleChange}>*!/*/}
+          {/*  /!*  <option value={""}>전체</option>*!/*/}
+          {/*  /!*  <option value={"id"}>게시물코드</option>*!/*/}
+          {/*  /!*  <option value={"content"}>내용</option>*!/*/}
+          {/*  /!*</select>*!/*/}
+
+          {/*  <Select*/}
+          {/*    name="searchType"*/}
+          {/*    value={jsonData.searchType}*/}
+          {/*    onChange={handleChange}*/}
+          {/*    options={searchOptions}*/}
+          {/*  />*/}
+          {/*  /!*<div className={styles.searchbar_box}>*!/*/}
+          {/*  /!*  <input name="searchKeyword" value={jsonData.searchKeyword} placeholder="검색어를 입력하세요" onChange={handleChange}/>*!/*/}
+          {/*  /!*  <button type="submit">*!/*/}
+          {/*  /!*    <LuSearch />*!/*/}
+          {/*  /!*  </button>*!/*/}
+          {/*  /!*</div>*!/*/}
+          {/*  <SearchBar*/}
+          {/*    name="searchKeyword"*/}
+          {/*    value={jsonData.searchKeyword}*/}
+          {/*    placeholder="검색어를 입력하세요"*/}
+          {/*    onChange={handleChange}*/}
+          {/*  />*/}
+          {/*  <div title={"초기화"} className={styles.search_reset_box}>*/}
+          {/*    <MdOutlineReplay />*/}
+          {/*  </div>*/}
+          {/*</form>*/}
+
+          <ul className={styles.filter_top_container}>
+            <li className={styles.filter_row}>
+              <div className={styles.filter_set}>
+                <label className={styles.first_label}>상태</label>
+                <div></div>
+              </div>
+            </li>
+            <li className={styles.filter_row}>
+              <div className={styles.filter_set}>
+                <label>검색어</label>
+                <div>
+                    <Select
+                      name="searchType"
+                      value={jsonData.searchType}
+                      onChange={handleChange}
+                      options={searchOptions}
+                    />
+                  <input
+                      width="100%"
+                      height="100%"
+                      name="searchKeyword"
+                      value={jsonData.searchKeyword}
+                      placeholder="검색어를 입력하세요"
+                      onChange={handleChange}
+                  />
+                </div>
+              </div>
+            </li>
+            <li className={styles.filter_row}>
+              <div className={styles.filter_set}>
+                <label className={isMobile? styles.double_row_label : styles.last_label}>기간</label>
+                <div className={styles.double_row_div}>
+                  <SingleDatePicker
+                    width="100%"
+                    value={draftStartDate}
+                    placeholder="시작일 선택"
+                    onChange={setDraftStartDate}
+                    borderRight
+                  />
+                  <SingleDatePicker
+                    width="100%"
+                    value={draftEndDate}
+                    placeholder="종료일 선택"
+                    onChange={setDraftEndDate}
+                  />
+                </div>
+              </div>
+              <div className={styles.filter_set}>
+                <label className={isMobile ? styles.last_label : styles.middle_label}>정렬</label>
+                <div></div>
+              </div>
+            </li>
+          </ul>
+
+          <div className={styles.filter_bottom_container}>
+            <div className={styles.status_box}>
+              <ul className={styles.status_set}>
+                <li>전체</li>
+                <li>대기</li>
+                <li>예약</li>
+                <li>구매</li>
+                <li>취소</li>
+              </ul>
+              <div className={styles.gradient_overlay}></div>
             </div>
-          </form>
+            <div className={styles.btn_box}>
+              <Button 
+                text="검색"
+                variant="contained"
+                color="primary"
+              />
+              <ResetButton />
+            </div>
+          </div>
         </section>
 
         <section className={styles.table_wrapper}>
