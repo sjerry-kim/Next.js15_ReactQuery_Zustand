@@ -4,7 +4,8 @@ import React from 'react';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { FilterState } from '@/adm/_component/dash/chart/TimelineFilterControls';
 import styles from './CategoricalFilterControls.module.css';
-import Select from '@/adm/_component/common/inputs/Select'; // 1. Select 컴포넌트 import
+import Select from '@/adm/_component/common/inputs/Select';
+import DateRangePicker from '@/adm/_component/common/inputs/DateRangePicker'; // 1. Select 컴포넌트 import
 
 interface WeekOption {
   value: number;
@@ -16,14 +17,14 @@ interface CategoricalFilterControlsProps {
   onFilterChange: (name: keyof FilterState, value: any) => void;
   yearOptions: number[];
   weekOptions: WeekOption[];
-  commonDatePickerStyle: object;
-  openPickerButtonStyle: object;
-  openPickerIconStyle: object;
+  // commonDatePickerStyle: object;
+  // openPickerButtonStyle: object;
+  // openPickerIconStyle: object;
 }
 
 export default function CategoricalFilterControls({
   filters, onFilterChange, yearOptions, weekOptions,
-  commonDatePickerStyle, openPickerButtonStyle, openPickerIconStyle,
+  // commonDatePickerStyle, openPickerButtonStyle, openPickerIconStyle,
 }: CategoricalFilterControlsProps) {
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -97,27 +98,33 @@ export default function CategoricalFilterControls({
       );
     case 'custom':
       return (
-        <div className={styles.datepicker_box}>
-          <DatePicker
-            value={filters.startDate}
-            onChange={(val) => onFilterChange('startDate', val)}
-            slotProps={{
-              textField: { placeholder: '시작일 선택', ...commonDatePickerStyle } as any,
-              openPickerButton: openPickerButtonStyle, openPickerIcon: openPickerIconStyle,
-            }}
-            desktopModeMediaQuery="@media (min-width: 0px)"
-          />
-          <span>~</span>
-          <DatePicker
-            value={filters.endDate}
-            onChange={(val) => onFilterChange('endDate', val)}
-            slotProps={{
-              textField: { placeholder: '종료일 선택', ...commonDatePickerStyle } as any,
-              openPickerButton: openPickerButtonStyle, openPickerIcon: openPickerIconStyle,
-            }}
-            desktopModeMediaQuery="@media (min-width: 0px)"
-          />
-        </div>
+        // <div className={styles.datepicker_box}>
+        //   <DatePicker
+        //     value={filters.startDate}
+        //     onChange={(val) => onFilterChange('startDate', val)}
+        //     slotProps={{
+        //       textField: { placeholder: '시작일 선택', ...commonDatePickerStyle } as any,
+        //       openPickerButton: openPickerButtonStyle, openPickerIcon: openPickerIconStyle,
+        //     }}
+        //     desktopModeMediaQuery="@media (min-width: 0px)"
+        //   />
+        //   <span>~</span>
+        //   <DatePicker
+        //     value={filters.endDate}
+        //     onChange={(val) => onFilterChange('endDate', val)}
+        //     slotProps={{
+        //       textField: { placeholder: '종료일 선택', ...commonDatePickerStyle } as any,
+        //       openPickerButton: openPickerButtonStyle, openPickerIcon: openPickerIconStyle,
+        //     }}
+        //     desktopModeMediaQuery="@media (min-width: 0px)"
+        //   />
+        // </div>
+        <DateRangePicker
+          startDate={filters.startDate}
+          endDate={filters.endDate}
+          onStartDateChange={(val) => onFilterChange('startDate', val)}
+          onEndDateChange={(val) => onFilterChange('endDate', val)}
+        />
       );
     default: return null;
   }

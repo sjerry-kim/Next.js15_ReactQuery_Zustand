@@ -51,21 +51,21 @@ export default function ChartFrame({ title, children, filterUIType }: ChartFrame
   ];
   const { isDesktop } = useWindowSize();
   /* mui datepicker 커스텀 */
-  const openPickerButtonStyle = {
-    disableRipple: true,
-    sx: { padding: 1, fontSize: '0.75rem', '&:hover': { backgroundColor: 'transparent' }, '&:focus': { backgroundColor: 'transparent' } },
-  };
-  const openPickerIconStyle = { sx: { fontSize: '0.55rem' } };
-  const commonDatePickerStyle = {
-    size: 'small', fullWidth: false, variant: 'outlined', inputProps: { readOnly: false }, InputLabelProps: { shrink: true },
-    sx: {
-      width: isDesktop ? '110px' : '100%', border: '1px solid #D0D4DA', borderRadius: '0.375rem', padding: '1px 8px', backgroundColor: '#FFF',
-      fontSize: '0.75rem', letterSpacing: '-0.35px', color: '#4b4b4b', backgroundImage: 'none', backgroundRepeat: 'no-repeat',
-      backgroundPosition: 'right 12px center', backgroundSize: '12px',
-      '& input': { all: 'unset', width: '100%', fontSize: '0.75rem', letterSpacing: '-0.35px', color: '#4b4b4b', lineHeight: 1.625 },
-      '& .MuiOutlinedInput-notchedOutline': { border: 'none' }, '& .MuiOutlinedInput-root': { padding: 0 }, '& .MuiInputAdornment-root': { marginLeft: 0 },
-    },
-  };
+  // const openPickerButtonStyle = {
+  //   disableRipple: true,
+  //   sx: { padding: 1, fontSize: '0.75rem', '&:hover': { backgroundColor: 'transparent' }, '&:focus': { backgroundColor: 'transparent' } },
+  // };
+  // const openPickerIconStyle = { sx: { fontSize: '0.55rem' } };
+  // const commonDatePickerStyle = {
+  //   size: 'small', fullWidth: false, variant: 'outlined', inputProps: { readOnly: false }, InputLabelProps: { shrink: true },
+  //   sx: {
+  //     width: isDesktop ? '110px' : '100%', border: '1px solid #D0D4DA', borderRadius: '0.375rem', padding: '1px 8px', backgroundColor: '#FFF',
+  //     fontSize: '0.75rem', letterSpacing: '-0.35px', color: '#4b4b4b', backgroundImage: 'none', backgroundRepeat: 'no-repeat',
+  //     backgroundPosition: 'right 12px center', backgroundSize: '12px',
+  //     '& input': { all: 'unset', width: '100%', fontSize: '0.75rem', letterSpacing: '-0.35px', color: '#4b4b4b', lineHeight: 1.625 },
+  //     '& .MuiOutlinedInput-notchedOutline': { border: 'none' }, '& .MuiOutlinedInput-root': { padding: 0 }, '& .MuiInputAdornment-root': { marginLeft: 0 },
+  //   },
+  // };
 
   // '주별 보기' 옵션 계산 (CategoricalFilterControls만 해당됨)
   const weekOptions = useMemo(() => {
@@ -113,9 +113,9 @@ export default function ChartFrame({ title, children, filterUIType }: ChartFrame
     onFilterChange: handleFilterChange,
     yearOptions: yearOptions,
     weekOptions: weekOptions,
-    commonDatePickerStyle: commonDatePickerStyle,
-    openPickerButtonStyle: openPickerButtonStyle,
-    openPickerIconStyle: openPickerIconStyle,
+    // commonDatePickerStyle: commonDatePickerStyle,
+    // openPickerButtonStyle: openPickerButtonStyle,
+    // openPickerIconStyle: openPickerIconStyle,
   };
 
   // 타임라인이 있는 차트(ex-꺾은선, 막대그래프 등)와 없는 차트(ex-파이, 도넛차트)를 구분

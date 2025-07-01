@@ -1,4 +1,5 @@
 import { ComponentProps } from 'react';
+import { Moment } from 'moment/moment';
 
 /* Button */
 export interface ButtonProps extends ComponentProps<'button'> {
@@ -24,4 +25,12 @@ export interface SelectProps extends ComponentProps<'select'> {
 /* Input */
 export interface SearchBarProps extends ComponentProps<'input'> {
   width?: string | number;
+}
+
+/* DatePicker*/
+export interface DateRangePickerProps {
+  startDate: Moment | null;
+  endDate: Moment | null;
+  onStartDateChange: (date: Moment | null) => void;
+  onEndDateChange: (date: Moment | null) => void;
 }
