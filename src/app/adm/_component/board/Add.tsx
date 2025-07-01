@@ -43,7 +43,7 @@ export default function Page({}) {
 
   const createMutation = useMutation<ApiResponse<Board>, Error>({
     mutationFn: async () => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/board`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/protected/board`, {
         method: 'POST',
         cache: 'no-store',
         headers: {
