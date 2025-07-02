@@ -99,7 +99,7 @@
 .status_box {
   display: flex;
   flex-direction: row;
-  width: 50%;
+  width: 60%;
   position: relative;
   overflow-x: auto;
   scroll-behavior: smooth;
@@ -123,9 +123,9 @@
   position: relative;
 }
 
-.status_set::-webkit-scrollbar {
-  display: none;
-}
+/*.status_set::-webkit-scrollbar {*/
+/*  display: none;*/
+/*}*/
 
 .gradient_overlay {
   position: absolute;

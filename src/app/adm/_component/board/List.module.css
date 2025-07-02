@@ -296,26 +296,9 @@
   }
 }
 
-@media (max-width: 767px) {
-  /*.top_wrapper {*/
-  /*  flex-direction: column;*/
-  /*  align-items: flex-end;*/
-  /*  @apply gap-2;*/
-  /*}*/
-
-  /*.status_container {*/
-  /*  width: 100%;*/
-  /*}*/
-
-  /*.status_box {*/
-  /*  padding: 0 10px 0 0;*/
-  /*}*/
-
-  /*.search_container {*/
-  /*  width: 100%;*/
-  /*}*/
-
-  /*.bottom_wrapper {*/
-  /*  @apply gap-3;*/
-  /*}*/
+/* select 반응형 */
+@media (max-width: 400px) {
+  .search_container select {
+    width: 80px;
+  }
 }
