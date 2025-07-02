@@ -464,61 +464,61 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
             </Popper>
           </div>
         </header>
-        {
-          // 대시보드가 아니고 && 모바일버전에서만 노출
-          (pathname !== '/adm/dash') &&
-          <>
-            <Breadcrumbs
-              separator={<NavigateNextIcon sx={{width: "18px", color: "#7E7E7E"}} />}
-              // separator=""
-              aria-label="breadcrumb"
-              sx={{
-                // position: "relative",
-                // top: "5px",
-                padding: "5px 30px 0 30px",
-                '& .MuiBreadcrumbs-separator': {
-                  mx: 0,
-                },
-              }}
-            >
-              {breadcrumbsPath.map((item, idx) => {
-                const isLast = idx === breadcrumbsPath.length - 1;
-                return (
-                  idx === 0 ?
-                    <Typography
-                      key={item.path}
-                      sx={{ cursor: 'pointer', color: '#7E7E7E', fontSize: "14px" }}
-                      onClick={()=>router.push(item.path)}
-                    >
-                      {item.title}
-                    </Typography> :
-                    isLast ?
-                      <Typography
-                        key={item.path}
-                        sx={{ color: '#A5B4FC', fontSize: "14px", fontWeight: "500" }}
-                      >
-                        {item.title}
-                      </Typography> :
-                      <Typography
-                        key={item.path}
-                        sx={{ color: '#7E7E7E', fontSize: "14px" }}
-                      >
-                        {item.title}
-                      </Typography>
-                )
-              })}
-            </Breadcrumbs>
-            {/*{*/}
-            {/*  isMobile &&*/}
-            {/*  <h2 className={styles.page_title}>*/}
-            {/*    {breadcrumbsPath.map((item, idx) => {*/}
-            {/*      const isLast = idx === breadcrumbsPath.length - 1;*/}
-            {/*      return isLast && item.title*/}
-            {/*    })}*/}
-            {/*  </h2>*/}
-            {/*}*/}
-          </>
-        }
+        {/*{*/}
+        {/*  // 대시보드가 아니고 && 모바일버전에서만 노출*/}
+        {/*  (pathname !== '/adm/dash') &&*/}
+        {/*  <>*/}
+        {/*    <Breadcrumbs*/}
+        {/*      separator={<NavigateNextIcon sx={{width: "18px", color: "#7E7E7E"}} />}*/}
+        {/*      // separator=""*/}
+        {/*      aria-label="breadcrumb"*/}
+        {/*      sx={{*/}
+        {/*        // position: "relative",*/}
+        {/*        // top: "5px",*/}
+        {/*        padding: "5px 30px 0 30px",*/}
+        {/*        '& .MuiBreadcrumbs-separator': {*/}
+        {/*          mx: 0,*/}
+        {/*        },*/}
+        {/*      }}*/}
+        {/*    >*/}
+        {/*      {breadcrumbsPath.map((item, idx) => {*/}
+        {/*        const isLast = idx === breadcrumbsPath.length - 1;*/}
+        {/*        return (*/}
+        {/*          idx === 0 ?*/}
+        {/*            <Typography*/}
+        {/*              key={item.path}*/}
+        {/*              sx={{ cursor: 'pointer', color: '#7E7E7E', fontSize: "14px" }}*/}
+        {/*              onClick={()=>router.push(item.path)}*/}
+        {/*            >*/}
+        {/*              {item.title}*/}
+        {/*            </Typography> :*/}
+        {/*            isLast ?*/}
+        {/*              <Typography*/}
+        {/*                key={item.path}*/}
+        {/*                sx={{ color: '#A5B4FC', fontSize: "14px", fontWeight: "500" }}*/}
+        {/*              >*/}
+        {/*                {item.title}*/}
+        {/*              </Typography> :*/}
+        {/*              <Typography*/}
+        {/*                key={item.path}*/}
+        {/*                sx={{ color: '#7E7E7E', fontSize: "14px" }}*/}
+        {/*              >*/}
+        {/*                {item.title}*/}
+        {/*              </Typography>*/}
+        {/*        )*/}
+        {/*      })}*/}
+        {/*    </Breadcrumbs>*/}
+        {/*    /!*{*!/*/}
+        {/*    /!*  isMobile &&*!/*/}
+        {/*    /!*  <h2 className={styles.page_title}>*!/*/}
+        {/*    /!*    {breadcrumbsPath.map((item, idx) => {*!/*/}
+        {/*    /!*      const isLast = idx === breadcrumbsPath.length - 1;*!/*/}
+        {/*    /!*      return isLast && item.title*!/*/}
+        {/*    /!*    })}*!/*/}
+        {/*    /!*  </h2>*!/*/}
+        {/*    /!*}*!/*/}
+        {/*  </>*/}
+        {/*}*/}
         {children}
       </Box>
     </Box>

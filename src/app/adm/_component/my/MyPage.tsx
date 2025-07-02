@@ -37,8 +37,8 @@ export default function MyPage() {
 
 
   return (
-    <main>
-      <section className={styles.form_wrapper}>
+    <main className={styles.main}>
+      <section className={styles.page_wrapper}>
         <div className={styles.top}>
           <h3>내 정보</h3>
         </div>
@@ -114,7 +114,7 @@ export default function MyPage() {
               </LabelInputSet>
             </li>
 
-            <li>
+            <li className={styles.one_row_box}>
               <LabelInput
                 label="회원정보1"
                 name="data1"
@@ -164,7 +164,6 @@ export default function MyPage() {
                 onChange={handleChange}
               />
             </li>
-
             <li className={styles.one_row_box}>
               <div className={styles.inner_row}>
                 <label className={styles.label}>웹 푸시 알림 설정</label>
