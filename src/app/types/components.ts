@@ -3,7 +3,7 @@ import { Moment } from 'moment/moment';
 import { DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 
 /* Option */
-type Option = {
+export type Option = {
   label: string;
   value: string | number;
   disabled?: boolean;
@@ -54,8 +54,8 @@ export interface RadioSetProps {
   label: string;
   name: string;
   options: Option[];
-  value: string; // 단일 선택이므로 string
-  onChange: (value: string) => void;
+  value: Option | null;
+  onChange: (value: Option | null) => void;
   direction?: 'row' | 'column';
 }
 
@@ -66,20 +66,16 @@ export interface CheckboxProps extends ComponentProps<'input'> {
 export interface CheckboxSetProps {
   label: string;
   options: Option[];
-  value: (string | number)[]; // 다중 선택이므로 string 배열
-  onChange: (value: string[]) => void;
+  value: Option[];
+  onChange: (value: Option[]) => void;
   direction?: 'row' | 'column';
-}
-
-export interface SwitchProps extends ComponentProps<'input'> {
-  label: string;
 }
 
 export interface SwitchSetProps {
   label: string;
   options: Option[];
-  value: (string | number)[]; // 다중 선택이므로 string 배열
-  onChange: (value: string[]) => void;
+  value: Option[];
+  onChange: (value: Option[]) => void;
   direction?: 'row' | 'column';
 }
 

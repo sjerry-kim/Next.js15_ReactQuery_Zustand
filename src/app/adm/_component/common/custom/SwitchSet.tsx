@@ -1,45 +1,41 @@
 'use client';
 
-// import Switch from '@mui/material/Switch'; // ❌ 기존 MUI import를 제거하고
-import Switch from '../mui/Switch'; // ✅ 우리가 만든 커스텀 Switch를 import 합니다.
-
-import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@/adm/_component/common/custom/Switch';
 import styles from './Set.module.css';
-import { SwitchSetProps } from '@/types/components';
+import { SwitchSetProps, Option } from '@/types/components';
 
 // 나머지 코드는 이전 답변과 100% 동일합니다.
 export default function SwitchSet({
-                                    label,
-                                    options,
-                                    value,
-                                    onChange,
-                                    direction = 'row',
-                                  }: SwitchSetProps) {
+  label,
+  options,
+  value,
+  onChange,
+  direction = 'row',
+}: SwitchSetProps) {
 
-  const handleChange = (checkedValue: string | number) => {
-    const newValues = value.includes(checkedValue)
-      ? value.filter((v) => v !== checkedValue)
-      : [...value, checkedValue];
+  const handleChange = (checkedOption: Option) => {
+    const isChecked = value.some(item => item.value === checkedOption.value);
+    const newValues = isChecked
+      ? value.filter((item) => item.value !== checkedOption.value)
+      : [...value, checkedOption];
+
     onChange(newValues);
   };
 
   return (
     <fieldset className={styles.wrapper}>
-      <legend className={styles.label}>{label}</legend>
+      {/*<legend className={styles.label}>{label}</legend>*/}
       <div className={`${styles.container} ${styles[direction]}`}>
         {options.map((option) => (
-          <FormControlLabel
-            key={option.value}
-            control={
-              <Switch
-                checked={value.includes(option.value)}
-                onChange={() => handleChange(option.value)}
-                disabled={option.disabled}
-                name={option.value}
-              />
-            }
-            label={option.label}
-          />
+          <div className={styles.switch_set_container} key={option.value}>
+            <span className={styles.span}>{option.label}</span>
+            <Switch
+              checked={value.some(item => item.value === option.value)}
+              onChange={() => handleChange(option)}
+              disabled={option.disabled}
+              name={String(option.value)}
+            />
+          </div>
         ))}
       </div>
     </fieldset>

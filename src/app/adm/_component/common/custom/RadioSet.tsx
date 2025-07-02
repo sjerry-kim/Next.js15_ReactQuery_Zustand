@@ -5,20 +5,20 @@ import styles from './Set.module.css';
 import { RadioSetProps } from '@/types/components';
 
 export default function RadioSet({
-                                   label, name, options, value, onChange, direction = 'row'
-                                 }: RadioSetProps) {
+  label, name, options, value, onChange, direction = 'row'
+}: RadioSetProps) {
   return (
     <fieldset className={styles.wrapper}>
-      <legend className={styles.label}>{label}</legend>
+      {/*<legend className={styles.label}>{label}</legend>*/}
       <div className={`${styles.container} ${styles[direction]}`}>
         {options.map((option) => (
           <Radio
             key={option.value}
             name={name}
             label={option.label}
-            value={option.value}
-            checked={value === option.value}
-            onChange={(e) => onChange(e.target.value)}
+            value={String(option.value)}
+            checked={value?.value === option.value}
+            onChange={() => onChange(option)}
             disabled={option.disabled}
           />
         ))}

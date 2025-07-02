@@ -303,6 +303,7 @@ module.exports = {
       },
 
       transitionDuration: {
+        200: '200ms',
         300: '300ms',
         500: '500ms',
       },

@@ -19,6 +19,11 @@ import DateRangePicker from '@/adm/_component/common/custom/DateRangePicker';
 import { Moment } from 'moment/moment';
 import SingleDatePicker from '@/adm/_component/common/custom/SingleDatePicker';
 import ResetButton from '@/adm/_component/common/buttons/ResetButton';
+import Checkbox from '@/adm/_component/common/custom/Checkbox';
+import CheckboxSet from '@/adm/_component/common/custom/CheckboxSet';
+import RadioSet from '../../common/custom/RadioSet';
+import SwitchSet from '@/adm/_component/common/custom/SwitchSet';
+import { Option } from '@/types/components';
 // import MenuModal from '@/adm/_component/common/MenuModal';
 
 interface JsonData {
@@ -164,6 +169,40 @@ export default function BoardListPage() {
     return <div>데이터를 불러오는데 실패했습니다. 나중에 다시 시도해주세요.</div>;
   }
 
+  /* ----- Text Start ----- */
+
+  const fruitOptions : Option[] = [
+    { label: '사과', value: 'apple' },
+    { label: '바나나', value: 'banana' },
+    { label: '오렌지', value: 'orange' },
+  ];
+  const sortOptions: Option[] = [
+    { label: '최신순', value: 'desc' },
+    { label: '오래된순', value: 'asc' },
+  ];
+  const settingOptions: Option[] = [
+    { label: '이메일 알림', value: 'email' },
+    { label: 'SMS 알림', value: 'sms' },
+  ]
+  const [selectedFruits, setSelectedFruits] = useState<Option[]>([
+    { label: '사과', value: 'apple' }
+  ]);
+  const [sortOrder, setSortOrder] = useState<Option | null>(sortOptions[0]);
+  const [settings, setSettings] = useState<Option[] | []>([{ label: '이메일 알림', value: 'email' },]);
+
+  // useEffect(()=>{
+  //   console.log(selectedFruits);
+  // }, [selectedFruits])
+  //
+  // useEffect(()=>{
+  //   console.log(sortOrder);
+  // }, [sortOrder])
+  //
+  // useEffect(()=>{
+  //   console.log(settings);
+  // }, [settings])
+
+  /* ----- Text End ----- */
   return (
     <>
       <main>
@@ -172,14 +211,45 @@ export default function BoardListPage() {
           <ul className={styles.filter_top_container}>
             <li className={styles.filter_row}>
               <div className={styles.filter_set}>
-                <label className={styles.first_label}>옵션</label>
-                <div></div>
+                <label className={styles.first_label}>옵션1</label>
+                <div>
+                  <CheckboxSet
+                    label="좋아하는 과일"
+                    options={fruitOptions}
+                    value={selectedFruits}
+                    onChange={setSelectedFruits}
+                  />
+                </div>
               </div>
             </li>
+
             <li className={styles.filter_row}>
               <div className={styles.filter_set}>
-                <label>옵션</label>
-                <div></div>
+                <label>옵션2</label>
+                <div>
+                  <RadioSet
+                    label="정렬"
+                    name="sortOrder"
+                    options={sortOptions}
+                    value={sortOrder}
+                    onChange={setSortOrder}
+                  />
+                </div>
+              </div>
+            </li>
+
+            <li className={styles.filter_row}>
+              <div className={styles.filter_set}>
+                <label>옵션3</label>
+                <div>
+                  <SwitchSet
+                    label="알림 설정"
+                    options={settingOptions}
+                    value={settings}
+                    onChange={setSettings}
+                    direction="column"
+                  />
+                </div>
               </div>
             </li>
 
