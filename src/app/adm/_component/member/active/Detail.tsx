@@ -6,7 +6,7 @@ import { board } from '@prisma/client';
 import styles from './Detail.module.css';
 import { getBoard } from '@/services/boardService';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import onTextChange from '@/utils/onTextChange';
+import onInputsChange from '@/utils/onInputsChange';
 import { Board } from '@/types/board';
 import CommonModal from '@/adm/_component/common/modals/CommonModal';
 import Editor from '@/adm/_component/common/inputs/Editor';
@@ -32,7 +32,7 @@ export default function Page({ id }: PageProps) {
     id: data?.id || 0,
     content: data?.content || '',
   });
-  const {handleChange, handleCustomChange} = onTextChange(jsonData, setJsonData);
+  const {handleChange, handleCustomChange} = onInputsChange(jsonData, setJsonData);
   const confirmationButtons: ButtonProps[] = [
     {
       text: '정지',

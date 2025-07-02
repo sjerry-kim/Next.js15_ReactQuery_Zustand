@@ -4,8 +4,8 @@ import { DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 
 /* Option */
 type Option = {
-  value: string | number;
   label: string;
+  value: string | number;
   disabled?: boolean;
 };
 
@@ -66,7 +66,7 @@ export interface CheckboxProps extends ComponentProps<'input'> {
 export interface CheckboxSetProps {
   label: string;
   options: Option[];
-  value: string[]; // 다중 선택이므로 string 배열
+  value: (string | number)[]; // 다중 선택이므로 string 배열
   onChange: (value: string[]) => void;
   direction?: 'row' | 'column';
 }
@@ -78,7 +78,7 @@ export interface SwitchProps extends ComponentProps<'input'> {
 export interface SwitchSetProps {
   label: string;
   options: Option[];
-  value: string[]; // 다중 선택이므로 string 배열
+  value: (string | number)[]; // 다중 선택이므로 string 배열
   onChange: (value: string[]) => void;
   direction?: 'row' | 'column';
 }

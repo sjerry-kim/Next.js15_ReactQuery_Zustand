@@ -7,7 +7,7 @@ type CustomEvent = {
   };
 };
 
-const onTextChange = <T extends Record<string, any>>(
+const onInputsChange = <T extends Record<string, any>>(
   _data: T,
   setData: Dispatch<SetStateAction<T>>
 ) => {
@@ -70,4 +70,4 @@ const onTextChange = <T extends Record<string, any>>(
   return { handleChange, handleCustomChange };
 };
 
-export default onTextChange;
+export default onInputsChange;

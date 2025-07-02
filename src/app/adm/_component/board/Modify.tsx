@@ -6,7 +6,7 @@ import { board } from '@prisma/client';
 import styles from './Modify.module.css';
 import { getBoard } from '@/services/boardService';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import onTextChange from '@/utils/onTextChange';
+import onInputsChange from '@/utils/onInputsChange';
 import { Board } from '@/types/board';
 
 type PageProps = {
@@ -27,7 +27,7 @@ export default function Page({ id }: PageProps) {
     id: data?.id || 0,
     content: data?.content || '',
   });
-  const {handleChange} = onTextChange(jsonData, setJsonData);
+  const {handleChange} = onInputsChange(jsonData, setJsonData);
 
   const updateMutation = useMutation<ApiResponse<Board>, Error>({
     mutationFn: async () => {

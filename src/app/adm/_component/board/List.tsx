@@ -10,7 +10,7 @@ import { ITEMS_PER_PAGE } from '@/_constant/pagination';
 import styles from "./List.module.css";
 import { MdOutlineReplay } from "react-icons/md";
 import useWindowSize from '@/hooks/useWindowSize.';
-import onTextChange from '@/utils/onTextChange';
+import onInputsChange from '@/utils/onInputsChange';
 import Button from '@/adm/_component/common/buttons/Button';
 import Select from '@/adm/_component/common/custom/Select';
 import SearchBar from '@/adm/_component/common/inputs/SearchBar';
@@ -47,7 +47,7 @@ export default function BoardListPage() {
     { value: "content", label: "내용" },
   ];
   const queryClient = useQueryClient();
-  const {handleChange} = onTextChange(jsonData, setJsonData);
+  const {handleChange} = onInputsChange(jsonData, setJsonData);
   const { isMobile, isLaptop } = useWindowSize();
 
   const getPageFromUrl = useCallback(() => {

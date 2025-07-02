@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './Add.module.css';
-import onTextChange from '@/utils/onTextChange';
+import onInputsChange from '@/utils/onInputsChange';
 import dynamic from 'next/dynamic';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { board } from '@prisma/client';
@@ -33,7 +33,7 @@ export default function Page({}) {
   const [jsonData, setJsonData] = useState({
     content: '',
   });
-  const {handleChange, handleCustomChange} = onTextChange(jsonData, setJsonData);
+  const {handleChange, handleCustomChange} = onInputsChange(jsonData, setJsonData);
   const tabs: Tab[] = [
     { key: 'info', label: '1. 정보 입력' },
     { key: 'option', label: '2. 옵션 설정' },

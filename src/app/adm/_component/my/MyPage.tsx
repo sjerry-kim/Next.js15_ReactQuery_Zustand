@@ -4,7 +4,7 @@ import styles from './MyPage.module.css';
 import NotificationButton from '@/adm/_component/common/NotificationButton';
 import Button from '@/adm/_component/common/buttons/Button';
 import LabelInput from '@/adm/_component/common/inputs/LabelInput';
-import onTextChange from '@/utils/onTextChange';
+import onInputsChange from '@/utils/onInputsChange';
 import { useState } from 'react';
 import LabelTextarea from '@/adm/_component/common/inputs/LabelTextarea';
 import LabelInputSet from '../common/inputs/LabelInputSet';
@@ -33,7 +33,7 @@ export default function MyPage() {
     data2: "",
     data3: "",
   });
-  const {handleChange} = onTextChange(jsonData, setJsonData);
+  const {handleChange} = onInputsChange(jsonData, setJsonData);
 
 
   return (

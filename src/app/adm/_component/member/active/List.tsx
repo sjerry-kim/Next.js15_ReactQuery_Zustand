@@ -10,7 +10,7 @@ import styles from "./List.module.css";
 import { LuSearch } from "react-icons/lu";
 import { MdOutlineReplay } from "react-icons/md";
 import useWindowSize from '@/hooks/useWindowSize.';
-import onTextChange from '@/utils/onTextChange';
+import onInputsChange from '@/utils/onInputsChange';
 import { ITEMS_PER_PAGE } from '@/_constant/pagination';
 import Button from '@/adm/_component/common/buttons/Button';
 import Select from '@/adm/_component/common/custom/Select';
@@ -46,7 +46,7 @@ export default function BoardListPage() {
   const [draftStartDate, setDraftStartDate] = useState<Moment | null>(null);
   const [draftEndDate, setDraftEndDate] = useState<Moment | null>(null);
   const queryClient = useQueryClient();
-  const {handleChange} = onTextChange(jsonData, setJsonData);
+  const {handleChange} = onInputsChange(jsonData, setJsonData);
   const { isMobile } = useWindowSize();
 
   const getPageFromUrl = useCallback(() => {

@@ -7,7 +7,7 @@ import { CheckboxSetProps } from '@/types/components';
 export default function CheckboxSet({
                                       label, options, value, onChange, direction = 'row'
                                     }: CheckboxSetProps) {
-  const handleChange = (checkedValue: string) => {
+  const handleChange = (checkedValue: string | number) => {
     // 이미 선택된 값이면 배열에서 제거, 아니면 추가
     const newValues = value.includes(checkedValue)
       ? value.filter((v) => v !== checkedValue)

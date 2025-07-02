@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import useValidation from '@/hooks/useValidation';
 import styles from './page.module.css';
-import onTextChange from '@/utils/onTextChange';
+import onInputsChange from '@/utils/onInputsChange';
 
 export default function Page() {
   const [jsonData, setJsonData] = useState({
@@ -12,7 +12,7 @@ export default function Page() {
     password: '',
     role: "user",
   });
-  const {handleChange} = onTextChange(jsonData, setJsonData);
+  const {handleChange} = onInputsChange(jsonData, setJsonData);
   const validationRules = {
     email: {
       required: true,
