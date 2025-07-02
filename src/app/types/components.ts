@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import React, { ComponentProps } from 'react';
 import { Moment } from 'moment/moment';
 import { DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 
@@ -29,6 +29,26 @@ export interface SelectProps extends ComponentProps<'select'> {
 export interface SearchBarProps extends ComponentProps<'input'> {
   width?: string | number;
   height?: string | number;
+}
+
+export interface LabelInputProps extends ComponentProps<'input'> {
+  label?: string;
+  required?: boolean;
+  showCharCount?: boolean;
+  showLabel?: boolean;
+}
+
+export interface LabelInputSetProps {
+  label: string;
+  children: React.ReactNode;
+  className?: string;
+}
+
+/* Textarea */
+export interface LabelTextareaProps extends ComponentProps<'textarea'> {
+  label: string;
+  required?: boolean;
+  showCharCount?: boolean;
 }
 
 /* DatePicker*/

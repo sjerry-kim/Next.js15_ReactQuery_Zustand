@@ -1,0 +1,40 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  @apply gap-1;
+}
+
+.label_box {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.label_text {
+  @apply font-bold text-md;
+}
+
+.required {
+  color: #ff4d4f;
+  margin-left: 4px;
+}
+
+.char_count {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.char_count_down {
+  position: relative;
+  top: 50px;
+}
+
+.textarea {
+  resize: none;
+  min-height: 220px;
+}
+
+.inputDisabled {
+  cursor: unset !important;
+}

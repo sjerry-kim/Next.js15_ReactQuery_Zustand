@@ -3,8 +3,38 @@
 import styles from './MyPage.module.css';
 import NotificationButton from '@/adm/_component/common/NotificationButton';
 import Button from '@/adm/_component/common/buttons/Button';
+import LabelInput from '@/adm/_component/common/inputs/LabelInput';
+import onTextChange from '@/utils/onTextChange';
+import { useState } from 'react';
+import LabelTextarea from '@/adm/_component/common/inputs/LabelTextarea';
+import LabelInputSet from '../common/inputs/LabelInputSet';
+
+interface JsonData {
+  userName: string;
+  email: string;
+  address: string;
+  currentPswd: string;
+  newPswd: string;
+  confirmPswd: string;
+  data1: string;
+  data2: string;
+  data3: string;
+}
 
 export default function MyPage() {
+  const [jsonData, setJsonData] = useState<JsonData>({
+    userName: "",
+    email: "user@example.com",
+    address: "",
+    currentPswd: "",
+    newPswd: "",
+    confirmPswd: "",
+    data1: "",
+    data2: "",
+    data3: "",
+  });
+  const {handleChange} = onTextChange(jsonData, setJsonData);
+
 
   return (
     <main>
@@ -19,44 +49,120 @@ export default function MyPage() {
                 <div className={styles.avatarSkeleton}></div>
               </div>
               <div className={styles.inner_column}>
-                <div className={styles.inner_row}>
-                  <label className={styles.label}>이름</label>
-                  <input type="text" placeholder="이름" className={styles.input} />
-                </div>
-                <div className={styles.inner_row}>
-                  <label className={styles.label}>이메일</label>
-                  <input type="email" value="user@example.com" disabled className={styles.inputDisabled} />
-                </div>
+                <LabelInput
+                  label="이름"
+                  name="userName"
+                  value={jsonData.userName}
+                  maxLength={10}
+                  placeholder="이름"
+                  disabled
+                  onChange={handleChange}
+                />
+                <LabelInput
+                  label="이메일"
+                  name="email"
+                  value={jsonData.email}
+                  maxLength={80}
+                  placeholder="이메일"
+                  disabled
+                  onChange={handleChange}
+                />
               </div>
             </li>
 
+            {/* todo 비밀번호 변경은 모달로 빼기 */}
             <li className={styles.one_row_box}>
-              <div className={styles.inner_row}>
-                <label className={styles.label}>비밀번호 변경</label>
-                <div className={styles.inner_row_set}>
-                  <input type="password" placeholder="현재 비밀번호" className={styles.input} />
-                  <input type="password" placeholder="새 비밀번호" className={styles.input} />
-                  <input type="password" placeholder="비밀번호 확인" className={styles.input} />
-                  <Button
-                    text="변경"
-                    variant="contained"
-                    color="primary"
-                    size="md"
-                    height="100%"
-                    onClick={()=>console.log("확인")}
-                  />
-                </div>
-              </div>
+              <LabelInputSet label="비밀번호 변경">
+                <LabelInput
+                  type="currentPswd"
+                  name="currentPswd"
+                  placeholder="현재 비밀번호"
+                  value={jsonData.currentPswd}
+                  maxLength={15}
+                  showCharCount
+                  showLabel={false}
+                  onChange={handleChange}
+                />
+                <LabelInput
+                  type="newPswd"
+                  name="newPswd"
+                  placeholder="새 비밀번호"
+                  value={jsonData.newPswd}
+                  maxLength={15}
+                  showCharCount
+                  showLabel={false}
+                  onChange={handleChange}
+                />
+                <LabelInput
+                  type="confirmPswd"
+                  name="confirmPswd"
+                  placeholder="비밀번호 확인"
+                  value={jsonData.confirmPswd}
+                  maxLength={15}
+                  showCharCount
+                  showLabel={false}
+                  onChange={handleChange}
+                />
+                <Button
+                  text="변경"
+                  variant="contained"
+                  color="primary"
+                  size="md"
+                  height="100%"
+                  onClick={()=>console.log("확인")}
+                />
+              </LabelInputSet>
+            </li>
+
+            <li>
+              <LabelInput
+                label="회원정보1"
+                name="data1"
+                value={jsonData.data1}
+                maxLength={10}
+                placeholder="회원정보를 입력하세요"
+                required
+                showCharCount
+                onChange={handleChange}
+              />
+              <LabelInput
+                label="회원정보2"
+                name="data2"
+                value={jsonData.data2}
+                maxLength={10}
+                placeholder="회원정보를 입력하세요"
+                showCharCount
+                required
+                onChange={handleChange}
+              />
             </li>
 
             <li className={styles.input_box}>
-              <label className={styles.label}>주소</label>
-              <input type="text" placeholder="주소" className={styles.input} />
+              <LabelInput
+                label="주소"
+                name="address"
+                value={jsonData.address}
+                maxLength={50}
+                placeholder="주소를 입력하세요"
+                showCharCount
+                required
+                onChange={handleChange}
+              />
             </li>
 
             <li className={styles.input_box}>
-              <label className={styles.label}>특이사항 (관리자 메모)</label>
-              <textarea placeholder="특이사항" rows={4} className={styles.textarea} />
+              {/*<label className={styles.label}>특이사항 (관리자 메모)</label>*/}
+              {/*<textarea placeholder="특이사항" rows={4} className={styles.textarea} />*/}
+              
+              <LabelTextarea
+                label="회원정보3"
+                name="data3"
+                value={jsonData.data3}
+                maxLength={3000}
+                placeholder="회원정보3을 입력하세요"
+                showCharCount
+                onChange={handleChange}
+              />
             </li>
 
             <li className={styles.one_row_box}>

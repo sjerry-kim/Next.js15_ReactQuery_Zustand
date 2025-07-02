@@ -43,7 +43,8 @@
 
 .content_container > li {
   display: flex;
-  flex-wrap: wrap;
+  /*flex-wrap: wrap;*/
+  @apply gap-3;
 }
 
 .label {

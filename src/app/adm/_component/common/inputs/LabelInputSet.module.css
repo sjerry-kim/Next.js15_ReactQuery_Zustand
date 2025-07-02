@@ -1,0 +1,38 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  @apply gap-1;
+}
+
+.label {
+  @apply font-bold text-md;
+}
+
+.content_set {
+  display: flex;
+  flex-direction: row;
+  align-items: center; /* 자식 요소들의 세로 정렬 */
+  width: 100%;
+  @apply gap-2;
+}
+
+.content_set > * {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.content_set > button {
+  flex-grow: 0;
+}
+
+@media (max-width: 767px) {
+  .content_set {
+    flex-direction: column;
+  }
+
+  .content_set > * {
+    flex-grow: 1;
+    width: 100%;
+  }
+}
