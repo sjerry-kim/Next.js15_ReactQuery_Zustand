@@ -19,8 +19,6 @@ export default function CommonModal({
                                       onClose,
                                     }: CommonModalProps) {
 
-  // 3. props를 기반으로 동적 스타일 객체 생성
-  // React.CSSProperties 타입을 사용하면 자동 완성과 타입 체크에 용이합니다.
   const modalStyle: CSSProperties = {
     width,
     height,
@@ -44,24 +42,6 @@ export default function CommonModal({
 
         {buttons.length > 0 && (
           <div className={styles.bottom_container}>
-            {/*{buttons.map((button, index) => {*/}
-            {/*  const buttonClasses = [*/}
-            {/*    styles.button,*/}
-            {/*    styles[button.variant || 'outlined'],*/}
-            {/*    styles[button.color || 'white'],*/}
-            {/*  ].join(' ');*/}
-
-            {/*  return (*/}
-            {/*    <button*/}
-            {/*      key={`${button.text}-${index}`}*/}
-            {/*      className={buttonClasses}*/}
-            {/*      onClick={button.onClick}*/}
-            {/*    >*/}
-            {/*      {button.text}*/}
-            {/*    </button>*/}
-            {/*  );*/}
-            {/*})}*/}
-
             {buttons.map((buttonProps, index) => (
               <Button
                 key={`${buttonProps.text}-${index}`}

@@ -1,6 +1,7 @@
 import React, { ComponentProps } from 'react';
 import { Moment } from 'moment/moment';
 import { DatePickerProps } from '@mui/x-date-pickers/DatePicker';
+import { TabsProps } from '@mui/material';
 
 /* Option */
 export type Option = {
@@ -102,4 +103,16 @@ export interface SingleDatePickerProps extends Omit<DatePickerProps<Moment>, 'va
   borderRight?: boolean;
   borderLeft?: boolean;
   placeholder?: string;
+}
+
+/* Tab */
+export interface TabItem {
+  key: string;
+  label: string;
+}
+
+export interface CustomTabsProps extends Omit<TabsProps, 'value' | 'onChange'> {
+  tabs: TabItem[];
+  activeTabKey: string;
+  onTabChange: (key: string) => void;
 }

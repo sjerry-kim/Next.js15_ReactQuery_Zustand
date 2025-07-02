@@ -3,6 +3,7 @@
   height: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
   position: absolute;
   top: 0;
   left: 0;
@@ -23,8 +24,6 @@
   background-color: white;
   border-radius: 0.25rem;
   overflow: hidden;
-  position: relative;
-  top: 15%;
   z-index: 10001;
   scrollbar-width: none;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.15);

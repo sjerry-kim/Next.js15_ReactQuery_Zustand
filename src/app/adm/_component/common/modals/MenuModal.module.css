@@ -3,6 +3,7 @@
   height: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
   position: absolute;
   top: 0;
   left: 0;
@@ -14,16 +15,14 @@
 .modal_wrapper {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  max-width: 80dvw;
-  min-width: 1000px;
+  justify-content: space-between;
+  /*max-width: 80dvw;*/
+  /*min-width: 1000px;*/
   height: fit-content;
-  max-height: 680px;
+  /*max-height: 680px;*/
   background-color: white;
   border-radius: 0.25rem;
   overflow: hidden;
-  position: relative;
-  top: 15%;
   z-index: 10001;
   scrollbar-width: none;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
@@ -60,20 +59,24 @@
   display: flex;
   flex-direction: row;
   width: 100%;
-  min-height: 350px;
-  max-height: 550px;
+  /*min-height: 350px;*/
+  /*max-height: 550px;*/
+  height: 100%;
   overflow-y: auto;
-  scrollbar-width: none;
+  /*scrollbar-width: none;*/
 }
 
-.middle_container::-webkit-scrollbar {
-  display: none;
-}
+/*.middle_container::-webkit-scrollbar {*/
+/*  display: none;*/
+/*}*/
 
 .sidebar {
   width: 200px;
   height: inherit;
   border-right: 1px solid #E5E8EC;
+  position: sticky;
+  top: 0;
+  left: 0;
 }
 
 .sidebar li {
@@ -91,7 +94,7 @@
 
 .content_box {
   padding: 15px;
-  width: calc(100% - 200px);
+  width: 100%;
   height: 100%;
 }
 
@@ -100,18 +103,24 @@
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  padding: 0 15px;
+  padding: 11.25px;
   width: 100%;
   height: 65px;
   border-top: 1px solid #E5E8EC;
+  @apply gap-2;
 }
 
 .bottom_container .submit_btn {
   height: 36px;
   border: 1px solid #D0D4DA;
-
 }
 
 .bottom_container .submit_btn:hover {
   background-color: #F5F5F5;
+}
+
+@media screen and (max-width: 767px) {
+  .middle_container{
+    flex-direction: column;
+  }
 }

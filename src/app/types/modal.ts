@@ -21,22 +21,43 @@ export interface CommonModalProps {
   minHeight?: string | number;
 }
 
-export interface CommonModalState {
-  isOpen: boolean;
-  type: string;
-  modalTitle: string;
-  buttons: ButtonProps[];
-  width?: string | number;
-  maxWidth?: string | number;
-  minWidth?: string | number;
-  height?: string | number;
-  maxHeight?: string | number;
-  minHeight?: string | number;
+// export interface CommonModalState {
+//   isOpen: boolean;
+//   type: string;
+//   modalTitle: string;
+//   buttons: ButtonProps[];
+//   width?: string | number;
+//   maxWidth?: string | number;
+//   minWidth?: string | number;
+//   height?: string | number;
+//   maxHeight?: string | number;
+//   minHeight?: string | number;
+// }
+//
+// export interface ModalConfig {
+//   type: string;
+//   title: string;
+//   buttons?: ButtonProps[];
+//   width?: string | number;
+//   maxWidth?: string | number;
+//   minWidth?: string | number;
+//   height?: string | number;
+//   maxHeight?: string | number;
+//   minHeight?: string | number;
+// }
+
+export interface MenuModalTab {
+  key: string;
+  label: string;
 }
 
-export interface ModalConfig {
-  type: string;
-  title: string;
+export interface MemuModalProps {
+  modalTitle?: string;
+  onClose: () => void;
+  children: ReactNode;
+  tabs: MenuModalTab[];
+  defaultTabKey?: string;
+  onTabChange: (key: string) => void;
   buttons?: ButtonProps[];
   width?: string | number;
   maxWidth?: string | number;

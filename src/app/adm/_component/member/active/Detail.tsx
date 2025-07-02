@@ -138,6 +138,7 @@ export default function Page({ id }: PageProps) {
   return (
     <CommonModal
       modalTitle="회원 정보"
+      width="1000px"
       buttons={confirmationButtons} // 원하는 버튼 배열을 전달
       onClose={() => router.back()}
     >

@@ -13,6 +13,8 @@ import { Board } from '@/types/board';
 import CloseIcon from '@mui/icons-material/Close';
 import CommonModal from '@/adm/_component/common/modals/CommonModal';
 import MenuModal from '@/adm/_component/common/modals/MenuModal';
+import { ButtonProps } from '@/types/components';
+import LabelTextarea from '@/adm/_component/common/inputs/LabelTextarea';
 
 const Editor = dynamic(() => import('@/adm/_component/common/inputs/Editor'), {
   ssr: false,
@@ -32,6 +34,9 @@ export default function Page({}) {
   const queryClient = useQueryClient();
   const [jsonData, setJsonData] = useState({
     content: '',
+    data1: "",
+    data2: "",
+    data3: "",
   });
   const {handleChange, handleCustomChange} = onInputsChange(jsonData, setJsonData);
   const tabs: Tab[] = [
@@ -40,6 +45,24 @@ export default function Page({}) {
     { key: 'confirm', label: '3. 최종 확인' }
   ]
   const [currentTab, setCurrentTab] = useState<string>("info");
+
+  const handleCancel = () => console.log('취소');
+  const handleSubmit = () => console.log('저장');
+
+  const myModalButtons: ButtonProps[] = [
+    {
+      text: '취소',
+      variant: 'outlined',
+      color: 'grey',
+      onClick: handleCancel,
+    },
+    {
+      text: '저장하기',
+      variant: 'contained',
+      color: 'primary',
+      onClick: handleSubmit,
+    }
+  ];
 
   const createMutation = useMutation<ApiResponse<Board>, Error>({
     mutationFn: async () => {
@@ -72,37 +95,68 @@ export default function Page({}) {
 
   return (
 
-    <CommonModal
-      modalTitle="글쓰기"
-      onClose={() => router.back()}
-    >
-      <ul className={styles.content_box}>
-        <li>
-          <label>제목</label>
-          <input/>
-        </li>
-        <li>
-          <label>내용</label>
-          <Editor
-            name="content"
-            value={jsonData.content}
-            onChange={handleCustomChange}
-          />
-        </li>
-      </ul>
-    </CommonModal>
-
-    // <MenuModal
-    //   modalTitle="설정"
+    // <CommonModal
+    //   modalTitle="글쓰기"
     //   onClose={() => router.back()}
-    //   onSubmit={() => createMutation.mutate()}
-    //   tabs={tabs}
-    //   onTabChange={(key) => setCurrentTab(key)}
     // >
-    //   {currentTab === 'info' && <>info</>}
-    //   {currentTab === 'option' && <>option</>}
-    //   {currentTab === 'confirm' && <>confirm</>}
-    // </MenuModal>
+    //   <ul className={styles.content_box}>
+    //     <li>
+    //       <label>제목</label>
+    //       <input/>
+    //     </li>
+    //     <li>
+    //       <label>내용</label>
+    //       <Editor
+    //         name="content"
+    //         value={jsonData.content}
+    //         onChange={handleCustomChange}
+    //       />
+    //     </li>
+    //   </ul>
+    // </CommonModal>
+
+    <MenuModal
+      modalTitle="설정"
+      onClose={() => router.back()}
+      tabs={tabs}
+      buttons={myModalButtons}
+      maxWidth="90%"
+      onTabChange={(key) => setCurrentTab(key)}
+    >
+      {currentTab === 'info' && (
+        <>
+          <LabelTextarea
+            label="정보1"
+            name="data1"
+            value={jsonData.data1}
+            maxLength={3000}
+            placeholder="정보1을 입력하세요"
+            showCharCount
+            onChange={handleChange}
+          />
+          <LabelTextarea
+            label="정보2"
+            name="data3"
+            value={jsonData.data2}
+            maxLength={3000}
+            placeholder="정보2을 입력하세요"
+            showCharCount
+            onChange={handleChange}
+          />
+          <LabelTextarea
+            label="정보3"
+            name="data3"
+            value={jsonData.data3}
+            maxLength={3000}
+            placeholder="정보3을 입력하세요"
+            showCharCount
+            onChange={handleChange}
+          />
+        </>
+      )}
+      {currentTab === 'option' && <>option</>}
+      {currentTab === 'confirm' && <>confirm</>}
+    </MenuModal>
 
   );
 }
