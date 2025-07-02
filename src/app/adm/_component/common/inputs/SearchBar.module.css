@@ -49,6 +49,13 @@
   @apply text-primary-light transition duration-300;
 }
 
+@media (max-width: 1023px) {
+  .wrapper {
+    width: 100%;
+    min-width: 140px;
+  }
+}
+
 @media (max-width: 767px) {
   .wrapper {
     width: 100%;

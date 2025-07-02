@@ -168,54 +168,21 @@ export default function BoardListPage() {
     <>
       <main>
         <section className={styles.top_wrapper}>
-          {/*<div className={styles.status_container}>*/}
-          {/*  <ul className={styles.status_box}>*/}
-          {/*    <li>전체</li>*/}
-          {/*    <li>대기</li>*/}
-          {/*    <li>예약</li>*/}
-          {/*    <li>구매</li>*/}
-          {/*    <li>취소</li>*/}
-          {/*  </ul>*/}
-          {/*  <div className={styles.gradient_overlay}></div>*/}
-          {/*</div>*/}
-
-          {/*<form className={styles.search_container} onSubmit={handleSearch}>*/}
-          {/*  /!*<select name="searchType" value={jsonData.searchType} onChange={handleChange}>*!/*/}
-          {/*  /!*  <option value={""}>전체</option>*!/*/}
-          {/*  /!*  <option value={"id"}>게시물코드</option>*!/*/}
-          {/*  /!*  <option value={"content"}>내용</option>*!/*/}
-          {/*  /!*</select>*!/*/}
-
-          {/*  <Select*/}
-          {/*    name="searchType"*/}
-          {/*    value={jsonData.searchType}*/}
-          {/*    onChange={handleChange}*/}
-          {/*    options={searchOptions}*/}
-          {/*  />*/}
-          {/*  /!*<div className={styles.searchbar_box}>*!/*/}
-          {/*  /!*  <input name="searchKeyword" value={jsonData.searchKeyword} placeholder="검색어를 입력하세요" onChange={handleChange}/>*!/*/}
-          {/*  /!*  <button type="submit">*!/*/}
-          {/*  /!*    <LuSearch />*!/*/}
-          {/*  /!*  </button>*!/*/}
-          {/*  /!*</div>*!/*/}
-          {/*  <SearchBar*/}
-          {/*    name="searchKeyword"*/}
-          {/*    value={jsonData.searchKeyword}*/}
-          {/*    placeholder="검색어를 입력하세요"*/}
-          {/*    onChange={handleChange}*/}
-          {/*  />*/}
-          {/*  <div title={"초기화"} className={styles.search_reset_box}>*/}
-          {/*    <MdOutlineReplay />*/}
-          {/*  </div>*/}
-          {/*</form>*/}
-
+          {/* ------ filter_top_container (start) ------ */}
           <ul className={styles.filter_top_container}>
             <li className={styles.filter_row}>
               <div className={styles.filter_set}>
-                <label className={styles.first_label}>상태</label>
+                <label className={styles.first_label}>옵션</label>
                 <div></div>
               </div>
             </li>
+            <li className={styles.filter_row}>
+              <div className={styles.filter_set}>
+                <label>옵션</label>
+                <div></div>
+              </div>
+            </li>
+
             <li className={styles.filter_row}>
               <div className={styles.filter_set}>
                 <label>검색어</label>
@@ -237,9 +204,10 @@ export default function BoardListPage() {
                 </div>
               </div>
             </li>
+
             <li className={styles.filter_row}>
               <div className={styles.filter_set}>
-                <label className={isMobile? styles.double_row_label : styles.last_label}>기간</label>
+                <label className={styles.double_row_label}>기간1</label>
                 <div className={styles.double_row_div}>
                   <SingleDatePicker
                     width="100%"
@@ -257,11 +225,37 @@ export default function BoardListPage() {
                 </div>
               </div>
               <div className={styles.filter_set}>
-                <label className={isMobile ? styles.last_label : styles.middle_label}>정렬</label>
+                <label className={isMobile ? "" : styles.middle_label}>정렬1</label>
+                <div></div>
+              </div>
+            </li>
+
+            <li className={styles.filter_row}>
+              <div className={styles.filter_set}>
+                <label className={isMobile? styles.double_row_label : styles.last_label}>기간2</label>
+                <div className={styles.double_row_div}>
+                  <SingleDatePicker
+                    width="100%"
+                    value={draftStartDate}
+                    placeholder="시작일 선택"
+                    onChange={setDraftStartDate}
+                    borderRight
+                  />
+                  <SingleDatePicker
+                    width="100%"
+                    value={draftEndDate}
+                    placeholder="종료일 선택"
+                    onChange={setDraftEndDate}
+                  />
+                </div>
+              </div>
+              <div className={styles.filter_set}>
+                <label className={isMobile ? styles.last_label : styles.middle_label}>정렬2</label>
                 <div></div>
               </div>
             </li>
           </ul>
+          {/* ------ filter_top_container (end) ------ */}
 
           <div className={styles.filter_bottom_container}>
             <div className={styles.status_box}>

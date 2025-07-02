@@ -48,7 +48,7 @@ export default function BoardListPage() {
   ];
   const queryClient = useQueryClient();
   const {handleChange} = onTextChange(jsonData, setJsonData);
-  const { isMobile } = useWindowSize();
+  const { isMobile, isLaptop } = useWindowSize();
 
   const getPageFromUrl = useCallback(() => {
     const pageParam = searchParams.get('page');
@@ -235,6 +235,7 @@ export default function BoardListPage() {
               options={searchOptions}
             />
             <SearchBar
+              width={isLaptop || isMobile ? "100%" : ""}
               name="searchKeyword"
               value={jsonData.searchKeyword}
               placeholder="검색어를 입력하세요"
