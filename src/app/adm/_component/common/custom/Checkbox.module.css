@@ -1,0 +1,12 @@
+.label { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+.input { display: none; }
+.customCheckbox {
+  width: 18px; height: 18px; border: 2px solid #ccc; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+}
+.customCheckbox svg {
+  fill: #fff; width: 18px; height: 18px;
+  transform: scale(0); transition: transform 0.2s;
+}
+.input:checked + .customCheckbox { background-color: #1890ff; border-color: #1890ff; }
+.input:checked + .customCheckbox svg { transform: scale(1); }

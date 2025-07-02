@@ -4,8 +4,8 @@ import React from 'react';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { FilterState } from '@/adm/_component/dash/chart/TimelineFilterControls';
 import styles from './CategoricalFilterControls.module.css';
-import Select from '@/adm/_component/common/inputs/Select';
-import DateRangePicker from '@/adm/_component/common/inputs/DateRangePicker';
+import Select from '@/adm/_component/common/custom/Select';
+import DateRangePicker from '@/adm/_component/common/custom/DateRangePicker';
 import useWindowSize from '@/hooks/useWindowSize.'; // 1. Select 컴포넌트 import
 
 interface WeekOption {

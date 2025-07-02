@@ -3,8 +3,8 @@
 import React from 'react';
 import { Moment } from 'moment';
 import styles from './TimelineFilterControls.module.css';
-import Select from '@/adm/_component/common/inputs/Select';
-import DateRangePicker from '@/adm/_component/common/inputs/DateRangePicker';
+import Select from '@/adm/_component/common/custom/Select';
+import DateRangePicker from '@/adm/_component/common/custom/DateRangePicker';
 import useWindowSize from '@/hooks/useWindowSize.';
 
 export interface FilterState {

@@ -2,6 +2,13 @@ import React, { ComponentProps } from 'react';
 import { Moment } from 'moment/moment';
 import { DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 
+/* Option */
+type Option = {
+  value: string | number;
+  label: string;
+  disabled?: boolean;
+};
+
 /* Button */
 export interface ButtonProps extends ComponentProps<'button'> {
   text: string;
@@ -16,11 +23,6 @@ export interface ButtonProps extends ComponentProps<'button'> {
 export interface ResetButtonProps extends ComponentProps<'button'> {}
 
 /* Select */
-type Option = {
-  value: string | number;
-  label: string;
-};
-
 export interface SelectProps extends ComponentProps<'select'> {
   options: Option[];
 }
@@ -42,6 +44,43 @@ export interface LabelInputSetProps {
   label: string;
   children: React.ReactNode;
   className?: string;
+}
+
+export interface RadioProps extends ComponentProps<'input'> {
+  label: string;
+}
+
+export interface RadioSetProps {
+  label: string;
+  name: string;
+  options: Option[];
+  value: string; // 단일 선택이므로 string
+  onChange: (value: string) => void;
+  direction?: 'row' | 'column';
+}
+
+export interface CheckboxProps extends ComponentProps<'input'> {
+  label: string;
+}
+
+export interface CheckboxSetProps {
+  label: string;
+  options: Option[];
+  value: string[]; // 다중 선택이므로 string 배열
+  onChange: (value: string[]) => void;
+  direction?: 'row' | 'column';
+}
+
+export interface SwitchProps extends ComponentProps<'input'> {
+  label: string;
+}
+
+export interface SwitchSetProps {
+  label: string;
+  options: Option[];
+  value: string[]; // 다중 선택이므로 string 배열
+  onChange: (value: string[]) => void;
+  direction?: 'row' | 'column';
 }
 
 /* Textarea */

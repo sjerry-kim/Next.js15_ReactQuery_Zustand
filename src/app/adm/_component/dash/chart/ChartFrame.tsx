@@ -14,7 +14,7 @@ import { CommonModalButton } from '@/types/modal';
 import TimelineFilterControls, { FilterState } from './TimelineFilterControls';
 import CategoricalFilterControls from './CategoricalFilterControls';
 import styles from './ChartFrame.module.css';
-import Select from '@/adm/_component/common/inputs/Select';
+import Select from '@/adm/_component/common/custom/Select';
 
 interface ChartFrameProps {
   title: string;

@@ -13,11 +13,11 @@ import useWindowSize from '@/hooks/useWindowSize.';
 import onTextChange from '@/utils/onTextChange';
 import { ITEMS_PER_PAGE } from '@/_constant/pagination';
 import Button from '@/adm/_component/common/buttons/Button';
-import Select from '@/adm/_component/common/inputs/Select';
+import Select from '@/adm/_component/common/custom/Select';
 import SearchBar from '@/adm/_component/common/inputs/SearchBar';
-import DateRangePicker from '@/adm/_component/common/inputs/DateRangePicker';
+import DateRangePicker from '@/adm/_component/common/custom/DateRangePicker';
 import { Moment } from 'moment/moment';
-import SingleDatePicker from '@/adm/_component/common/inputs/SingleDatePicker';
+import SingleDatePicker from '@/adm/_component/common/custom/SingleDatePicker';
 import ResetButton from '@/adm/_component/common/buttons/ResetButton';
 // import MenuModal from '@/adm/_component/common/MenuModal';
 

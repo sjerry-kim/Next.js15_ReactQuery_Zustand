@@ -1,0 +1,12 @@
+.label { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+.input { display: none; }
+.customRadio {
+  width: 18px; height: 18px; border: 2px solid #ccc; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+}
+.customRadio:after {
+  content: ''; width: 10px; height: 10px; background-color: #fff;
+  border-radius: 50%; transition: all 0.2s; transform: scale(0);
+}
+.input:checked + .customRadio { border-color: #1890ff; }
+.input:checked + .customRadio:after { background-color: #1890ff; transform: scale(1); }
