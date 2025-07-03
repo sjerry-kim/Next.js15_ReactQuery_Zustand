@@ -1,0 +1,102 @@
+.content_wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  @apply gap-3;
+}
+
+.search_container {
+  display: flex;
+  flex-shrink: 0; /* 검색창이 줄어들지 않도록 */
+  @apply gap-2;
+}
+
+.status_cell {
+  text-align: center;
+  padding: 40px 20px;
+  @apply bg-neutral-200;
+}
+
+.selected_row {
+  @apply bg-background-hover;
+}
+
+/* --- Table --- */
+.table_wrapper {
+  flex-grow: 1;
+  position: relative;
+  overflow: auto;
+  border: 1px solid;
+  border-radius: 8px;
+  @apply border-neutral-250;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table thead {
+  position: sticky;
+  top: 0;
+}
+
+.table th {
+  padding: 13px 16px;
+  text-align: center;
+  border-bottom: 1px solid;
+  white-space: nowrap;
+  @apply border-neutral-250;
+}
+
+.table thead th {
+  @apply bg-neutral-150 text-md font-semibold text-neutral-700;
+}
+
+.table thead th {
+  position: relative;
+}
+
+.table thead th:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 17px;
+  @apply bg-neutral-200;
+}
+
+.table tbody tr:hover {
+  @apply bg-background-hover cursor-pointer;
+}
+
+.table td {
+  padding: 8.75px 16px;
+  height: 42.5px;
+  box-sizing: border-box;
+  text-align: center;
+  vertical-align: middle;
+  border-bottom: 1px solid;
+  white-space: nowrap;
+  @apply text-md border-neutral-250;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.need_left {
+  text-align: left !important;
+}
+
+.need_right {
+  text-align: right !important;
+}
+
+/* 체크박스 위치 가운데 정렬 임시 스타일 */
+.checkbox_box label {
+  position: relative;
+  top: 3px;
+}

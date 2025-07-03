@@ -3,6 +3,7 @@
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { CustomTabsProps } from '@/types/components';
+import { COLORS } from '@/_constant/colorConstants';
 
 export default function CustomTabs({
   tabs,
@@ -28,14 +29,14 @@ export default function CustomTabs({
     },
     '& .Mui-selected': {
       color: '#A5B4FC !important', // 선택된 탭의 폰트 색상
-      backgroundColor: 'rgba(25, 118, 210, 0.08)',
+      backgroundColor: COLORS.background.hover,
     },
     '& .MuiTabScrollButton-root': {
       '& .MuiTouchRipple-root': {
         display: 'none',
       },
       '&:hover': {
-        backgroundColor: 'rgba(25, 118, 210, 0.08)',
+        backgroundColor: COLORS.background.hover,
       },
     },
   };
@@ -45,7 +46,7 @@ export default function CustomTabs({
     transition: 'background-color 0.3s, color 0.3s',
     color: '#4B4B4B',
     '&:hover': {
-      backgroundColor: 'rgba(25, 118, 210, 0.08)',
+      backgroundColor: COLORS.background.hover,
     },
   };
 

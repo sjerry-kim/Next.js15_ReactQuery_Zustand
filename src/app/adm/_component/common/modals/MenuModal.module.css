@@ -88,12 +88,11 @@
 }
 
 .sidebar li:hover {
-  background-color: rgba(25, 118, 210, 0.08);
+  @apply bg-background-hover
 }
 
 .sidebar .active {
-  background-color: rgba(25, 118, 210, 0.08);
-  @apply text-primary-light;
+  @apply text-primary-light bg-background-hover;
 }
 
 .sidebar .inactive {

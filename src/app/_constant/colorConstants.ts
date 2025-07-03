@@ -15,6 +15,7 @@ export const COLORS = {
     DEFAULT: '#FFFFFF',
     light: '#FFFFFF',
     dark: '#E5E7EB',
+    hover: "rgba(25, 118, 210, 0.08)",
   },
   surface: {
     DEFAULT: '#FFFFFF',

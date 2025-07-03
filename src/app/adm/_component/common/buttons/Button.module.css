@@ -12,8 +12,8 @@
 .disabled {
   cursor: unset;
   pointer-events: none;
+  @apply opacity-40;
 }
-
 
 /* --- Variants: Size --- */
 .sm {

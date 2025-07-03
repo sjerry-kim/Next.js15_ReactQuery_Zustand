@@ -24,7 +24,38 @@ import CheckboxSet from '@/adm/_component/common/custom/CheckboxSet';
 import RadioSet from '../../common/custom/RadioSet';
 import SwitchSet from '@/adm/_component/common/custom/SwitchSet';
 import { Option } from '@/types/components';
+import SearchModal from '@/adm/_component/common/modals/SearchModal';
+import moment from 'moment';
 // import MenuModal from '@/adm/_component/common/MenuModal';
+
+/* ------ 임시 타입, 함수 등 start ------ */
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  createdAt: string;
+}
+
+async function searchUsers(filter: { type: string; keyword: string }): Promise<User[]> {
+  // console.log('Searching users with filter:', filter);
+  // 여기에 실제 fetch 로직을 구현합니다.
+  // const res = await fetch(`/api/users?type=${filter.type}&keyword=${filter.keyword}`);
+  // return res.json();
+
+  // 임시 목업 데이터 반환
+  return [
+    { id: 1, name: '홍길동', email: 'hong@example.com', createdAt: moment().format("YYYY.MM.DD")},
+    { id: 2, name: '김철수', email: 'kim@example.com', createdAt: moment().format("YYYY.MM.DD")},
+    { id: 3, name: '홍길동', email: 'hong@example.com', createdAt: moment().format("YYYY.MM.DD")},
+    { id: 4, name: '김철수', email: 'kim@example.com', createdAt: moment().format("YYYY.MM.DD")},
+    { id: 5, name: '홍길동', email: 'hong@example.com', createdAt: moment().format("YYYY.MM.DD")},
+    { id: 6, name: '김철수', email: 'kim@example.com', createdAt: moment().format("YYYY.MM.DD")},
+    { id: 7, name: '홍길동', email: 'hong@example.com', createdAt: moment().format("YYYY.MM.DD")},
+    { id: 8, name: '김철수', email: 'kim@example.com', createdAt: moment().format("YYYY.MM.DD")},
+  ];
+}
+
+/* ------ 임시 타입, 함수 등 end ------ */
 
 interface JsonData {
   searchType: string;
@@ -171,6 +202,7 @@ export default function BoardListPage() {
 
   /* ----- Text Start ----- */
 
+  // checkbox, radio, switch 등
   const fruitOptions : Option[] = [
     { label: '사과', value: 'apple' },
     { label: '바나나', value: 'banana' },
@@ -202,7 +234,17 @@ export default function BoardListPage() {
   //   console.log(settings);
   // }, [settings])
 
+  // search modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
+
+  const handleApplyUsers = (users: User[]) => {
+    // console.log('적용된 유저들:', users);
+    setSelectedUsers(users);
+  };
+
   /* ----- Text End ----- */
+
   return (
     <>
       <main>
@@ -296,7 +338,14 @@ export default function BoardListPage() {
               </div>
               <div className={styles.filter_set}>
                 <label className={isMobile ? "" : styles.middle_label}>정렬1</label>
-                <div></div>
+                <div>
+                  <button onClick={() => setIsModalOpen(true)}>회원 검색</button>
+                  {selectedUsers.length > 0 && (
+                    <div>
+                      <p>선택된 회원: {selectedUsers.map(u => u.name).join(', ')}</p>
+                    </div>
+                  )}
+                </div>
               </div>
             </li>
 
@@ -417,6 +466,29 @@ export default function BoardListPage() {
           />
         </section>
       </main>
+
+      {isModalOpen && (
+        <SearchModal<User>
+          modalTitle="회원 검색"
+          width="600px"
+          height="550px"
+          // multiSelect={true}
+          selectedItems={selectedUsers}
+          searchOptions={[
+            { value: 'name', label: '이름' },
+            { value: 'email', label: '이메일' },
+          ]}
+          tableColumns={[
+            { key: 'id', header: 'ID' },
+            { key: 'name', header: '이름' },
+            { key: 'email', header: '이메일' },
+            { key: 'createdAt', header: '가입일'},
+          ]}
+          onClose={() => setIsModalOpen(false)}
+          onApply={handleApplyUsers}
+          queryFn={searchUsers} // dataFetch 함수
+        />
+      )}
     </>
   );
 }
