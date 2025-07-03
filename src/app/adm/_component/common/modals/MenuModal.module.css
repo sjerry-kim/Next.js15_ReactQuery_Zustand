@@ -80,12 +80,20 @@
 }
 
 .sidebar li {
-  padding: 15px;
+  display: flex;
+  flex-direction: row;
+  padding: 12px;
   cursor: pointer;
+  @apply text-base text-neutral-700 transition duration-300;
+}
+
+.sidebar li:hover {
+  background-color: rgba(25, 118, 210, 0.08);
 }
 
 .sidebar .active {
-  color: red;
+  background-color: rgba(25, 118, 210, 0.08);
+  @apply text-primary-light;
 }
 
 .sidebar .inactive {

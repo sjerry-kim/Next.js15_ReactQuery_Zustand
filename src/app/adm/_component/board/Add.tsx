@@ -40,9 +40,12 @@ export default function Page({}) {
   });
   const {handleChange, handleCustomChange} = onInputsChange(jsonData, setJsonData);
   const tabs: Tab[] = [
-    { key: 'info', label: '1. 정보 입력' },
-    { key: 'option', label: '2. 옵션 설정' },
-    { key: 'confirm', label: '3. 최종 확인' }
+    { key: 'info', label: '정보 입력' },
+    { key: 'option', label: '옵션 설정' },
+    { key: 'confirm', label: '최종 확인' },
+    { key: '4', label: '4444444' },
+    { key: '5', label: '55555555' },
+    { key: '6', label: '6666666666' },
   ]
   const [currentTab, setCurrentTab] = useState<string>("info");
 

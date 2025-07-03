@@ -7,17 +7,17 @@ import { CommonModalProps } from '@/types/modal';
 import Button from '@/adm/_component/common/buttons/Button'
 
 export default function CommonModal({
-                                      children,
-                                      modalTitle = "",
-                                      buttons = [],
-                                      width,
-                                      maxWidth,
-                                      minWidth,
-                                      height,
-                                      maxHeight,
-                                      minHeight,
-                                      onClose,
-                                    }: CommonModalProps) {
+  children,
+  modalTitle = "",
+  buttons = [],
+  width,
+  maxWidth = "90%",
+  minWidth,
+  height,
+  maxHeight = "90%",
+  minHeight,
+  onClose,
+}: CommonModalProps) {
 
   const modalStyle: CSSProperties = {
     width,
@@ -30,7 +30,6 @@ export default function CommonModal({
 
   return (
     <div className={styles.modalBackground}>
-      {/* 4. 생성된 스타일 객체를 모달 래퍼에 적용 */}
       <div className={styles.modal_wrapper} style={modalStyle}>
         <div className={styles.top_container}>
           <h4>{modalTitle}</h4>

@@ -2,28 +2,28 @@
 
 import styles from './MenuModal.module.css';
 import CloseIcon from '@mui/icons-material/Close';
-import { CSSProperties, ReactNode, useEffect, useState } from 'react';
+import { CSSProperties, useState } from 'react';
 import { MemuModalProps } from '@/types/modal';
 import Button from '@/adm/_component/common/buttons/Button'
-import { Tab, Tabs } from '@mui/material';
 import useWindowSize from '@/hooks/useWindowSize.';
 import CustomTabs from '@/adm/_component/common/custom/CustomTabs';
+import { LuDot } from 'react-icons/lu';
 
 export default function MenuModal({
-                                    children,
-                                    modalTitle = "",
-                                    buttons = [],
-                                    width = "1100px",
-                                    maxWidth,
-                                    minWidth,
-                                    height = "700px",
-                                    maxHeight,
-                                    minHeight,
-                                    tabs,
-                                    defaultTabKey,
-                                    onTabChange,
-                                    onClose,
-                                  }: MemuModalProps) {
+  children,
+  modalTitle = "",
+  buttons = [],
+  width = "1100px",
+  maxWidth = "90%",
+  minWidth,
+  height = "700px",
+  maxHeight = "90%",
+  minHeight,
+  tabs,
+  defaultTabKey,
+  onTabChange,
+  onClose,
+}: MemuModalProps) {
   const [activeTabKey, setActiveTabKey] = useState(defaultTabKey || tabs[0]?.key);
   const modalStyle: CSSProperties = {
     width,
@@ -52,22 +52,6 @@ export default function MenuModal({
         <div className={styles.middle_container}>
           {
             isMobile ?
-              // <Tabs
-              //   value={activeTabKey}
-              //   variant="scrollable"
-              //   scrollButtons="auto"
-              //   aria-label="scrollable auto tabs example"
-              // >
-              //   {tabs.map((tab) => (
-              //     <Tab
-              //       label={tab.label}
-              //       key={tab.key}
-              //       value={tab.key}
-              //       className={activeTabKey === tab.key ? styles.active : styles.inactive}
-              //       onClick={() => handleTabClick(tab.key)}
-              //     />
-              //   ))}
-              // </Tabs>
               <CustomTabs
                 tabs={tabs}
                 activeTabKey={activeTabKey}
@@ -81,6 +65,7 @@ export default function MenuModal({
                     className={activeTabKey === tab.key ? styles.active : styles.inactive}
                     onClick={() => handleTabClick(tab.key)}
                   >
+                    <LuDot />
                     {tab.label}
                   </li>
                 ))}
