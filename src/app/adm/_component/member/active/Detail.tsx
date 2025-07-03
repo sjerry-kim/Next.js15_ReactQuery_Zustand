@@ -48,7 +48,7 @@ export default function Page({ id }: PageProps) {
         handleTempBtn();
       },
       variant: 'contained',
-      color: 'danger',
+      color: 'error',
       size: "md",
     },
   ];

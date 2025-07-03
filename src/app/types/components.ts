@@ -14,7 +14,7 @@ export type Option = {
 export interface ButtonProps extends ComponentProps<'button'> {
   text: string;
   variant?: 'outlined' | 'contained';
-  color?: 'grey' | 'danger' | 'white' | 'primary' | 'info' | 'warn' | 'success';
+  color?: 'grey' | 'error' | 'white' | 'primary' | 'info' | 'warning' | 'success';
   size?: 'sm' | 'md' | 'lg';
   width?: string | number;
   height?: string | number;

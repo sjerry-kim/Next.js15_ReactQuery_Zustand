@@ -49,27 +49,27 @@
 }
 
 /* Info */
-.contained.danger {
-  @apply bg-danger text-neutral-100
+.contained.error {
+  @apply bg-error text-neutral-100
 }
-.contained.danger:hover {
-  @apply bg-danger-dark
-}
-
-/* Danger */
-.contained.danger {
-  @apply bg-danger text-neutral-100
-}
-.contained.danger:hover {
-  @apply bg-danger-dark
+.contained.error:hover {
+  @apply bg-error-dark
 }
 
-/* Warn */
-.contained.warn {
-  @apply bg-warn text-neutral-100
+/* Error */
+.contained.error {
+  @apply bg-error text-neutral-100
 }
-.contained.warn:hover {
-  @apply bg-warn-dark
+.contained.error:hover {
+  @apply bg-error-dark
+}
+
+/* Warning */
+.contained.warning {
+  @apply bg-warning text-neutral-100
+}
+.contained.warning:hover {
+  @apply bg-warning-dark
 }
 
 /* Success */
@@ -110,20 +110,20 @@
   @apply bg-info-bg
 }
 
-/* Danger */
-.outlined.danger {
-  @apply border-danger-light text-danger-dark
+/* Error */
+.outlined.error {
+  @apply border-error-light text-error-dark
 }
-.outlined.danger:hover {
-  @apply bg-danger-bg
+.outlined.error:hover {
+  @apply bg-error-bg
 }
 
-/* Warn */
-.outlined.warn {
-  @apply border-warn-light text-warn-dark
+/* Warning */
+.outlined.warning {
+  @apply border-warning-light text-warning-dark
 }
-.outlined.warn:hover {
-  @apply bg-warn-bg
+.outlined.warning:hover {
+  @apply bg-warning-bg
 }
 
 /* Success */

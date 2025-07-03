@@ -4,7 +4,7 @@ import { ButtonProps } from '@/types/components';
 export interface CommonModalButton {
   text: string;
   onClick: () => void;
-  color?: 'primary' | 'grey' | 'info' | 'danger' | 'warn' | 'success';
+  color?: 'primary' | 'grey' | 'info' | 'error' | 'warning' | 'success';
   variant?: 'contained' | 'outlined';
 }
 

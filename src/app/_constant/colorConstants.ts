@@ -42,14 +42,14 @@ export const COLORS = {
     text: '#1F6F99',
     dark: '#238AC7',
   },
-  danger: {
+  error: {
     DEFAULT: '#EB5757',
     bg: '#F9E3E3',
     light: '#F3C8C8',
     text: '#9B3D3D',
     dark: '#D94C4C',
   },
-  warn: {
+  warning: {
     DEFAULT: '#F2994A',
     bg: '#FDE9D6',
     light: '#F7D2A9',
