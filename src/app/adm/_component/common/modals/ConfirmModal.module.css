@@ -1,0 +1,78 @@
+.modalBackground {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  @apply z-150
+}
+
+.modal_wrapper {
+  width: 420px;
+  max-width: 90%;
+  max-height: 90%;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+}
+
+.top_container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 12px;
+  padding-bottom: 0;
+  /*border-bottom: 1px solid #f0f0f0;*/
+}
+
+.top_container h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.close_btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  height: fit-content;
+}
+
+.close_btn svg {
+  color: #888;
+}
+
+.content_wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  height: fit-content;
+  min-height: 70px;
+  white-space: pre-wrap;
+  text-align: center;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #333;
+  @apply gap-1
+}
+
+.bottom_container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px;
+  border-radius: 0 0 8px 8px;
+  @apply gap-2
+}

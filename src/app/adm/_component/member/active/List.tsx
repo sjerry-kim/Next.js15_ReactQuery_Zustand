@@ -26,6 +26,7 @@ import SwitchSet from '@/adm/_component/common/custom/SwitchSet';
 import { Option } from '@/types/components';
 import SearchModal from '@/adm/_component/common/modals/SearchModal';
 import moment from 'moment';
+import { useConfirm } from '@/hooks/useConfirm';
 // import MenuModal from '@/adm/_component/common/MenuModal';
 
 /* ------ 임시 타입, 함수 등 start ------ */
@@ -243,6 +244,21 @@ export default function BoardListPage() {
     setSelectedUsers(users);
   };
 
+  // ConfirmModal
+  const openConfirm = useConfirm();
+  const handleTempAlert = async () => {
+    const userConfirmed = await openConfirm({
+      title: "정말 탈퇴하시겠습니까?",
+      message: "모든 데이터가 영구적으로 삭제됩니다.",
+    });
+
+    if (userConfirmed) {
+      console.log("탈퇴 처리 API 호출!");
+    } else {
+      console.log("탈퇴 작업을 취소했습니다.");
+    }
+  }
+
   /* ----- Text End ----- */
 
   return (
@@ -379,7 +395,7 @@ export default function BoardListPage() {
           <div className={styles.filter_bottom_container}>
             <div className={styles.status_box}>
               <ul className={styles.status_set}>
-                <li>전체</li>
+                <li onClick={handleTempAlert}>전체</li>
                 <li>대기</li>
                 <li>예약</li>
                 <li>구매</li>

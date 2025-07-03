@@ -90,3 +90,16 @@ export interface SearchModalProps<T> {
   maxHeight?: string | number;
   minHeight?: string | number;
 }
+
+export interface ComfirmModalProps {
+  modalTitle?: string;
+  onClose: () => void;
+  children: ReactNode;
+  buttons?: ButtonProps[];
+  width?: string | number;
+  maxWidth?: string | number;
+  minWidth?: string | number;
+  height?: string | number;
+  maxHeight?: string | number;
+  minHeight?: string | number;
+}
