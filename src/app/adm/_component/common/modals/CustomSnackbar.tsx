@@ -66,9 +66,6 @@ const CustomSnackbar = React.forwardRef<HTMLDivElement, CustomContentProps>(
     const Icon = ICONS[variant as keyof typeof ICONS] || <InfoIcon />;
     const palette = COLORS[variant as keyof typeof COLORS] || COLORS.info;
 
-    console.log(COLORS[variant as keyof typeof COLORS]);
-    console.log(COLORS.info);
-
     return (
       <StyledSnackbar
         ref={ref}
