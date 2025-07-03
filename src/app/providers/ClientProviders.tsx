@@ -7,6 +7,7 @@ import FcmTokenInitializer from '@/utils/FcmTokenInitializer';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import ConfirmModal from '@/adm/_component/common/modals/ConfirmModal';
+import CustomSnackbar from '@/adm/_component/common/modals/CustomSnackbar';
 
 type Props = {
   children: ReactNode;
@@ -16,12 +17,19 @@ type Props = {
 export default function ClientProviders({ children }: Props) {
   return (
     <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="ko">
+      {/* 커스텀 Snackbar */}
       <SnackbarProvider
-        maxSnack={3}
-        autoHideDuration={3000}
+        maxSnack={5}
+        autoHideDuration={3500}
         anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        Components={{
+          success: CustomSnackbar,
+          error: CustomSnackbar,
+          warning: CustomSnackbar,
+          info: CustomSnackbar,
         }}
       >
         {children}

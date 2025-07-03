@@ -27,6 +27,7 @@ import { Option } from '@/types/components';
 import SearchModal from '@/adm/_component/common/modals/SearchModal';
 import moment from 'moment';
 import { useConfirm } from '@/hooks/useConfirm';
+import { useSnackbar } from '@/hooks/useSnackbar';
 // import MenuModal from '@/adm/_component/common/MenuModal';
 
 /* ------ 임시 타입, 함수 등 start ------ */
@@ -259,6 +260,15 @@ export default function BoardListPage() {
     }
   }
 
+  // Snackbar
+  const { showSnackbar } = useSnackbar();
+  const handleTempSnackbar = () => {
+    showSnackbar('성공적으로 저장되었습니다.', 'success')
+    showSnackbar('경고 저장되었습니다.', 'warning')
+    showSnackbar('에러 저장되었습니다.', 'error')
+    showSnackbar('알림 저장되었습니다.', 'info')
+  }
+
   /* ----- Text End ----- */
 
   return (
@@ -396,7 +406,7 @@ export default function BoardListPage() {
             <div className={styles.status_box}>
               <ul className={styles.status_set}>
                 <li onClick={handleTempAlert}>전체</li>
-                <li>대기</li>
+                <li onClick={handleTempSnackbar}>대기</li>
                 <li>예약</li>
                 <li>구매</li>
                 <li>취소</li>

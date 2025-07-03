@@ -1,0 +1,11 @@
+.content_box {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  @apply gap-2;
+}
+
+.content_box span svg {
+  @apply text-xl;
+}
