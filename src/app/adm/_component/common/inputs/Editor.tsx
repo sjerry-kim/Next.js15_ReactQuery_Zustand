@@ -29,10 +29,11 @@ export default function Editor({
     "bold", "underline", "strikethrough", "link", "alignment", "|",
     "insertTable",
     image && "imageInsert",
-    youtube && "mediaEmbed",
-    "|",
-    source && "htmlEmbed",
-    "findAndReplace",
+    // todo html 뷰어 추가 필요
+    // youtube && "mediaEmbed",
+    // "|",
+    // source && "htmlEmbed",
+    // "findAndReplace",
   ].filter(Boolean) as string[];
 
   const handleImageUpload = useCallback(async (file: File) => {
