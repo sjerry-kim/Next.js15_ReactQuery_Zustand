@@ -97,8 +97,8 @@ export default function AuthInitializer({ children }: { children: React.ReactNod
     return (
       <Loading
         type={"line"}
-        title={"보안 확인중입니다."}
-        subTitle={"계정 상태를 확인하고 있습니다."}
+        title={user ? "보안 확인중...": "로딩중..."}
+        subTitle={user ? "계정 상태를 확인하고 있습니다." : "잠시만 기다려주세요."}
       />
     );
   }

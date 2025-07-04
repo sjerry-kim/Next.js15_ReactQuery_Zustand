@@ -63,7 +63,7 @@ export async function middleware(req: NextRequest) {
     try {
       payload = await verifyAccessToken(accessToken);
     } catch (error) {
-      // console.log(`[Middleware] Accesstoken 검증 실패(만료 또는 위조-유효하지 않음-): ${(error as Error).message}`);
+      console.error(`[Middleware] Accesstoken 검증 실패(만료 또는 위조-유효하지 않음-): ${(error as Error).message}`);
     }
   }
 
