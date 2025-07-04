@@ -7,6 +7,7 @@ import onInputsChange from '@/utils/onInputsChange';
 import { useUserStore } from '@/zustand/userStore';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/zustand/authStore';
+import { useSnackbar } from '@/hooks/useSnackbar';
 
 export default function Page() {
   const router = useRouter();
@@ -27,6 +28,7 @@ export default function Page() {
       maxLength: 12,
     },
   };
+  const {showSnackbar} = useSnackbar();
   const { errors, validate } = useValidation(jsonData, validationRules);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -38,6 +40,7 @@ export default function Page() {
     }
   };
 
+  // todo 에러처리 해당 로직으로 통일
   const handleLogin = async () => {
     try {
       const res = await fetch('/api/auth/login', {
@@ -49,21 +52,23 @@ export default function Page() {
         credentials: 'include',
       });
 
-      // todo 에러처리 통일 필요
       if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || '로그인 실패');
+        if (res.status === 401) {
+          const errorBody = await res.json();
+          return showSnackbar(errorBody.message || '아이디 또는 비밀번호가 틀렸습니다.', 'warning');
+        } else {
+          throw new Error('서버에 문제가 발생했습니다.');
+        }
       }
 
       const { accessToken, user } = await res.json();
 
       useUserStore.getState().setUser(user);
       useAuthStore.getState().setAccessToken(accessToken);
-
       router.push('/');
     } catch (error) {
-      // todo 에러처리 통일 필요
-      console.error('로그인 에러!');
+      showSnackbar(error.message || '로그인에 실패하였습니다.', 'error')
+      console.error('[login]', error.message);
     }
   };
 

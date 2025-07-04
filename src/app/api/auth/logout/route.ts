@@ -29,7 +29,10 @@ export async function POST(req: NextRequest) {
     }
 
     // 3. 클라이언트에게 보낼 최종 응답을 생성
-    const response = NextResponse.json({ message: '성공적으로 로그아웃되었습니다.' });
+    const response = NextResponse.json(
+      { message: '성공적으로 로그아웃되었습니다.'},
+      { status: 200 }
+    );
 
     // 4. 클라이언트의 쿠키를 삭제
     response.cookies.set('refresh_token', '', {

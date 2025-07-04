@@ -3,10 +3,12 @@
 import { useUserStore } from '@/zustand/userStore';
 import { useAuthStore } from '@/zustand/authStore';
 import { useQueryClient } from '@tanstack/react-query';
+import { useSnackbar } from '@/hooks/useSnackbar';
 
 export default function Page() {
   const user = useUserStore((state) => state.user);
   const queryClient = useQueryClient();
+  const { showSnackbar } = useSnackbar();
 
   const handleLogout = async () => {
     try {
@@ -14,9 +16,9 @@ export default function Page() {
         method: 'POST',
       });
 
-      // 서버에서의 로그아웃 요청이 실패하더라도 클라이언트 상태는 정리
+      // 서버에서의 로그아웃 요청이 실패하더라도 클라이언트 상태는 정리 = throw 안 함
       if (!res.ok) {
-        console.error('서버 로그아웃에 실패!');
+        console.error('[logout] 서버 로그아웃에 실패하였습니다.');
       }
 
       // 클라이언트의 모든 인증 관련 상태를 정리
@@ -29,14 +31,12 @@ export default function Page() {
 
       // 메인페이지로 이동하여 모든 상태를 완전히 새로고침
       window.location.href = '/';
-
     } catch (error) {
-      // todo 에러처리
       // 네트워크 에러 등 fetch 자체가 실패한 경우
-      console.error('로그아웃 처리 중 에러 발생:', error);
-      // 에러가 발생하더라도 사용자 경험을 위해 강제로 상태를 초기화하고 이동할 수 있습니다.
-      alert('로그아웃 중 문제가 발생했습니다. 페이지를 새로고침합니다.');
-      window.location.href = '/login';
+      console.error('[logout]', error.message || '로그아웃 오류');
+      // 에러가 발생하더라도 사용자 경험을 위해 강제로 상태를 초기화
+      showSnackbar('로그아웃 중 문제가 발생하였습니다. 페이지를 새로고침합니다.', 'error')
+      window.location.reload();
     }
   };
 
