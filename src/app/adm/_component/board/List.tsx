@@ -19,6 +19,7 @@ import CommonModal from '@/adm/_component/common/modals/CommonModal';
 import DateRangePicker from '@/adm/_component/common/custom/DateRangePicker';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
+import Loading from '@/adm/_component/common/Loading';
 
 interface JsonData {
   searchType: string;
@@ -251,8 +252,6 @@ export default function BoardListPage() {
         </section>
 
         <section className={styles.table_wrapper}>
-          {isFetching && isPlaceholderData && <div className={styles.fetching_indicator}>페이지 로딩중...</div>}
-
           <table className={styles.table}>
             <thead>
             <tr>
@@ -265,10 +264,10 @@ export default function BoardListPage() {
             </tr>
             </thead>
             <tbody>
-            {isLoading ? ( // Initial load
+            { isFetching ? (
               <tr>
-                <td colSpan={6} style={{ textAlign: 'center', padding: '20px' }}>
-                  <h1>로딩중...</h1>
+                <td colSpan={6} className={styles.table_loading} >
+                  <Loading type="circle" />
                 </td>
               </tr>
             ) : boardsToDisplay.length > 0 ? (

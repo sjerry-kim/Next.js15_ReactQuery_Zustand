@@ -28,6 +28,7 @@ import SearchModal from '@/adm/_component/common/modals/SearchModal';
 import moment from 'moment';
 import { useConfirm } from '@/hooks/useConfirm';
 import { useSnackbar } from '@/hooks/useSnackbar';
+import Loading from '@/adm/_component/common/Loading';
 // import MenuModal from '@/adm/_component/common/MenuModal';
 
 /* ------ 임시 타입, 함수 등 start ------ */
@@ -196,12 +197,6 @@ export default function BoardListPage() {
     }));
   }, [searchTypeFromUrl, searchKeywordFromUrl]);
 
-  if (isError) {
-    // todo 에러처리
-    alert(`에러가 발생하였습니다: ${error.message}. 관리자에게 문의하세요.`);
-    return <div>데이터를 불러오는데 실패했습니다. 나중에 다시 시도해주세요.</div>;
-  }
-
   /* ----- Text Start ----- */
 
   // checkbox, radio, switch 등
@@ -270,6 +265,12 @@ export default function BoardListPage() {
   }
 
   /* ----- Text End ----- */
+
+  if (isError) {
+    // todo 에러처리
+    alert(`에러가 발생하였습니다: ${error.message}. 관리자에게 문의하세요.`);
+    return <div>데이터를 불러오는데 실패했습니다. 나중에 다시 시도해주세요.</div>;
+  }
 
   return (
     <>
@@ -425,8 +426,6 @@ export default function BoardListPage() {
         </section>
 
         <section className={styles.table_wrapper}>
-          {isFetching && isPlaceholderData && <div className={styles.fetching_indicator}>페이지 로딩중...</div>}
-
           <table className={styles.table}>
             <thead>
             <tr>
@@ -439,11 +438,10 @@ export default function BoardListPage() {
             </tr>
             </thead>
             <tbody>
-            {/* 상단에서 로딩/에러를 처리하므로, JSX 내부의 조건문을 단순화합니다. */}
-            {isLoading ? (
+            { isFetching ? (
               <tr>
-                <td colSpan={6} style={{ textAlign: 'center', padding: '20px' }}>
-                  <h1>로딩중...</h1>
+                <td colSpan={6} className={styles.table_loading} >
+                  <Loading type="circle" />
                 </td>
               </tr>
             ) : boardsToDisplay.length > 0 ? (
@@ -494,7 +492,7 @@ export default function BoardListPage() {
       </main>
 
       {isModalOpen && (
-        <SearchModal<User>
+        <SearchModal
           modalTitle="회원 검색"
           width="600px"
           height="550px"

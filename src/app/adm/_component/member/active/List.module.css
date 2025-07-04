@@ -236,6 +236,11 @@
   text-align: right;
 }
 
+.table_loading {
+  padding: 45px !important;
+  text-align: center;
+}
+
 /* bottom */
 .bottom_wrapper {
   display: flex;

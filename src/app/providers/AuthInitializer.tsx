@@ -2,9 +2,9 @@
 
 import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { PROTECTED_PATHS } from '@/_auth/path-auth';
 import { useUserStore } from '@/zustand/userStore';
 import { useAuthStore } from '@/zustand/authStore';
+import Loading from '@/adm/_component/common/Loading';
 
 /* ✅ zustand(클라이언트 메모리)에 Accesstoken을 남겨놓고, 
       전역적으로 페이지 이동 및 로그아웃 처리가 필요한 로직을 위한 provider */
@@ -80,7 +80,7 @@ export default function AuthInitializer({ children }: { children: React.ReactNod
   // apiFetch에서 재발급이 최종 실패했을 때 발생하는 'auth-error' 이벤트를 감지
   useEffect(() => {
     const handleAuthError = () => {
-      alert('장시간 활동이 없어 로그아웃되었습니다. 다시 로그인해주세요.');
+      alert('보안 상 로그아웃되었습니다. 다시 로그인해주세요.');
       window.location.href = '/login'; // 페이지를 완전히 새로고침하며 로그인 페이지로 이동
     };
 
@@ -95,10 +95,11 @@ export default function AuthInitializer({ children }: { children: React.ReactNod
   // 인증 확인이 끝날 때까지 랜더링되는 로딩 UI
   if (!isInitialized) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        {/* todo 여기에 멋진 스피너나 로고를 넣을 수 있습니다. */}
-        <h1>Loading Application...</h1>
-      </div>
+      <Loading
+        type={"line"}
+        title={"보안 확인중입니다."}
+        subTitle={"계정 상태를 확인하고 있습니다."}
+      />
     );
   }
 

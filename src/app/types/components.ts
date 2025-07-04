@@ -116,3 +116,10 @@ export interface CustomTabsProps extends Omit<TabsProps, 'value' | 'onChange'> {
   activeTabKey: string;
   onTabChange: (key: string) => void;
 }
+
+/* Loading */
+export interface LoadingProps {
+  type?: 'line' | 'circle';
+  title?: string;
+  subTitle?: string;
+}

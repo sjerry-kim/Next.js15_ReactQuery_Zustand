@@ -1,0 +1,22 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  @apply text-neutral-700;
+}
+
+.spinner {
+}
+
+.title {
+  margin-top: 1.8rem;
+  @apply text-lg font-bold;
+}
+
+.sub_title {
+  margin-top: 0.5rem;
+  @apply text-md text-neutral-500;
+}

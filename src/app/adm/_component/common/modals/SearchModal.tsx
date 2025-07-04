@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import React, { useState, FormEvent } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import CommonModal from '@/adm/_component/common/modals/CommonModal';
 import { ButtonProps } from '@/types/components';
@@ -10,6 +10,7 @@ import SearchBar from '../inputs/SearchBar';
 import Checkbox from '../custom/Checkbox';
 import styles from './SearchModal.module.css';
 import onInputsChange from '@/utils/onInputsChange';
+import Loading from '@/adm/_component/common/Loading';
 
 // T - 제네릭 id가 pk인 모달에서 다룰 데이터
 export default function SearchModal<T extends { id: number | string }>({
@@ -159,7 +160,11 @@ export default function SearchModal<T extends { id: number | string }>({
             </thead>
             <tbody>
             {isLoading ? (
-              <tr><td colSpan={tableColumns.length + 1} className={styles.status_cell}>로딩중...</td></tr>
+              <tr>
+                <td colSpan={6} className={styles.table_loading} >
+                  <Loading type="circle" />
+                </td>
+              </tr>
             ) : items && items.length > 0 ? (
               items.map((item) => (
                 // 선택된 행에 하이라이트 스타일 적용
