@@ -44,7 +44,7 @@ export async function middleware(req: NextRequest) {
     '/_next',
     '/favicon.ico',
     '/fonts',
-    '/403',
+    '/error',
     '/404'
   ];
 
