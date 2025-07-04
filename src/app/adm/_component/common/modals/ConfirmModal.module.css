@@ -42,15 +42,19 @@
 .close_btn {
   background: none;
   border: none;
-  cursor: pointer;
   padding: 0;
   display: flex;
   align-items: center;
   height: fit-content;
+  @apply cursor-pointer;
 }
 
 .close_btn svg {
-  color: #888;
+  fill: #9E9E9E ;
+}
+
+.close_btn svg:hover {
+  fill: #626262 ;
 }
 
 .content_wrapper {
@@ -60,7 +64,7 @@
   align-items: center;
   padding: 12px;
   height: fit-content;
-  min-height: 70px;
+  min-height: 80px;
   white-space: pre-wrap;
   text-align: center;
   font-size: 0.9rem;
