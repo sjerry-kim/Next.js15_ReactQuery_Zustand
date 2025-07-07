@@ -1,0 +1,30 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100dvw;
+  height: 100dvh;
+  @apply gap-3;
+}
+
+.comment {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.comment h1 {
+  @apply text-4xl text-neutral-700
+}
+
+.comment button {
+  margin-top: 15px;
+  padding: 9px 24px;
+  @apply text-md text-neutral-100 bg-primary rounded-md cursor-pointer;
+}
+
+.comment button:hover {
+  @apply bg-primary-dark;
+}
