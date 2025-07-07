@@ -3,7 +3,7 @@ import { Board, PaginatedBoardResponse } from '@/types/board';
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
-export async function GET(request: NextRequest): Promise<NextResponse<PaginatedBoardResponse | { error: string }>> {
+export async function GET(request: NextRequest): Promise<NextResponse<PaginatedBoardResponse | { message: string }>> {
   const searchParams = request.nextUrl.searchParams;
   const page = parseInt(searchParams.get('page') || '1', 10);
   const pageSize = parseInt(searchParams.get('pageSize') || '10', 10); // Default page size
@@ -11,10 +11,10 @@ export async function GET(request: NextRequest): Promise<NextResponse<PaginatedB
   const searchKeyword = searchParams.get('searchKeyword') || '';
 
   if (isNaN(page) || page < 1) {
-    return NextResponse.json({ error: 'Invalid page number. Must be a positive integer.' }, { status: 400 });
+    return NextResponse.json({ message: 'Invalid page number. Must be a positive integer.' }, { status: 400 });
   }
   if (isNaN(pageSize) || pageSize < 1) {
-    return NextResponse.json({ error: 'Invalid page size. Must be a positive integer.' }, { status: 400 });
+    return NextResponse.json({ message: 'Invalid page size. Must be a positive integer.' }, { status: 400 });
   }
 
   const skip = (page - 1) * pageSize;
@@ -130,7 +130,7 @@ export async function POST(request: Request): Promise<Response> {
   } catch (error) {
     console.error(error);
     return NextResponse.json(
-      { error: '[POST] 서버 내부 오류가 발생했습니다.' },
+      { message: '[POST] 서버 내부 오류가 발생했습니다.' },
       { status: 500 }
     );
   }

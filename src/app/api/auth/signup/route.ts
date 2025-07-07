@@ -16,7 +16,7 @@ export async function POST(req: Request) {
 
     if (!email || !password || !name) {
       return NextResponse.json(
-        { error: '필수 입력값이 누락되었습니다.' },
+        { message: '필수 입력값이 누락되었습니다.' },
         { status: 400 }
       );
     }
@@ -32,14 +32,14 @@ export async function POST(req: Request) {
 
     if (signUpError) {
       return NextResponse.json(
-        { error: signUpError.message },
+        { message: signUpError.message },
         { status: 400 }
       );
     }
 
     if (!data.user) {
       return NextResponse.json(
-        { error: '회원가입 실패: 사용자 정보가 없습니다.' },
+        { message: '회원가입 실패: 사용자 정보가 없습니다.' },
         { status: 500 }
       );
     }
@@ -60,7 +60,7 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error(error);
     return NextResponse.json(
-      { error: '[POST] 서버 내부 오류가 발생했습니다.' },
+      { message: '[POST] 서버 내부 오류가 발생했습니다.' },
       { status: 500 }
     );
   } finally {

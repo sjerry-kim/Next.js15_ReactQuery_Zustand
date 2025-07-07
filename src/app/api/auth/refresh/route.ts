@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     // 1. Refreshtoken이 없을 경우, apiFetch의 catch에서 로그아웃 처리 됨
     if (!refreshToken) {
       return NextResponse.json(
-        { error: '[POST] Refreshtoken이 존재하지 않습니다.' },
+        { message: '[POST] Refreshtoken이 존재하지 않습니다.' },
         { status: 401 }
       );
     }

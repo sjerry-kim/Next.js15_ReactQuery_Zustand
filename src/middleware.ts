@@ -76,7 +76,7 @@ export async function middleware(req: NextRequest) {
     if (isApiRoute) {
       // console.log(`[Middleware] Accesstoken 인증 실패. 경로: ${pathname}`);
       // 클라이언트의 apiFetch가 재발급을 시도하도록 401을 보냅니다.
-      return NextResponse.json({ error: '인증이 필요하거나 Accesstoken이 만료되었습니다.' }, { status: 401 });
+      return NextResponse.json({ message: '인증이 필요하거나 Accesstoken이 만료되었습니다.' }, { status: 401 });
     }
 
     // 4-2. 페이지 요청에 대한 처리
@@ -124,7 +124,7 @@ export async function middleware(req: NextRequest) {
   if (pathname.startsWith('/api/protected')) {
     const allowedRoles = ['user', 'editor', 'manager', 'super_admin'];
     if (!allowedRoles.includes(payload.role)) {
-      return NextResponse.json({ error: '접근 권한이 없습니다.' }, { status: 403 });
+      return NextResponse.json({ message: '접근 권한이 없습니다.' }, { status: 403 });
     }
   }
 

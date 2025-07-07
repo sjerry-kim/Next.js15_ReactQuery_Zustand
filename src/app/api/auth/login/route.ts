@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     if (!profileResult) {
       console.error(`[POST] User profile not found for user_id: ${user.id}`);
       return NextResponse.json(
-        { error: '사용자 프로필을 찾을 수 없습니다. 관리자에게 문의하세요.' },
+        { message: '사용자 프로필을 찾을 수 없습니다. 관리자에게 문의하세요.' },
         { status: 500 }
       );
     }
@@ -92,7 +92,7 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error(error);
     return NextResponse.json(
-      { error: '[POST] 서버 내부 오류가 발생했습니다.' },
+      { message: '[POST] 서버 내부 오류가 발생했습니다.' },
       { status: 500 }
     );
   }

@@ -1,4 +1,4 @@
-import { board } from '@prisma/client';
+import { board, Prisma } from '@prisma/client';
 import prisma from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -52,13 +52,13 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     // Prisma에서 '찾을 수 없는 레코드' 에러를 감지하여 404를 반환
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
       return NextResponse.json(
-        { error: '[PATCH] 수정할 데이터를 찾을 수 없습니다.' },
+        { message: '[PATCH] 수정할 데이터를 찾을 수 없습니다.' },
         { status: 404 }
       );
     }
     // 그 외 모든 에러는 500으로 처리
     return NextResponse.json(
-      { error: '[PATCH] 서버 내부 오류가 발생했습니다.' },
+      { message: '[PATCH] 서버 내부 오류가 발생했습니다.' },
       { status: 500 }
     );
   }
@@ -81,13 +81,13 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     // Prisma에서 '찾을 수 없는 레코드' 에러를 감지하여 404를 반환
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
       return NextResponse.json(
-        { error: '[DELETE] 삭제할 데이터를 찾을 수 없습니다.' },
+        { message: '[DELETE] 삭제할 데이터를 찾을 수 없습니다.' },
         { status: 404 }
       );
     }
     // 그 외 모든 에러는 500으로 처리
     return NextResponse.json(
-      { error: '[DELETE] 서버 내부 오류가 발생했습니다.' },
+      { message: '[DELETE] 서버 내부 오류가 발생했습니다.' },
       { status: 500 }
     );
   }
