@@ -7,7 +7,7 @@ type ErrorProps = {
   reset: () => void; // 세그먼트를 다시 렌더링하여 복구를 시도하는 함수
 };
 
-export default function Error({ error, reset }: ErrorProps) {
+export default function error({ error, reset }: ErrorProps) {
   useEffect(() => {
     // 에러 리포팅 서비스에 에러를 기록할 수 있습니다. (e.g. Sentry)
     console.error(error);

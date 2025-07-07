@@ -15,7 +15,7 @@ export async function POST(req: Request) {
 
     if (authError || !authData.user) {
       return NextResponse.json(
-        { error: '이메일 또는 비밀번호가 올바르지 않습니다.' },
+        { message: '[POST] 이메일 또는 비밀번호가 올바르지 않습니다.' },
         { status: 401 }
       );
     }
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     });
 
     if (!profileResult) {
-      console.error(`[Login Error] User profile not found for user_id: ${user.id}`);
+      console.error(`[POST] User profile not found for user_id: ${user.id}`);
       return NextResponse.json(
         { error: '사용자 프로필을 찾을 수 없습니다. 관리자에게 문의하세요.' },
         { status: 500 }
@@ -72,7 +72,7 @@ export async function POST(req: Request) {
 
     // 7. 최종 응답 생성
     const response = NextResponse.json({
-      message: '로그인 성공',
+      message: '[POST] 로그인에 성공하였습니다.',
       user: userData,
       accessToken: accessToken,
     });
@@ -89,11 +89,10 @@ export async function POST(req: Request) {
     });
 
     return response;
-  } catch (err) {
-    // todo 에러처리
-    console.error('로그인 API 처리 중 예외 발생:', err);
+  } catch (error) {
+    console.error(error);
     return NextResponse.json(
-      { error: '서버 내부 오류가 발생했습니다.' },
+      { error: '[POST] 서버 내부 오류가 발생했습니다.' },
       { status: 500 }
     );
   }

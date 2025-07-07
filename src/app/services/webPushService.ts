@@ -11,15 +11,15 @@ export const savePushSubscription  = async (fcmToken: string) => {
   const response = await apiFetch(apiUrl, options);
 
   if (!response.ok) {
-    let errorMessage = 'Failed to save subscription.';
+    let errorMessage = response.status;
     try {
       const errorBody = await response.json();
-      // API 라우트에서 message 필드로 에러를 보내므로 errorBody.message를 확인
       errorMessage = errorBody.message || errorMessage;
     } catch (e) {
       // JSON 파싱 실패 시 기본 에러 메시지 사용
     }
     // 실패 시, 에러를 발생시켜 useMutation의 onError 콜백이 실행되도록 함
+    console.error("[webPushService]", errorMessage);
     throw new Error(errorMessage);
   }
 

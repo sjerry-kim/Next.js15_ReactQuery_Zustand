@@ -8,6 +8,7 @@ import { getBoard } from '@/services/boardService';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import onInputsChange from '@/utils/onInputsChange';
 import { Board } from '@/types/board';
+import { useSnackbar } from '@/hooks/useSnackbar';
 
 type PageProps = {
   id: string;
@@ -28,6 +29,7 @@ export default function Page({ id }: PageProps) {
     content: data?.content || '',
   });
   const {handleChange} = onInputsChange(jsonData, setJsonData);
+  const {showSnackbar} = useSnackbar();
 
   const updateMutation = useMutation<ApiResponse<Board>, Error>({
     mutationFn: async () => {
@@ -42,7 +44,7 @@ export default function Page({ id }: PageProps) {
       });
 
       if (!response.ok) {
-        throw new Error("통신 오류 발생!");
+        throw new Error("통신 오류가 발생하였습니다.");
       }
 
       return response.json();
@@ -67,7 +69,7 @@ export default function Page({ id }: PageProps) {
       router.back();
     },
     onError() {
-      alert('오류가 발생하였습니다. 관리자에게 문의하세요.');
+      showSnackbar("통신 오류가 발생하였습니다.", "error")
     },
   });
 
@@ -83,6 +85,10 @@ export default function Page({ id }: PageProps) {
         body: JSON.stringify(jsonData),
       });
 
+      if (!response.ok) {
+        throw new Error("통신 오류가 발생하였습니다.");
+      }
+
       return response.json();
     },
     async onSuccess() {
@@ -95,7 +101,7 @@ export default function Page({ id }: PageProps) {
       router.back();
     },
     onError() {
-      alert('오류가 발생하였습니다. 관리자에게 문의하세요.');
+      showSnackbar("통신 오류가 발생하였습니다.", "error")
     },
   });
 

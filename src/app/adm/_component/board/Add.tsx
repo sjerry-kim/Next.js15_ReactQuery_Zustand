@@ -15,6 +15,7 @@ import CommonModal from '@/adm/_component/common/modals/CommonModal';
 import MenuModal from '@/adm/_component/common/modals/MenuModal';
 import { ButtonProps } from '@/types/components';
 import LabelTextarea from '@/adm/_component/common/inputs/LabelTextarea';
+import { useSnackbar } from '@/hooks/useSnackbar';
 
 const Editor = dynamic(() => import('@/adm/_component/common/inputs/Editor'), {
   ssr: false,
@@ -48,6 +49,7 @@ export default function Page({}) {
     { key: '6', label: '6666666666' },
   ]
   const [currentTab, setCurrentTab] = useState<string>("info");
+  const {showSnackbar} = useSnackbar();
 
   const handleCancel = () => console.log('취소');
   const handleSubmit = () => console.log('저장');
@@ -79,7 +81,7 @@ export default function Page({}) {
       });
 
       if (!response.ok) {
-        throw new Error("통신 오류 발생!");
+        throw new Error("통신 오류가 발생하였습니다.");
       }
 
       return await response.json();
@@ -92,7 +94,7 @@ export default function Page({}) {
       router.back();
     },
     onError() {
-      alert('오류가 발생하였습니다. 관리자에게 문의하세요.');
+      showSnackbar("통신 오류가 발생하였습니다.", "error")
     },
   });
 

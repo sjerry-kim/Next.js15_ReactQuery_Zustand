@@ -266,12 +266,12 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
 
   const handleLogout = async () => {
     try {
-      const res = await fetch('/api/auth/logout', {
+      const response = await fetch('/api/auth/logout', {
         method: 'POST',
       });
 
       // 서버에서의 로그아웃 요청이 실패하더라도 클라이언트 상태는 정리 = throw 안 함
-      if (!res.ok) {
+      if (!response.ok) {
         console.error('[logout] 서버 로그아웃에 실패하였습니다.');
       }
 
@@ -287,9 +287,9 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
       window.location.href = '/';
     } catch (error) {
       // 네트워크 에러 등 fetch 자체가 실패한 경우
-      console.error('[logout]', error.message || '로그아웃 오류');
+      console.error('[logout]', error.message);
       // 에러가 발생하더라도 사용자 경험을 위해 강제로 상태를 초기화
-      showSnackbar('로그아웃 중 문제가 발생하였습니다. 페이지를 새로고침합니다.', 'error')
+      showSnackbar(error.message || '로그아웃 중 문제가 발생하였습니다.', 'error')
       window.location.reload();
     }
   };

@@ -5,7 +5,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   try {
     const { id } = await params;
 
-    const res: board | null = await prisma.board.findUnique({
+    const response: board | null = await prisma.board.findUnique({
       where: {
         id: parseInt(id),
       },
@@ -18,16 +18,17 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       },
     });
 
-    return new Response(JSON.stringify(res), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    // return new Response(JSON.stringify(res), {
+    //   status: 200,
+    //   headers: { 'Content-Type': 'application/json' },
+    // });
+    return NextResponse.json(response);
   } catch (error) {
-    console.error(error);
-    return new Response(JSON.stringify({ error: 'Failed to fetch data' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    console.error('[GET]', error);
+    return NextResponse.json(
+      { message: '[GET] 서버 내부 오류가 발생했습니다.' },
+      { status: 500 }
+    );
   }
 }
 
@@ -36,23 +37,29 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     const { id } = await params;
     const { content } = await request.json();
 
-    const res: board = await prisma.board.update({
-      where: {
-        id: parseInt(id),
-      },
-      data: {
-        content: content,
-      },
+    const updatedBoard = await prisma.board.update({
+      where: { id: parseInt(id) },
+      data: { content },
     });
 
-    return new Response(JSON.stringify({ message: 'Post created successfully', data: res }), {
-      status: 200,
+    return NextResponse.json({
+      message: '[PATCH] 게시글이 성공적으로 수정되었습니다.',
+      data: updatedBoard,
     });
   } catch (error) {
-    console.error(error);
-    return new Response(JSON.stringify({ error: 'Failed to create post' }), {
-      status: 500,
-    });
+    console.error('[PATCH]', error);
+    // Prisma에서 '찾을 수 없는 레코드' 에러를 감지하여 404를 반환
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+      return NextResponse.json(
+        { error: '[PATCH] 수정할 데이터를 찾을 수 없습니다.' },
+        { status: 404 }
+      );
+    }
+    // 그 외 모든 에러는 500으로 처리
+    return NextResponse.json(
+      { error: '[PATCH] 서버 내부 오류가 발생했습니다.' },
+      { status: 500 }
+    );
   }
 }
 
@@ -60,19 +67,27 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
   try {
     const { id } = await params;
 
-    const res: board = await prisma.board.delete({
-      where: {
-        id: parseInt(id),
-      },
+    const deletedBoard = await prisma.board.delete({
+      where: { id: parseInt(id) },
     });
 
-    return new Response(JSON.stringify({ message: 'Post created successfully', data: res }), {
-      status: 200,
+    return NextResponse.json({
+      message: '[DELETE] 게시글이 성공적으로 삭제되었습니다.',
+      data: deletedBoard,
     });
   } catch (error) {
-    console.error(error);
-    return new Response(JSON.stringify({ error: 'Failed to create post' }), {
-      status: 500,
-    });
+    console.error('[DELETE]', error);
+    // Prisma에서 '찾을 수 없는 레코드' 에러를 감지하여 404를 반환
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+      return NextResponse.json(
+        { error: '[DELETE] 삭제할 데이터를 찾을 수 없습니다.' },
+        { status: 404 }
+      );
+    }
+    // 그 외 모든 에러는 500으로 처리
+    return NextResponse.json(
+      { error: '[DELETE] 서버 내부 오류가 발생했습니다.' },
+      { status: 500 }
+    );
   }
 }

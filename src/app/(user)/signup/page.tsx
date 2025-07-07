@@ -4,6 +4,7 @@ import { useState } from 'react';
 import useValidation from '@/hooks/useValidation';
 import styles from './page.module.css';
 import onInputsChange from '@/utils/onInputsChange';
+import {useSnackbar} from '@/hooks/useSnackbar';
 
 export default function Page() {
   const [jsonData, setJsonData] = useState({
@@ -30,6 +31,7 @@ export default function Page() {
     },
   };
   const { errors, validate } = useValidation(jsonData, validationRules);
+  const {showSnackbar} = useSnackbar();
 
   const handleTempAdminRole = () => {
     setJsonData((prevState) => ({
@@ -49,17 +51,23 @@ export default function Page() {
 
   const handleCreate = async () => {
     try {
-      const res = await fetch(`${process.env.PUBLIC_URL}/api/auth/signup`, {
+      const response = await fetch(`/api/auth/signup`, {
         method: 'POST',
         cache: 'no-store',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(jsonData),
+        credentials: 'include',
       });
 
-    } catch (err) {
-      console.error(err);
+      if (!response.ok) {
+        throw new Error("통신 오류가 발생하였습니다.");
+      }
+
+    } catch (error) {
+      console.error('[signup]', error.message);
+      showSnackbar(error.message || '회원가입에 실패하였습니다.', 'error')
     }
   };
 

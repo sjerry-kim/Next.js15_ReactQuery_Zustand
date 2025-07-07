@@ -43,8 +43,9 @@ export default function Page() {
   // todo 에러처리 해당 로직으로 통일
   const handleLogin = async () => {
     try {
-      const res = await fetch('/api/auth/login', {
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
+        cache: 'no-store',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -52,23 +53,23 @@ export default function Page() {
         credentials: 'include',
       });
 
-      if (!res.ok) {
-        if (res.status === 401) {
-          const errorBody = await res.json();
+      if (!response.ok) {
+        if (response.status === 401) {
+          const errorBody = await response.json();
           return showSnackbar(errorBody.message || '아이디 또는 비밀번호가 틀렸습니다.', 'warning');
         } else {
-          throw new Error('서버에 문제가 발생했습니다.');
+          throw new Error('통신 오류가 발생하였습니다.');
         }
       }
 
-      const { accessToken, user } = await res.json();
+      const { accessToken, user } = await response.json();
 
       useUserStore.getState().setUser(user);
       useAuthStore.getState().setAccessToken(accessToken);
       router.push('/');
     } catch (error) {
-      showSnackbar(error.message || '로그인에 실패하였습니다.', 'error')
       console.error('[login]', error.message);
+      showSnackbar(error.message || '로그인에 실패하였습니다.', 'error')
     }
   };
 

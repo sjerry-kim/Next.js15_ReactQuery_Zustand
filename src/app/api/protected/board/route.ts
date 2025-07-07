@@ -88,9 +88,11 @@ export async function GET(request: NextRequest): Promise<NextResponse<PaginatedB
       pageSize,
     });
   } catch (error) {
-    console.error("API Error fetching boards:", error);
-    // In a real app, you might want to log this error to a monitoring service
-    return NextResponse.json({ error: 'Failed to fetch board data from the database.' }, { status: 500 });
+    console.error(error);
+    return NextResponse.json(
+      { message: '[GET] 서버 내부 오류가 발생했습니다.' },
+      { status: 500 }
+    );
   } finally {
     // It's good practice to disconnect, though Next.js might handle some of this.
     // For serverless functions, connection management can be nuanced.
@@ -102,19 +104,34 @@ export async function POST(request: Request): Promise<Response> {
   try {
     const { content } = await request.json();
 
-    const res: board = await prisma.board.create({
+    const response: board = await prisma.board.create({
       data: {
         content: content,
       },
     });
 
-    return new Response(JSON.stringify({ message: 'Post created successfully', data: res }), {
-      status: 200,
-    });
+    // return new Response(
+    //   JSON.stringify({
+    //     message: '[POST] 게시물 등록에 성공하였습니다.',
+    //     data: res,
+    //   }),
+    //   {
+    //     status: 200,
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //   }
+    // );
+
+    return NextResponse.json(
+      { message: '[POST] 게시물 등록에 성공하였습니다.', userId: response },
+      { status: 200 }
+    );
   } catch (error) {
     console.error(error);
-    return new Response(JSON.stringify({ error: 'Failed to create post' }), {
-      status: 500,
-    });
+    return NextResponse.json(
+      { error: '[POST] 서버 내부 오류가 발생했습니다.' },
+      { status: 500 }
+    );
   }
 }

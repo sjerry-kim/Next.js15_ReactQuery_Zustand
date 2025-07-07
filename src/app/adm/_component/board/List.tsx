@@ -20,6 +20,8 @@ import DateRangePicker from '@/adm/_component/common/custom/DateRangePicker';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 import Loading from '@/adm/_component/common/Loading';
+import Fail from '@/adm/_component/common/Fail';
+import { useSnackbar } from '@/hooks/useSnackbar';
 
 interface JsonData {
   searchType: string;
@@ -50,6 +52,7 @@ export default function BoardListPage() {
   const queryClient = useQueryClient();
   const {handleChange} = onInputsChange(jsonData, setJsonData);
   const { isMobile, isLaptop } = useWindowSize();
+  const {showSnackbar} = useSnackbar();
 
   const getPageFromUrl = useCallback(() => {
     const pageParam = searchParams.get('page');
@@ -207,10 +210,9 @@ export default function BoardListPage() {
     }));
   }, [searchTypeFromUrl, searchKeywordFromUrl]);
 
-  if (isError && error) {
-    // TODO: 커스텀 알림창 또는 에러 페이지 구현
-    alert(`에러가 발생하였습니다: ${error.message}. 관리자에게 문의하세요.`);
-    return <div>데이터를 불러오는데 실패했습니다. 나중에 다시 시도해주세요.</div>;
+  if (isError) {
+    showSnackbar('통신 오류가 발생하였습니다.', 'error');
+    return <Fail />;
   }
 
   return (

@@ -1,17 +1,16 @@
 'use client';
 
-import React, { useEffect } from 'react';
 import { Tooltip } from '@mui/material';
-import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import NotificationsOffIcon from '@mui/icons-material/NotificationsOff';
 import { useMutation } from '@tanstack/react-query';
 import { useWebPushStore } from '@/zustand/webPushStore';
 import { requestPermissionAndGetToken } from '@/lib/firebase';
 import { savePushSubscription  } from '@/services/webPushService';
 import Button from '@/adm/_component/common/buttons/Button';
+import { useSnackbar } from '@/hooks/useSnackbar';
 
 export default function NotificationButton() {
   const { permission, isSubscribed, setPermission, setIsSubscribed, setFcmToken } = useWebPushStore();
+  const {showSnackbar} = useSnackbar();
 
   const { mutate: subscribe, isPending } = useMutation<any, Error, string>({
     mutationFn: savePushSubscription ,
@@ -27,7 +26,8 @@ export default function NotificationButton() {
 
   const handleSubscribeClick = async () => {
     if (permission === 'denied') {
-      alert('브라우저 설정에서 알림 권한을 허용해주세요.');
+      showSnackbar("브라우저 설정에서 알림 권한을 허용해주세요.", "info")
+
       return;
     }
 

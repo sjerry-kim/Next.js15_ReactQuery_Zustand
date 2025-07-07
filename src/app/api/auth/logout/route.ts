@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
 
     // 3. 클라이언트에게 보낼 최종 응답을 생성
     const response = NextResponse.json(
-      { message: '성공적으로 로그아웃되었습니다.'},
+      { message: '[POST] 성공적으로 로그아웃되었습니다.'},
       { status: 200 }
     );
 
@@ -45,8 +45,10 @@ export async function POST(req: NextRequest) {
     // 이후 클라이언트에서 zustand의 Accesstoken 및 유저 정보를 제거
     return response;
   } catch (error) {
-    // todo 에러처리
-    console.error('[Logout] 예기치 못한 서버 오류:', error);
-    return NextResponse.json({ error: '서버 내부 오류가 발생했습니다.' }, { status: 500 });
+    console.error(error);
+    return NextResponse.json(
+      { message: '[POST] 서버 내부 오류가 발생했습니다.' },
+      { status: 500 }
+    );
   }
 }

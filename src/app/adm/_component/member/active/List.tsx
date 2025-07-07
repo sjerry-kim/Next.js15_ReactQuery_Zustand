@@ -29,6 +29,7 @@ import moment from 'moment';
 import { useConfirm } from '@/hooks/useConfirm';
 import { useSnackbar } from '@/hooks/useSnackbar';
 import Loading from '@/adm/_component/common/Loading';
+import Fail from '@/adm/_component/common/Fail';
 // import MenuModal from '@/adm/_component/common/MenuModal';
 
 /* ------ 임시 타입, 함수 등 start ------ */
@@ -197,7 +198,7 @@ export default function BoardListPage() {
     }));
   }, [searchTypeFromUrl, searchKeywordFromUrl]);
 
-  /* ----- Text Start ----- */
+  /* ----- Test Start ----- */
 
   // checkbox, radio, switch 등
   const fruitOptions : Option[] = [
@@ -249,7 +250,7 @@ export default function BoardListPage() {
     });
 
     if (userConfirmed) {
-      console.log("탈퇴 처리 API 호출!");
+      console.log("탈퇴 처리 API가 호출되었습니다.");
     } else {
       console.log("탈퇴 작업을 취소했습니다.");
     }
@@ -264,12 +265,11 @@ export default function BoardListPage() {
     showSnackbar('알림 저장되었습니다.', 'info')
   }
 
-  /* ----- Text End ----- */
+  /* ----- Test End ----- */
 
   if (isError) {
-    // todo 에러처리
-    alert(`에러가 발생하였습니다: ${error.message}. 관리자에게 문의하세요.`);
-    return <div>데이터를 불러오는데 실패했습니다. 나중에 다시 시도해주세요.</div>;
+    showSnackbar('통신 오류가 발생하였습니다.', 'error');
+    return <Fail />;
   }
 
   return (

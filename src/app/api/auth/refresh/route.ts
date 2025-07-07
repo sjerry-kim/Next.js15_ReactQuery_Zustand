@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     // 1. Refreshtoken이 없을 경우, apiFetch의 catch에서 로그아웃 처리 됨
     if (!refreshToken) {
       return NextResponse.json(
-        { error: '[Refresh] Refresh Token이 존재하지 않습니다.' },
+        { error: '[POST] Refreshtoken이 존재하지 않습니다.' },
         { status: 401 }
       );
     }
@@ -31,11 +31,11 @@ export async function POST(req: NextRequest) {
     });
 
     // 4. Refreshtoken 정보가 DB와 불일치할 경우, apiFetch의 catch에서 로그아웃 처리 됨
-    if (!tokenInDb) throw new Error('[Refresh] DB에 토큰 정보가 없습니다.');
+    if (!tokenInDb) throw new Error('[POST] DB에 Refreshtoken 정보가 없습니다.');
 
     // 5. bcrypt를 사용하여 해싱되어 저장된 DB의 Refreshtoken과 현재 가지고 있는 Refeshtoken이 일치하는지 확인
     const isMatch = await bcrypt.compare(refreshToken, tokenInDb.refresh_token);
-    if (!isMatch) throw new Error("[Refresh] Refreshtoken이 일치하지 않습니다.");
+    if (!isMatch) throw new Error("[POST] Refreshtoken이 일치하지 않습니다.");
 
 
     /* --- 현재 로그인한 유저 세션 복원 (Silent Refresh) --- */
@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    if (!profileAndUser || !profileAndUser.users) throw new Error('[Refresh] 프로필 또는 사용자 정보를 찾을 수 없습니다.');
+    if (!profileAndUser || !profileAndUser.users) throw new Error('[POST] 프로필 또는 사용자 정보를 찾을 수 없습니다.');
 
     const userData = {
       email: payload.email, // email은 토큰 페이로드에서
@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
     // 10. 최종 응답 생성
     // 새로 발급된 `accessToken`과 `user` 정보는 클라이언트의 메모리(Zustand)에 저장될 수 있도록 JSON 본문에 담아 전달
     const response = NextResponse.json({
-      message: '[Refresh] Tokens refreshed successfully',
+      message: '[POST] Tokens refreshed successfully',
       accessToken: newAccessToken,
       user: userData,
     });
@@ -118,9 +118,13 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     // 12. 에러 발생 시, 모든 쿠키를 삭제하고 401 응답
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('[Refresh]', errorMessage);
+    console.error(errorMessage);
 
-    const response = NextResponse.json({ error: errorMessage }, { status: 401 });
+    const response = NextResponse.json(
+      { error: errorMessage },
+      { status: 401 }
+    );
+
     response.cookies.delete('refresh_token');
     return response;
   }

@@ -54,13 +54,13 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(
-      { message: '회원가입 성공', userId: data.user.id },
+      { message: '[POST] 회원가입에 성공하였습니다.', userId: data.user.id },
       { status: 201 }
     );
   } catch (error) {
-    console.error('회원가입 오류:', error);
+    console.error(error);
     return NextResponse.json(
-      { error: '서버 내부 오류가 발생했습니다.' },
+      { error: '[POST] 서버 내부 오류가 발생했습니다.' },
       { status: 500 }
     );
   } finally {

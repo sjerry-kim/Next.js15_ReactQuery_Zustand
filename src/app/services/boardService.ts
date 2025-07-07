@@ -19,41 +19,38 @@ export async function getBoardList(
   }
 
   const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/protected/board?${params.toString()}`;
+  const response = await apiFetch(apiUrl);
 
-  const res = await apiFetch(apiUrl);
-
-  if (!res.ok) {
-    let errorMessage = `Failed to fetch data. Status: ${res.status}`;
+  if (!response.ok) {
+    let errorMessage = response.status;
     try {
-      const errorBody = await res.json();
-      errorMessage = errorBody.error || errorMessage; // Use server's error message if available
-    } catch (e) {
-      // Failed to parse error JSON, use default message
+      const errorBody = await response.json();
+      errorMessage = errorBody.message || errorMessage;
+    } catch (error) {
+      // JSON 파싱 실패 시 기본 에러 메시지 사용
     }
-    console.error("getBoardList API Error:", errorMessage);
+    console.error("[boardService]", errorMessage);
     throw new Error(errorMessage);
   }
-
-  return res.json() as Promise<PaginatedBoardResponse>;
+  return response.json() as Promise<PaginatedBoardResponse>;
 }
 
 export async function getBoard(id: string) {
   const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/protected/board/${id}`;
 
-  // const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/protected/board/${id}`, {
-  //   method: 'GET',
-  //   cache: 'no-store',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //     'Cache-Control': 'no-store',
-  //   },
-  // });
+  const response = await apiFetch(apiUrl);
 
-  const res = await apiFetch(apiUrl);
-
-  if (!res.ok) {
-    throw new Error('Failed to fetch data');
+  if (!response.ok) {
+    let errorMessage = response.status;
+    try {
+      const errorBody = await response.json();
+      errorMessage = errorBody.message || errorMessage;
+    } catch (error) {
+      // JSON 파싱 실패 시 기본 에러 메시지 사용
+    }
+    console.error("[boardService]", errorMessage);
+    throw new Error(errorMessage);
   }
 
-  return res.json();
+  return response.json();
 }

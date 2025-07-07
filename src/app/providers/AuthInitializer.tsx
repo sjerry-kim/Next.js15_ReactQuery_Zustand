@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useUserStore } from '@/zustand/userStore';
 import { useAuthStore } from '@/zustand/authStore';
 import Loading from '@/adm/_component/common/Loading';
+import { useSnackbar } from '@/hooks/useSnackbar';
 
 /* ✅ zustand(클라이언트 메모리)에 Accesstoken을 남겨놓고, 
       전역적으로 페이지 이동 및 로그아웃 처리가 필요한 로직을 위한 provider */
@@ -12,6 +13,7 @@ export default function AuthInitializer({ children }: { children: React.ReactNod
   const { isInitialized, setAccessToken, setInitialized, clearAccessToken } = useAuthStore();
   const user = useUserStore((state) => state.user);
   const setUser = useUserStore((state) => state.setUser);
+  const { showSnackbar } = useSnackbar();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -32,14 +34,14 @@ export default function AuthInitializer({ children }: { children: React.ReactNod
 
       try {
         // apiFetch 로직과 통일
-        const res = await fetch('/api/auth/refresh', {
+        const response = await fetch('/api/auth/refresh', {
           method: 'POST',
           credentials: 'include',
         });
 
-        if (!res.ok) throw new Error('[AuthInitializer] Refreshtoken이 유효하지 않거나, 만료되었습니다.');
+        if (!response.ok) throw new Error('[AuthInitializer] Refreshtoken이 유효하지 않거나, 만료되었습니다.');
 
-        const { accessToken: newAccessToken, user } = await res.json();
+        const { accessToken: newAccessToken, user } = await response.json();
 
         // 새로 발급받은 Accesstoken과 갱신된 최신 유저 정보를 zustand에 다시 set
         setAccessToken(newAccessToken);
@@ -80,7 +82,7 @@ export default function AuthInitializer({ children }: { children: React.ReactNod
   // apiFetch에서 재발급이 최종 실패했을 때 발생하는 'auth-error' 이벤트를 감지
   useEffect(() => {
     const handleAuthError = () => {
-      alert('보안 상 로그아웃되었습니다. 다시 로그인해주세요.');
+      showSnackbar('보안 상 로그아웃되었습니다. 다시 로그인해주세요.', 'warning')
       window.location.href = '/login'; // 페이지를 완전히 새로고침하며 로그인 페이지로 이동
     };
 

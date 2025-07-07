@@ -21,7 +21,6 @@ export const apiFetch = async (url: string, options: RequestInit & { params?: Re
   let finalUrl = url;
 
   if (options.params && Object.keys(options.params).length > 0) {
-    // URLSearchParams는 객체를 "?key1=value1&key2=value2" 형태의 문자열로 만들어줍니다.
     const queryParams = new URLSearchParams(options.params);
     finalUrl = `${url}?${queryParams.toString()}`;
   }
