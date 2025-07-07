@@ -26,24 +26,52 @@ export const apiFetch = async (url: string, options: RequestInit & { params?: Re
   }
 
   // fetch 통신 옵션 생성 함수
-  const buildOptions = (accessToken: string | null): RequestInit => {
-    // new Headers()를 사용하여 헤더 객체를 안전하게 생성
-    // options.headers가 어떤 타입이든 (객체, 배열, Headers 인스턴스) 안전하게 처리함
-    const headers = new Headers(options.headers);
+  // const buildOptions = (accessToken: string | null): RequestInit => {
+  //   // new Headers()를 사용하여 헤더 객체를 안전하게 생성
+  //   // options.headers가 어떤 타입이든 (객체, 배열, Headers 인스턴스) 안전하게 처리함
+  //   const headers = new Headers(options.headers);
+  //
+  //   // Content-Type이 없는 경우에만 기본값을 설정
+  //   if (!headers.has('Content-Type') && !(options.body instanceof FormData)) {
+  //     headers.set('Content-Type', 'application/json');
+  //   }
+  //
+  //   // Accesstoken이 있으면 Authorization 헤더를 설정
+  //   if (accessToken) headers.set('Authorization', `Bearer ${accessToken}`);
+  //
+  //   return {
+  //     ...options,
+  //     headers,
+  //     credentials: 'include',
+  //   };
+  // };
 
-    // Content-Type이 없는 경우에만 기본값을 설정
-    if (!headers.has('Content-Type')) {
-      headers.set('Content-Type', 'application/json');
+  // fetch 통신 옵션 생성 함수
+  const buildOptions = (token: string | null): RequestInit => {
+    const newOptions: RequestInit = { ...options };
+    const headers = new Headers(newOptions.headers);
+
+    // ✅ 여기가 수정된 핵심 로직입니다.
+    if (newOptions.body instanceof FormData) {
+      // body가 FormData일 경우, Content-Type을 절대 설정하지 않습니다.
+      // 브라우저가 자동으로 올바른 Content-Type을 설정하도록 둡니다.
+      headers.delete('Content-Type');
+    } else {
+      // FormData가 아닐 경우에만 Content-Type을 application/json으로 기본 설정합니다.
+      if (!headers.has('Content-Type')) {
+        headers.set('Content-Type', 'application/json');
+      }
     }
 
-    // Accesstoken이 있으면 Authorization 헤더를 설정
-    if (accessToken) headers.set('Authorization', `Bearer ${accessToken}`);
+    // AccessToken이 있으면 모든 요청에 Authorization 헤더를 추가합니다.
+    if (token) {
+      headers.set('Authorization', `Bearer ${token}`);
+    }
 
-    return {
-      ...options,
-      headers,
-      credentials: 'include',
-    };
+    newOptions.headers = headers;
+    newOptions.credentials = 'include';
+
+    return newOptions;
   };
 
   // haeder에 Accesstoken을 포함해서 fetch 통신
