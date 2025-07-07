@@ -114,13 +114,13 @@ export const ADMIN_MENUS: Menu[] = [
       {
         idx: 2,
         title: "정책",
-        path: "/adm/policy",
+        path: "/adm/setting/policy",
         roles: [ROLES.SUPER_ADMIN],
       },
       {
         idx: 3,
         title: "이용약관",
-        path: "/adm/terms",
+        path: "/adm/setting/terms",
         roles: [ROLES.SUPER_ADMIN],
       },
     ]

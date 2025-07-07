@@ -152,10 +152,8 @@ export default function BoardListPage() {
 
   const handleAddClick = () => {
     const newSearchParams = new URLSearchParams(searchParams);
-    // todo 임시로 board 경로로 넣어둠 추후 변경 필요
-    const destination = `/adm/board/add?${newSearchParams.toString()}`;
+    const destination = `/adm/member/active/add?${newSearchParams.toString()}`;
 
-    console.log(destination);
     router.push(destination);
   };
 
