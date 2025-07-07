@@ -52,7 +52,7 @@ export default function Page({ id }: PageProps) {
     content: data?.content || '',
     createdAt: data?.created_at || '',
     updatedAt: data?.updated_at || '',
-    userName: "",
+    userName: data?.id || "", // Test용으로 data.id 추가함
     email: "user@example.com",
     address: "",
     currentPswd: "",
