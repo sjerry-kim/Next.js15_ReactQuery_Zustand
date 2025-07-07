@@ -11,7 +11,7 @@ export const savePushSubscription  = async (fcmToken: string) => {
   const response = await apiFetch(apiUrl, options);
 
   if (!response.ok) {
-    let errorMessage = response.status;
+    let errorMessage = `서버 응답 오류: ${response.status}`;
     try {
       const errorBody = await response.json();
       errorMessage = errorBody.message || errorMessage;

@@ -22,7 +22,7 @@ export async function getBoardList(
   const response = await apiFetch(apiUrl);
 
   if (!response.ok) {
-    let errorMessage = response.status;
+    let errorMessage = `서버 응답 오류: ${response.status}`;
     try {
       const errorBody = await response.json();
       errorMessage = errorBody.message || errorMessage;
@@ -41,7 +41,7 @@ export async function getBoard(id: string) {
   const response = await apiFetch(apiUrl);
 
   if (!response.ok) {
-    let errorMessage = response.status;
+    let errorMessage = `서버 응답 오류: ${response.status}`;
     try {
       const errorBody = await response.json();
       errorMessage = errorBody.message || errorMessage;
