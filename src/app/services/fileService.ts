@@ -15,7 +15,7 @@ export const uploadEditorImage = async (file: File) => {
   const response = await apiFetch(apiUrl, options);
 
   if (!response.ok) {
-    let errorMessage = `이미지 업로드 실패: ${response.status}`;
+    let errorMessage = `서버 응답 오류: ${response.status}`;
     try {
       const errorBody = await response.json();
       // CKEditor 에러 형식에 맞게 error.message를 찾도록 수정

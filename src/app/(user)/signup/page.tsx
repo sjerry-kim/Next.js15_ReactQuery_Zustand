@@ -66,8 +66,13 @@ export default function Page() {
       }
 
     } catch (error) {
-      console.error('[signup]', error.message);
-      showSnackbar(error.message || '회원가입에 실패하였습니다.', 'error')
+      if (error instanceof Error) {
+        console.error('[signup]', error.message);
+        showSnackbar(error.message || '회원가입에 실패하였습니다.', 'error')
+      } else {
+        console.error('[signup]', error);
+        showSnackbar('알 수 없는 오류가 발생하였습니다.', 'error');
+      }
     }
   };
 

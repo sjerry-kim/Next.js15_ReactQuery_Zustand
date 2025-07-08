@@ -68,8 +68,13 @@ export default function Page() {
       useAuthStore.getState().setAccessToken(accessToken);
       router.push('/');
     } catch (error) {
-      console.error('[login]', error.message);
-      showSnackbar(error.message || '로그인에 실패하였습니다.', 'error')
+      if (error instanceof Error) {
+        console.error('[login]', error.message);
+        showSnackbar(error.message, 'error');
+      } else {
+        console.error('[login]', error);
+        showSnackbar('알 수 없는 오류가 발생하였습니다.', 'error');
+      }
     }
   };
 

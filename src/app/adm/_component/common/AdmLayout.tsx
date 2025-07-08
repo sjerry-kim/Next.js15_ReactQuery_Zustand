@@ -286,11 +286,17 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
       // 메인페이지로 이동하여 모든 상태를 완전히 새로고침
       window.location.href = '/';
     } catch (error) {
-      // 네트워크 에러 등 fetch 자체가 실패한 경우
-      console.error('[logout]', error.message);
+      if (error instanceof Error) {
+        // 네트워크 에러 등 fetch 자체가 실패한 경우
+        console.error('[logout]', error.message);
+        showSnackbar(error.message || '로그아웃 중 문제가 발생하였습니다.', 'error')
+      } else {
+        console.error('[login]', error);
+        showSnackbar('알 수 없는 오류가 발생하였습니다.', 'error');
+      }
       // 에러가 발생하더라도 사용자 경험을 위해 강제로 상태를 초기화
-      showSnackbar(error.message || '로그아웃 중 문제가 발생하였습니다.', 'error')
       window.location.reload();
+
     }
   };
 

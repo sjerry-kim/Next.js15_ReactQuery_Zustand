@@ -1,6 +1,6 @@
 import { board, Prisma } from '@prisma/client';
 import prisma from '@/lib/prisma';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -19,10 +19,6 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       },
     });
 
-    // return new Response(JSON.stringify(res), {
-    //   status: 200,
-    //   headers: { 'Content-Type': 'application/json' },
-    // });
     return NextResponse.json(response);
   } catch (error) {
     console.error('[GET]', error);

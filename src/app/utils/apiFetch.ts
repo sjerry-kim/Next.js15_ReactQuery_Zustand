@@ -99,7 +99,6 @@ export const apiFetch = async (url: string, options: RequestInit & { params?: Re
     });
 
     // refresh api에서 터진 에러를 throw함
-    // todo 리디렉션 필요한지 검토
     if (!refreshRes.ok) throw new Error('[apiFetch] Refreshtoken이 유효하지 않거나, 만료되었습니다.');
 
     const { accessToken: newAccessToken, user } = await refreshRes.json();

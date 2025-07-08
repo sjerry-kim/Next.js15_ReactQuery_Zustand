@@ -1,7 +1,5 @@
 import { TermsResponse } from '@/types/terms';
 import { apiFetch } from '@/utils/apiFetch';
-import { SearchParams } from 'next/dist/server/request/search-params';
-import { PaginatedBoardResponse } from '@/types/board';
 
 export async function getTermsList() {
   const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/protected/setting/terms`;

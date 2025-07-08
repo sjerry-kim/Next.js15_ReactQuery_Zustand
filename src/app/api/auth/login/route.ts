@@ -42,13 +42,13 @@ export async function POST(req: Request) {
       role: profileResult.role!,
     };
 
-    // 4. ✅ jose 함수는 비동기이므로, await을 사용하여 토큰 생성
+    // 4. jose 함수는 비동기이므로, await을 사용하여 토큰 생성
     const accessToken = await generateAccessToken(payload);
     const refreshToken = await generateRefreshToken(payload);
     const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
     const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 90);
 
-    // 5. ✅ DB 작업을 한 번의 'upsert'로 효율적으로 처리
+    // 5. DB 작업을 한 번의 'upsert'로 효율적으로 처리
     await prisma.user_tokens.upsert({
       where: { user_id: user.id },
       update: {

@@ -18,13 +18,13 @@ import LabelTextarea from '@/adm/_component/common/inputs/LabelTextarea';
 import { useSnackbar } from '@/hooks/useSnackbar';
 import Loading from '@/adm/_component/common/Loading';
 
-const Editor = dynamic(() => import('@/adm/_component/common/inputs/Editor'), {
-  ssr: false,
-  loading: () =>
-    <div style={{height: "500px"}}>
-      <Loading subTitle={"로딩이 지속되면 새로고침 해주세요."} />
-    </div>
-});
+// const Editor = dynamic(() => import('@/adm/_component/common/inputs/Editor'), {
+//   ssr: false,
+//   loading: () =>
+//     <div style={{height: "500px"}}>
+//       <Loading subTitle={"로딩이 지속되면 새로고침 해주세요."} />
+//     </div>
+// });
 
 interface Tab {
   key: string;

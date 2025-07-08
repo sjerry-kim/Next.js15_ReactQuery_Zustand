@@ -83,6 +83,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       headers: { 'Content-Type': 'application/json' },
     });
 
+    // Prisma 없는 api 통신에서는 !response.ok가 필수
     if (!response.ok) {
       const errorBody = await response.json();
       console.error("External Server Error:", errorBody);

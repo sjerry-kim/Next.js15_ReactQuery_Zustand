@@ -5,7 +5,7 @@ import {TokenPayload} from '@/types/next-auth';
 
 export async function POST(req: NextRequest) {
   try {
-    // 0. refresh_token 쿠키 get
+    // 1. refresh_token 쿠키 get
     const refreshToken = req.cookies.get('refresh_token')?.value;
 
     // 2. 서버 측 정리 작업

@@ -110,19 +110,6 @@ export async function POST(request: Request): Promise<Response> {
       },
     });
 
-    // return new Response(
-    //   JSON.stringify({
-    //     message: '[POST] 게시물 등록에 성공하였습니다.',
-    //     data: res,
-    //   }),
-    //   {
-    //     status: 200,
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //   }
-    // );
-
     return NextResponse.json(
       { message: '[POST] 게시물 등록에 성공하였습니다.', userId: response },
       { status: 200 }
