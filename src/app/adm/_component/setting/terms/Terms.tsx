@@ -12,6 +12,7 @@ import { router } from 'next/client';
 import { useSnackbar } from '@/hooks/useSnackbar';
 import { createTerms } from '@/services/termsServices';
 import { TermsResponse } from '@/types/terms';
+import LabelEditor from '@/adm/_component/common/inputs/LabelEditor';
 
 interface JsonData {
   title: string;
@@ -59,7 +60,8 @@ export default function MyPage() {
             placeholder="제목"
             onChange={handleChange}
           />
-          <Editor
+          <LabelEditor
+            label="내용"
             name="content"
             value={jsonData.content}
             onChange={handleCustomChange}
