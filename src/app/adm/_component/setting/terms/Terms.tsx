@@ -13,10 +13,16 @@ import { useSnackbar } from '@/hooks/useSnackbar';
 import { createTerms } from '@/services/termsServices';
 import { TermsResponse } from '@/types/terms';
 import LabelEditor from '@/adm/_component/common/inputs/LabelEditor';
+import ImageUploader from '@/adm/_component/common/files/ImageUploader';
+import { ImageList } from '@/adm/_component/common/files/ImageList';
+import { useImageManager } from '@/hooks/useImageManager';
+import { downloadImage } from '@/utils/download';
+import { ImageListItem } from '@/types/files';
 
 interface JsonData {
   title: string;
   content: string;
+  img_list: ImageListItem[];
 }
 
 export default function MyPage() {
@@ -24,9 +30,14 @@ export default function MyPage() {
   const [jsonData, setJsonData] = useState<JsonData>({
     title: "",
     content: "",
+    img_list: []
   });
+  const [deletedImageIdxList, setDeletedImageIdxList] = useState([]);
   const {handleChange, handleCustomChange} = onInputsChange(jsonData, setJsonData);
   const {showSnackbar} = useSnackbar();
+  const { images, addImages, deleteImage } = useImageManager({
+    initialImages: jsonData.img_list, // jsonData.img_list를 초기값으로 전달
+  });
 
   const createMutation = useMutation<ApiResponse<TermsResponse>, Error>({
     mutationFn: () => createTerms(jsonData),
@@ -73,6 +84,14 @@ export default function MyPage() {
             size="md"
             height="100%"
             onClick={()=> createMutation.mutate()}
+          />
+
+          <ImageUploader onCompressedImages={addImages} />
+          <ImageList
+            images={images}
+            editMode={true}
+            onDelete={deleteImage}
+            onDownload={downloadImage}
           />
         </div>
       </section>
