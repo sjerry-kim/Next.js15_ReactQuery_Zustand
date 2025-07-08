@@ -16,18 +16,18 @@ export default function Page() {
     email: '',
     password: '',
   });
-  const {handleChange} = onInputsChange(jsonData, setJsonData);
   const validationRules = {
     email: {
       required: true,
-      pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      format: 'email',
     },
     password: {
       required: true,
       minLength: 6,
       maxLength: 12,
     },
-  };
+  } as const;
+  const {handleChange} = onInputsChange(jsonData, setJsonData);
   const {showSnackbar} = useSnackbar();
   const { errors, validate } = useValidation(jsonData, validationRules);
 

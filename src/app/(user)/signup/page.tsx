@@ -17,7 +17,7 @@ export default function Page() {
   const validationRules = {
     email: {
       required: true,
-      pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      format: 'email',
     },
     password: {
       required: true,
@@ -29,7 +29,7 @@ export default function Page() {
       minLength: 2,
       maxLength: 50,
     },
-  };
+  } as const;
   const { errors, validate } = useValidation(jsonData, validationRules);
   const {showSnackbar} = useSnackbar();
 

@@ -74,7 +74,7 @@ export default function MyPage() {
             <li className={styles.one_row_box}>
               <LabelInputSet label="비밀번호 변경">
                 <LabelInput
-                  type="currentPswd"
+                  type="password"
                   name="currentPswd"
                   placeholder="현재 비밀번호"
                   value={jsonData.currentPswd}
@@ -84,7 +84,7 @@ export default function MyPage() {
                   onChange={handleChange}
                 />
                 <LabelInput
-                  type="newPswd"
+                  type="password"
                   name="newPswd"
                   placeholder="새 비밀번호"
                   value={jsonData.newPswd}
@@ -94,7 +94,7 @@ export default function MyPage() {
                   onChange={handleChange}
                 />
                 <LabelInput
-                  type="confirmPswd"
+                  type="password"
                   name="confirmPswd"
                   placeholder="비밀번호 확인"
                   value={jsonData.confirmPswd}
