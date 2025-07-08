@@ -12,6 +12,7 @@ import CommonModal from '@/adm/_component/common/modals/CommonModal';
 import LabelInput from '@/adm/_component/common/inputs/LabelInput';
 import dynamic from 'next/dynamic';
 import Loading from '@/adm/_component/common/Loading';
+import LabelEditor from '@/adm/_component/common/inputs/LabelEditor';
 
 const Editor = dynamic(() => import('@/adm/_component/common/inputs/Editor'), {
   ssr: false,
@@ -126,7 +127,8 @@ export default function Page({ id }: PageProps) {
           placeholder="제목"
           onChange={handleChange}
         />
-        <Editor
+        <LabelEditor
+          label="내용"
           name="content"
           value={jsonData.content}
           onChange={handleCustomChange}

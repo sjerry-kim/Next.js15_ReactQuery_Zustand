@@ -1,0 +1,21 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  @apply gap-1;
+}
+
+.label_box {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.label_text {
+  @apply font-bold text-md;
+}
+
+.required {
+  color: #ff4d4f;
+  margin-left: 4px;
+}

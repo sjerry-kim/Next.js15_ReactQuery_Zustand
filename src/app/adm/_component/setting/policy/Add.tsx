@@ -12,6 +12,7 @@ import { TermsResponse } from '@/types/terms';
 import { createTerms } from '@/services/termsServices';
 import LabelInput from '@/adm/_component/common/inputs/LabelInput';
 import Loading from '@/adm/_component/common/Loading';
+import LabelEditor from '../../common/inputs/LabelEditor';
 
 const Editor = dynamic(() => import('@/adm/_component/common/inputs/Editor'), {
   ssr: false,
@@ -76,7 +77,8 @@ export default function Page({}) {
           placeholder="제목"
           onChange={handleChange}
         />
-        <Editor
+        <LabelEditor
+          label="내용"
           name="content"
           value={jsonData.content}
           onChange={handleCustomChange}
