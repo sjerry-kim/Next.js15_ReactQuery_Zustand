@@ -2,9 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { board } from '@prisma/client';
 import styles from './Modify.module.css';
-import { getBoard } from '@/services/boardService';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import onInputsChange from '@/utils/onInputsChange';
 import { Board } from '@/types/board';
@@ -12,8 +10,16 @@ import { useSnackbar } from '@/hooks/useSnackbar';
 import { deleteTerm, getTerm, updateTerm } from '@/services/termsServices';
 import CommonModal from '@/adm/_component/common/modals/CommonModal';
 import LabelInput from '@/adm/_component/common/inputs/LabelInput';
-import Button from '@/adm/_component/common/buttons/Button';
-import Editor from '@/adm/_component/common/inputs/Editor';
+import dynamic from 'next/dynamic';
+import Loading from '@/adm/_component/common/Loading';
+
+const Editor = dynamic(() => import('@/adm/_component/common/inputs/Editor'), {
+  ssr: false,
+  loading: () =>
+    <div style={{height: "500px"}}>
+      <Loading subTitle={"로딩이 지속되면 새로고침 해주세요."} />
+    </div>
+});
 
 type PageProps = {
   id: string;
@@ -21,7 +27,6 @@ type PageProps = {
 
 export default function Page({ id }: PageProps) {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const { data } = useQuery({
     queryKey: ['term', id], // 서버에서 사용한 queryKey와 동일하게 설정
     queryFn: () => getTerm(id), // 동일한 queryFn 사용
@@ -107,6 +112,9 @@ export default function Page({ id }: PageProps) {
           onClick: () => {deleteMutation.mutate()}
         },
       ]}
+      width="1100px"
+      maxWidth="90%"
+      height="800px"
       onClose={() => router.back()}
     >
       <ul className={styles.content_box}>

@@ -21,3 +21,8 @@
   line-height: normal;
 }
 
+.content_box {
+  display: flex;
+  flex-direction: column;
+  @apply gap-3;
+}

@@ -1,22 +1,16 @@
 import { apiFetch } from '@/utils/apiFetch';
 
 export const uploadEditorImage = async (file: File) => {
-  if (!file || !(file instanceof File)) {
-    throw new Error("유효하지 않은 파일이 전달되었습니다.");
-  }
+  if (!file || !(file instanceof File)) throw new Error("유효하지 않은 파일이 전달되었습니다.");
 
   const apiUrl = '/api/protected/file/editor-image';
   const formData = new FormData();
-
-  // ✅ Swagger 명세에 따라 필드 이름을 'upload_file'로 수정
   formData.append('upload_file', file);
 
   const options = {
     method: 'POST',
     body: formData,
   };
-
-  console.log("1. apiFetch에 전달하는 options:", options);
 
   const response = await apiFetch(apiUrl, options);
 

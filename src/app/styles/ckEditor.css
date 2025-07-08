@@ -4,26 +4,81 @@
 
 /* 텍스트입력태그 */
 .ck.ck-editor__editable:not(.ck-editor__nested-editable), .ck-source-editing-area {
-    height: auto!important;
-    min-height: 500px;
-    margin-bottom: 30px;
-    max-height: 900px;
+  height: auto!important;
+  min-height: 500px;
+  margin-bottom: 30px;
+  max-height: 900px;
 }
 
 /* 툴박스 */
 .ck.ck-toolbar.ck-toolbar_grouping {
-    width: 100%;
+  width: 100%;
 }
 
 /* 입력내용이 짧고 행이 길어지면 자동으로 텍스트입력태그 가로넓이가 줄어들기 때문에 고정 */
 .ck-editor__editable_inline, .ck-source-editing-area {
-    width: 100%;
+  width: 100%;
 }
 
 .ck-widget.raw-html-embed .raw-html-embed__source {
-    height: 250px!important;
+  height: 250px!important;
 }
 
 .ck-source-editing-area textarea {
-    overflow: scroll;
+  overflow: scroll;
+}
+
+/* ------ CK-Editor 커스텀 ------ */
+/* 툴바 영역 */
+.ck-rounded-corners .ck.ck-editor__top .ck-sticky-panel .ck-toolbar,
+.ck.ck-editor__top .ck-sticky-panel
+.ck-toolbar.ck-rounded-corners {
+  border: 1px solid #D1D1D1 !important;
+  border-bottom: none !important;
+  z-index: 9999 !important;
+  box-shadow: none !important;
+  @apply rounded-t-lg !important;
+}
+
+.ck.ck-toolbar .ck.ck-toolbar__separator {
+  background: #D1D1D1 !important;
+}
+
+/* 에디터 편집영역 warpper */
+.ck-editor__main {
+  max-height: 500px  !important;
+  height: 500px  !important;
+  min-height: 500px  !important;
+  overflow-y: auto  !important;
+  border: 1px solid #D1D1D1 !important;
+  @apply rounded-b-lg !important;
+}
+
+.ck-editor__main:hover {
+  @apply border-primary-light !important;
+}
+
+/* 에디터 실제 편집 영역 */
+.ck-content, .ck-editor__editable {
+  max-height: none !important;
+  overflow-y: hidden !important;
+  border-color: transparent !important;
+}
+
+.ck.ck-editor__editable:not(.ck-editor__nested-editable) {
+  /*border: 1px solid #D1D1D1 !important;*/
+  z-index: 10000 !important;
+}
+
+.ck.ck-editor__editable:not(.ck-editor__nested-editable):hover {
+  cursor: text;
+}
+
+.ck.ck-editor__editable:not(.ck-editor__nested-editable):focus {
+  /*border: 1px solid #A5B4FC !important;*/
+  box-shadow: none !important;
+}
+
+.ck.ck-editor__editable:not(.ck-editor__nested-editable), .ck-source-editing-area {
+  margin-bottom: 0 !important;
 }

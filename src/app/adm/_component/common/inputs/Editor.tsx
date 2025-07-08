@@ -2,8 +2,11 @@
 
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import * as ClassicEditor from "../../../../../../ckeditor5-40.0.0"; // import 방식 수정
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { uploadEditorImage } from '@/services/fileService';
+import { useSnackbar } from '@/hooks/useSnackbar';
+import { MAX_FILE_SIZE_MB} from '@/_constant/file';
+// import styles from './Editor.module.css';
 
 interface EditorProps {
   name: string;
@@ -14,80 +17,60 @@ interface EditorProps {
   source?: boolean;
 }
 
-const MAX_FILE_SIZE_MB = 100;
-
 export default function Editor({
   name,
   value,
   onChange,
   image = true,
-  youtube = true,
-  source = true,
+  // youtube = true,
+  // source = true,
 }: EditorProps) {
   const toolbarItems = [
     "undo", "redo", "|",
+    // "sourceEditing",
     "fontFamily", "fontSize", "fontColor", "fontBackgroundColor",
     "bold", "underline", "strikethrough", "link", "alignment", "|",
     "insertTable",
     image && "imageInsert",
-    // todo html 뷰어 추가 필요
     // youtube && "mediaEmbed",
     // "|",
     // source && "htmlEmbed",
-    // "findAndReplace",
+    "findAndReplace",
   ].filter(Boolean) as string[];
-
-  // const handleImageUpload = useCallback(async (file: File) => {
-  //   if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-  //     alert(`파일 크기는 ${MAX_FILE_SIZE_MB}MB 이하여야 합니다.`);
-  //     return { default: "" };
-  //   }
-  //
-  //   const formData = new FormData();
-  //   formData.append("file", file);
-  //
-  //   try {
-  //     const res = await fetch("/api/protected/file/editor-image", {
-  //       method: "POST",
-  //       body: formData,
-  //     });
-  //
-  //     if (!res.ok) {
-  //       throw new Error("업로드 실패");
-  //     }
-  //
-  //     const data = await res.json();
-  //     return { default: data.url }; // 백엔드 응답이 { url: '...' } 형태라고 가정
-  //   } catch (err) {
-  //     alert("이미지 업로드 실패. 관리자에게 문의해주세요.");
-  //     return { default: "" };
-  //   }
-  // }, []);
+  const [isFocused, setFocused] = useState(false);
+  const editorWrapperRef = useRef<HTMLDivElement>(null);
+  const { showSnackbar } = useSnackbar();
 
   const handleImageUpload = useCallback(async (file: File) => {
-    // 파일 크기 유효성 검사는 즉각적인 피드백을 위해 클라이언트에 남겨둡니다.
+    const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+
+    // 파일 형식 검사
+    if (!allowedTypes.includes(file.type)) {
+      showSnackbar("지원하지 않는 파일 형식입니다. (jpg, png, gif, webp)", 'warning');
+      return { default: "" };
+    }
+
+    // 파일 크기 검사
     if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-      alert(`파일 크기는 ${MAX_FILE_SIZE_MB}MB 이하여야 합니다.`);
+      showSnackbar(`파일 크기는 ${MAX_FILE_SIZE_MB}MB 이하여야 합니다.`, 'warning');
       return { default: "" };
     }
 
     try {
-      // 2. 중앙화된 서비스 함수를 호출합니다.
       const data = await uploadEditorImage(file);
 
-      // 3. 성공 응답을 CKEditor가 요구하는 형식으로 변환하여 반환합니다.
-      return { default: data.url }; // 서비스 함수가 { url: '...' } 형태를 반환한다고 가정
-
-    } catch (err) {
-      // 4. 서비스 함수에서 던져진 에러를 여기서 잡아서 처리합니다.
-      console.error(err); // 콘솔에는 상세한 에러를 기록
-      alert("이미지 업로드 실패. 관리자에게 문의해주세요."); // 사용자에게는 간단한 알림 표시
+      return { default: data.fullUrl };
+    } catch (error) {
+      console.error(error);
+      showSnackbar(`이미지 업로드 중 문제가 발생하였습니다.`, 'error');
       return { default: "" };
     }
-  }, []);
+  }, [showSnackbar]);
 
   return (
     <CKEditor
+      onFocus={() => setFocused(true)}
+      onBlur={() => setFocused(false)}
       editor={ClassicEditor as any}
       data={value}
       config={{
@@ -115,7 +98,7 @@ export default function Editor({
           };
         };
 
-        // 비어 있는 이미지 제거
+        // 실패한 이미지(깨지거나, 업로드가 되지 않은 이미지) 제거
         editor.model.document.on("change:data", () => {
           if (!editor.model.document) return;
 
@@ -125,7 +108,12 @@ export default function Editor({
 
             for (const element of Array.from(root.getChildren())) {
               const imgElement = element as any;
-              if (imgElement.name === "imageBlock" && !element.getAttribute("src")) {
+              if (
+                imgElement.name === "imageBlock" && // 1. 이 요소가 이미지 블록이고,
+                !element.getAttribute("src") && // 2. 최종 주소(src)가 없으면서,
+                !element.getAttribute("uploadId") // 3. 현재 업로드 중도 아닐 때
+              ) {
+                // => 이 세 조건을 모두 만족하는 '진짜 실패한 이미지'만 삭제
                 writer.remove(element);
               }
             }
