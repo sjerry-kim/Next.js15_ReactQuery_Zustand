@@ -13,8 +13,10 @@ import Loading from '@/adm/_component/common/Loading';
 /* ✅ 이미지 업로더 컴포넌트 */
 function ImageUploader({
   onCompressedImages,
-  maxFiles = 10,
-  accept = DEFAULT_ACCEPT_IMAGE_OBJECT
+  maxFiles = 10, // 최대 허용 이미지 갯수
+  accept = DEFAULT_ACCEPT_IMAGE_OBJECT,
+  maxSizeMB = 1, // 최대 허용 용량
+  maxWidthOrHeight = 1024, // 가로,세로 변 중 긴 부분의 최대 길이
 } : ImageUploaderProps) {
   const [isLoading, setIsLoading] = useState(false); // 이미지 로딩 상태
   const { showSnackbar } = useSnackbar();
@@ -44,15 +46,24 @@ function ImageUploader({
       const compressed: File[] = [];
       for (const file of acceptedFiles) {
         const options = {
-          maxSizeMB: 1,
-          maxWidthOrHeight: 1024,
-          useWebWorker: true,
+          maxSizeMB: maxSizeMB, // 최대 파일 크기를 1MB로 제한
+          maxWidthOrHeight: maxWidthOrHeight, // 이미지의 가로 또는 세로 중 더 긴 쪽의 최대 크기를 1024px로 제한 (비율은 유지)
+          useWebWorker: true, // 웹 워커(Web Worker)를 사용하여 압축 실행 (성능 및 UX 향상)
         };
+        // 설정한 옵션에 따라 각 파일을 비동기적으로 압축 (Blob(블롭) 객체로)
         const compressedBlob = await imageCompression(file, options);
-        const finalFile = new File([compressedBlob], file.name, {
-          type: compressedBlob.type,
-          lastModified: Date.now(),
-        });
+
+        // 압축된 Blob 데이터를 FormData로 보내기 쉬운 File 객체로 다시 변환
+        const finalFile = new File(
+          [compressedBlob], // 첫 번째 인자: Blob 데이터
+          file.name, // 두 번째 인자: 파일 이름 (원본 파일 이름을 그대로 사용)
+          // 세 번째 인자: 옵션 객체
+          {
+            type: compressedBlob.type, // MIME 타입 (e.g., 'image/jpeg')
+            lastModified: Date.now(), // 수정 날짜를 현재 시간으로 설정
+          }
+        );
+        // 최종적으로 만들어진 압축 파일을 배열에 추가
         compressed.push(finalFile);
       }
 

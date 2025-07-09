@@ -18,6 +18,8 @@ export interface ImageUploaderProps {
   onCompressedImages: (files: File[]) => void;
   maxFiles?: number; // 최대 파일 개수
   accept?: DropzoneOptions['accept']; // dropzone 라이브러리가 사용하는 accept 객체
+  maxSizeMB?: number;
+  maxWidthOrHeight?: number;
 }
 
 export interface ImageListProps {
@@ -40,6 +42,8 @@ export interface FileUploaderProps {
   onFilesSelected: (files: File[]) => void;
   maxFiles?: number; // 최대 파일 개수
   accept?: DropzoneOptions['accept']; // dropzone 라이브러리가 사용하는 accept 객체
+  maxImageSizeMB?: number;
+  maxImageWidthOrHeight?: number;
 }
 
 export interface FileListProps {

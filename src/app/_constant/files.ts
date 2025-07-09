@@ -1,5 +1,6 @@
 import { DropzoneOptions } from 'react-dropzone';
 
+// editor, 파일 업로드 용량 제한 등에서 사용 중
 export const MAX_FILE_SIZE_MB = 100;
 
 // export const DEFAULT_ALLOWED_IMAGE_TYPES = [

@@ -7,14 +7,16 @@ import { RiUploadCloudFill } from 'react-icons/ri';
 import styles from './ImageUploader.module.css';
 import { FileUploaderProps } from '@/types/files';
 import { useSnackbar } from '@/hooks/useSnackbar';
-import { DEFAULT_ACCEPT_FILE_OBJECT } from '@/_constant/files';
+import { DEFAULT_ACCEPT_FILE_OBJECT, MAX_FILE_SIZE_MB } from '@/_constant/files';
 import Loading from '@/adm/_component/common/Loading';
 
 /* ✅ 파일 업로더 컴포넌트 */
 function FileUploader({
   onFilesSelected,
   maxFiles = 10,
-  accept = DEFAULT_ACCEPT_FILE_OBJECT
+  accept = DEFAULT_ACCEPT_FILE_OBJECT,
+  maxImageSizeMB = 1, // (이미지) 최대 허용 용량
+  maxImageWidthOrHeight = 1024, // (이미지) 가로,세로 변 중 긴 부분의 최대 길이
 } : FileUploaderProps) {
   const [isLoading, setIsLoading] = useState(false); // 이미지 로딩 상태
   const { showSnackbar } = useSnackbar();
@@ -43,11 +45,20 @@ function FileUploader({
       // 2. 파일 처리 로직 (이미지 파일만 압축)
       const processedFiles: File[] = []; // 변수 이름을 더 명확하게 변경
       for (const file of acceptedFiles) {
+        // 모든 파일에 대해 공통적으로 용량 검사를 먼저 수행
+        if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+          showSnackbar(
+            `${file.name} 파일의 용량이 너무 큽니다. (최대 ${MAX_FILE_SIZE_MB}MB)`,
+            'warning'
+          );
+          continue; // 이 파일은 건너뛰고 다음 파일 처리
+        }
+
         // 파일 타입이 'image/'로 시작하는 경우에만 압축을 실행
         if (file.type.startsWith('image/')) {
           const options = {
-            maxSizeMB: 1,
-            maxWidthOrHeight: 1024,
+            maxSizeMB: maxImageSizeMB,
+            maxWidthOrHeight: maxImageWidthOrHeight,
             useWebWorker: true,
           };
           const compressedBlob = await imageCompression(file, options);
