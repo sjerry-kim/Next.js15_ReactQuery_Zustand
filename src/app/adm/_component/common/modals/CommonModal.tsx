@@ -2,7 +2,7 @@
 
 import styles from './CommonModal.module.css';
 import CloseIcon from '@mui/icons-material/Close';
-import { CSSProperties } from 'react';
+import { CSSProperties, Fragment } from 'react';
 import { CommonModalProps } from '@/types/modal';
 import Button from '@/adm/_component/common/buttons/Button'
 
@@ -16,6 +16,9 @@ export default function CommonModal({
   height,
   maxHeight = "90%",
   minHeight,
+  buttonsLocation = 'flex-end', // pdf 뷰어의 페이지네이션을 위해서 넣어둠
+  currentPage = 0,
+  totalPages = 0,
   onClose,
 }: CommonModalProps) {
 
@@ -39,8 +42,9 @@ export default function CommonModal({
         </div>
         <div className={styles.child_container}>{children}</div>
 
-        {buttons.length > 0 && (
-          <div className={styles.bottom_container}>
+        {/* 하단 버튼 (! 일반 모달의 경우) */}
+        {(buttons.length > 0  && totalPages <= 0) && (
+          <div className={styles.bottom_container} style={{justifyContent: buttonsLocation}}>
             {buttons.map((buttonProps, index) => (
               <Button
                 key={`${buttonProps.text}-${index}`}
@@ -48,6 +52,35 @@ export default function CommonModal({
                 height="100%"
               />
             ))}
+          </div>
+        )}
+
+        {/* 하단 버튼 (! 페이지네이션-PDF뷰어-의 경우) */}
+        {(buttons.length > 0  && totalPages > 0) && (
+          <div className={styles.bottom_container} style={{justifyContent: buttonsLocation}}>
+            {buttons.map((buttonProps, index) => {
+              if (buttons?.length - 1 !== index) {
+                return (
+                  <Fragment key={`${buttonProps.text}-${index}`}>
+                    <Button
+                      {...buttonProps}
+                      height="100%"
+                    />
+                    <span className={styles.pagination}>
+                      {currentPage} / {totalPages || '...'}
+                    </span>
+                  </Fragment>
+                )
+              } else {
+                return (
+                  <Button
+                    key={`${buttonProps.text}-${index}`}
+                    {...buttonProps}
+                    height="100%"
+                  />
+                )
+              }
+            })}
           </div>
         )}
       </div>

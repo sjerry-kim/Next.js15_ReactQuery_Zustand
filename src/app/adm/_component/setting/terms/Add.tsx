@@ -21,6 +21,7 @@ import { FileListItem, ImageListItem } from '@/types/files';
 import { useFileManager } from '@/hooks/useFileManager';
 import FileUploader from '@/adm/_component/common/files/FileUploader';
 import { FileList } from '@/adm/_component/common/files/FileList';
+import PdfViewer from '@/adm/_component/common/files/PdfViewer';
 
 interface JsonData {
   title: string;
@@ -37,6 +38,8 @@ export default function MyPage() {
     img_list: [],
     file_list: [],
   });
+  const [isPdfOpen, setIsPdfOpen] = useState(false);
+  const myPdfUrl = "/files/test.pdf"; // public 폴더에 있는 파일 또는 외부 URL
   const { images, deletedImageIds, addImages, deleteImage } = useImageManager({
     initialImages: jsonData.img_list,
   });
@@ -60,80 +63,101 @@ export default function MyPage() {
   });
 
   return (
-    <main className={styles.main}>
-      <section className={styles.page_wrapper}>
-        <div className={styles.top}>
-          <h3>이용약관 등록</h3>
-        </div>
-        <div className={styles.bottom}>
-          <ul className={styles.content_container}>
-            <li className={styles.input_box}>
-              <LabelInput
-                label="제목"
-                name="title"
-                maxLength={30}
-                placeholder="제목"
-                required={true}
-                value={jsonData.title}
-                onChange={handleChange}
-              />
-            </li>
+    <>
+      <main className={styles.main}>
+        <section className={styles.page_wrapper}>
+          <div className={styles.top}>
+            <h3>이용약관 등록</h3>
+          </div>
+          <div className={styles.bottom}>
+            <ul className={styles.content_container}>
+              <li className={styles.input_box}>
+                <LabelInput
+                  label="제목"
+                  name="title"
+                  maxLength={30}
+                  placeholder="제목"
+                  required={true}
+                  value={jsonData.title}
+                  onChange={handleChange}
+                />
+              </li>
 
-            <li className={styles.input_box}>
-              <LabelEditor
-                label="내용"
-                name="content"
-                required={true}
-                value={jsonData.content}
-                onChange={handleCustomChange}
-              />
-            </li>
+              <li className={styles.input_box}>
+                <LabelEditor
+                  label="내용"
+                  name="content"
+                  required={true}
+                  value={jsonData.content}
+                  onChange={handleCustomChange}
+                />
+              </li>
 
-            <li className={styles.file_box}>
-              <label className={styles.label_box}>
-                <div className={styles.label_text}>
-                  이미지 첨부
-                  <span className={styles.required}>*</span>
-                </div>
-              </label>
-              <ImageUploader onCompressedImages={addImages} />
-              <ImageList
-                images={images}
-                editMode={true}
-                onDelete={deleteImage}
-                onDownload={downloadImage}
-              />
-            </li>
+              <li className={styles.file_box}>
+                <label className={styles.label_box}>
+                  <div className={styles.label_text}>
+                    이미지 첨부
+                    <span className={styles.required}>*</span>
+                  </div>
+                </label>
+                <ImageUploader onCompressedImages={addImages} />
+                <ImageList
+                  images={images}
+                  editMode={true}
+                  onDelete={deleteImage}
+                  onDownload={downloadImage}
+                />
+              </li>
 
-            <li className={styles.file_box}>
-              <label className={styles.label_box}>
-                <div className={styles.label_text}>
-                  파일 첨부
-                </div>
-              </label>
-              <FileUploader onFilesSelected={addFiles} />
-              <FileList
-                files={files}
-                editMode={true}
-                onDelete={deleteFile}
-                onDownload={downloadFile}
-              />
-            </li>
+              <li className={styles.file_box}>
+                <label className={styles.label_box}>
+                  <div className={styles.label_text}>
+                    파일 첨부
+                  </div>
+                </label>
+                <FileUploader onFilesSelected={addFiles} />
+                <FileList
+                  files={files}
+                  editMode={true}
+                  onDelete={deleteFile}
+                  onDownload={downloadFile}
+                />
+              </li>
 
-            <div className={styles.btn_box}>
-              <Button
-                text="등록"
-                variant="contained"
-                color="primary"
-                size="md"
-                width="fit-content"
-                height="100%"
-                onClick={()=> createMutation.mutate()}
-              />
-            </div>
-          </ul>
-        </div>
-      </section>
-    </main>
+              <li>
+                <Button
+                  text="PDF 보기"
+                  variant="outlined"
+                  color="primary"
+                  size="md"
+                  width="100%"
+                  height="100%"
+                  onClick={()=> setIsPdfOpen(true)}
+                />
+              </li>
+
+              <div className={styles.btn_box}>
+                <Button
+                  text="등록"
+                  variant="contained"
+                  color="primary"
+                  size="md"
+                  width="fit-content"
+                  height="100%"
+                  onClick={()=> createMutation.mutate()}
+                />
+              </div>
+            </ul>
+          </div>
+        </section>
+      </main>
+
+      {isPdfOpen && (
+        <PdfViewer
+          fileUrl={myPdfUrl}
+          onClose={() => setIsPdfOpen(false)}
+        />
+      )}
+    </>
   )
 }

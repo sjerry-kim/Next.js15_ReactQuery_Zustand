@@ -70,3 +70,8 @@ h5 {
 p {
   font-size: 14px;
 }
+
+/* readt-pdf pdf 뷰어 텍스트 드래그 및 선택 허용 */
+.react-pdf__Page__textContent, .textLayer {
+  user-select: text !important;
+}

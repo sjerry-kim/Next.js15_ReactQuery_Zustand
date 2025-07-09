@@ -19,6 +19,9 @@ export interface CommonModalProps {
   height?: string | number;
   maxHeight?: string | number;
   minHeight?: string | number;
+  buttonsLocation?: 'flex-start' | 'center' | 'flex-end'; // 버튼 위치
+  currentPage?: number,
+  totalPages?: number,
 }
 
 // export interface CommonModalState {
