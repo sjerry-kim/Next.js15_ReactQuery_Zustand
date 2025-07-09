@@ -1,4 +1,4 @@
-import { ImageListItem } from '@/types/files';
+import { FileListItem, ImageListItem } from '@/types/files';
 import { useSnackbar } from '@/hooks/useSnackbar';
 
 /* ✅ 이미지 URL을 받아 사용자 컴퓨터에 파일을 다운로드시키는 함수 */
@@ -46,5 +46,35 @@ export const downloadImage = async (img: ImageListItem) => {
   } catch (err) {
     console.error('[download]', err);
     showSnackbar( `이미지 다운로드 중 문제가 발생했습니다.`, 'warning');
+  }
+};
+
+export const downloadFile = async (file: FileListItem) => {
+  if (!file.file_url) {
+    console.error('다운로드할 파일 URL이 없습니다.');
+    // 사용자에게 알림 추가 (예: showAlert)
+    return;
+  }
+  try {
+    const isDev = process.env.NODE_ENV === 'development';
+    const fetchUrl = isDev
+      ? file.file_url.replace('https://api.moneyflag.kr', '')
+      : file.file_url;
+
+    const response = await fetch(fetchUrl, { mode: 'cors' });
+    if (!response.ok) throw new Error('파일 요청 실패');
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = file.file_init_name || 'download';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error('파일 다운로드 오류:', err);
+    // 사용자에게 알림 추가 (예: showAlert)
   }
 };

@@ -120,6 +120,7 @@ export interface CustomTabsProps extends Omit<TabsProps, 'value' | 'onChange'> {
 /* Loading */
 export interface LoadingProps {
   type?: 'line' | 'circle';
+  circleSize?: number;
   title?: string;
   subTitle?: string;
 }

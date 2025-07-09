@@ -16,13 +16,17 @@ import LabelEditor from '@/adm/_component/common/inputs/LabelEditor';
 import ImageUploader from '@/adm/_component/common/files/ImageUploader';
 import { ImageList } from '@/adm/_component/common/files/ImageList';
 import { useImageManager } from '@/hooks/useImageManager';
-import { downloadImage } from '@/utils/download';
-import { ImageListItem } from '@/types/files';
+import { downloadImage, downloadFile } from '@/utils/download';
+import { FileListItem, ImageListItem } from '@/types/files';
+import { useFileManager } from '@/hooks/useFileManager';
+import FileUploader from '@/adm/_component/common/files/FileUploader';
+import { FileList } from '@/adm/_component/common/files/FileList';
 
 interface JsonData {
   title: string;
   content: string;
   img_list: ImageListItem[];
+  file_list: FileListItem[];
 }
 
 export default function MyPage() {
@@ -30,10 +34,14 @@ export default function MyPage() {
   const [jsonData, setJsonData] = useState<JsonData>({
     title: "",
     content: "",
-    img_list: []
+    img_list: [],
+    file_list: [],
   });
   const { images, deletedImageIds, addImages, deleteImage } = useImageManager({
     initialImages: jsonData.img_list,
+  });
+  const {files, deletedFileIds, addFiles, deleteFile} = useFileManager({
+    initialFiles: jsonData.file_list,
   });
   const {handleChange, handleCustomChange} = onInputsChange(jsonData, setJsonData);
   const {showSnackbar} = useSnackbar();
@@ -70,6 +78,7 @@ export default function MyPage() {
                 onChange={handleChange}
               />
             </li>
+
             <li className={styles.input_box}>
               <LabelEditor
                 label="내용"
@@ -79,6 +88,7 @@ export default function MyPage() {
                 onChange={handleCustomChange}
               />
             </li>
+
             <li className={styles.file_box}>
               <label className={styles.label_box}>
                 <div className={styles.label_text}>
@@ -94,6 +104,22 @@ export default function MyPage() {
                 onDownload={downloadImage}
               />
             </li>
+
+            <li className={styles.file_box}>
+              <label className={styles.label_box}>
+                <div className={styles.label_text}>
+                  파일 첨부
+                </div>
+              </label>
+              <FileUploader onFilesSelected={addFiles} />
+              <FileList
+                files={files}
+                editMode={true}
+                onDelete={deleteFile}
+                onDownload={downloadFile}
+              />
+            </li>
+
             <div className={styles.btn_box}>
               <Button
                 text="등록"

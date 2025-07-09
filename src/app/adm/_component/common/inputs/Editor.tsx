@@ -5,7 +5,7 @@ import * as ClassicEditor from "../../../../../../ckeditor5-40.0.0"; // import ë
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { uploadEditorImage } from '@/services/fileService';
 import { useSnackbar } from '@/hooks/useSnackbar';
-import { MAX_FILE_SIZE_MB} from '@/_constant/file';
+import { MAX_FILE_SIZE_MB} from '@/_constant/files';
 // import styles from './Editor.module.css';
 
 interface EditorProps {

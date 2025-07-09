@@ -5,17 +5,17 @@ import { FileRejection, useDropzone } from 'react-dropzone';
 import imageCompression from 'browser-image-compression';
 import { RiUploadCloudFill } from 'react-icons/ri';
 import styles from './ImageUploader.module.css';
-import { ImageUploaderProps } from '@/types/files';
+import { FileUploaderProps } from '@/types/files';
 import { useSnackbar } from '@/hooks/useSnackbar';
-import { DEFAULT_ACCEPT_IMAGE_OBJECT } from '@/_constant/files';
+import { DEFAULT_ACCEPT_FILE_OBJECT } from '@/_constant/files';
 import Loading from '@/adm/_component/common/Loading';
 
-/* ✅ 이미지 업로더 컴포넌트 */
-function ImageUploader({
-  onCompressedImages,
+/* ✅ 파일 업로더 컴포넌트 */
+function FileUploader({
+  onFilesSelected,
   maxFiles = 10,
-  accept = DEFAULT_ACCEPT_IMAGE_OBJECT
-} : ImageUploaderProps) {
+  accept = DEFAULT_ACCEPT_FILE_OBJECT
+} : FileUploaderProps) {
   const [isLoading, setIsLoading] = useState(false); // 이미지 로딩 상태
   const { showSnackbar } = useSnackbar();
 
@@ -35,35 +35,41 @@ function ImageUploader({
       }
 
       if (acceptedFiles.length > maxFiles) {
-        showSnackbar(`이미지는 최대 ${maxFiles}장까지만 등록 가능합니다.`, 'warning');
+        showSnackbar(`파일은 최대 ${maxFiles}장까지만 등록 가능합니다.`, 'warning');
         setIsLoading(false);
         return;
       }
 
-      // 2. 이미지 압축 로직
-      const compressed: File[] = [];
+      // 2. 파일 처리 로직 (이미지 파일만 압축)
+      const processedFiles: File[] = []; // 변수 이름을 더 명확하게 변경
       for (const file of acceptedFiles) {
-        const options = {
-          maxSizeMB: 1,
-          maxWidthOrHeight: 1024,
-          useWebWorker: true,
-        };
-        const compressedBlob = await imageCompression(file, options);
-        const finalFile = new File([compressedBlob], file.name, {
-          type: compressedBlob.type,
-          lastModified: Date.now(),
-        });
-        compressed.push(finalFile);
+        // 파일 타입이 'image/'로 시작하는 경우에만 압축을 실행
+        if (file.type.startsWith('image/')) {
+          const options = {
+            maxSizeMB: 1,
+            maxWidthOrHeight: 1024,
+            useWebWorker: true,
+          };
+          const compressedBlob = await imageCompression(file, options);
+          const finalFile = new File([compressedBlob], file.name, {
+            type: compressedBlob.type,
+            lastModified: Date.now(),
+          });
+          processedFiles.push(finalFile);
+        } else {
+          // 이미지가 아닌 다른 파일(PDF, DOCX 등)은 압축 안 함
+          processedFiles.push(file);
+        }
       }
 
-      // 3. 압축된 파일들을 부모 컴포넌트로 전달
-      onCompressedImages(compressed);
+      // 3. 처리된 파일들을 부모 컴포넌트로 전달
+      onFilesSelected(processedFiles);
     } catch (err) {
-      console.error('이미지 압축 중 문제가 발생하였습니다: ', err);
+      console.error('파일 압축 중 문제가 발생하였습니다: ', err);
     } finally {
       setIsLoading(false);
     }
-  }, [onCompressedImages, maxFiles, showSnackbar]);
+  }, [onFilesSelected, maxFiles, showSnackbar]);
 
   // 4. react-dropzone 훅을 사용하여 드래그 앤 드롭 기능 활성화
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -80,15 +86,15 @@ function ImageUploader({
         <input {...getInputProps()} />
         {
           isLoading ?
-          <Loading subTitle="이미지 압축 중입니다." circleSize={33.5} /> :
-          <>
-            <RiUploadCloudFill size={32} className={styles.upload_icon} />
-            <p>이미지를 드래그하거나 클릭하여 업로드</p>
-          </>
+            <Loading subTitle="파일 처리 중입니다." circleSize={33.5} /> :
+            <>
+              <RiUploadCloudFill size={32} className={styles.upload_icon} />
+              <p>파일을 드래그하거나 클릭하여 업로드</p>
+            </>
         }
       </div>
     </div>
   );
 }
 
-export default ImageUploader;
+export default FileUploader;

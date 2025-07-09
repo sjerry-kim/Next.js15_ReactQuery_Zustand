@@ -7,7 +7,12 @@ import Box from '@mui/material/Box';
 import useWindowSize from '@/hooks/useWindowSize.';
 import { COLORS } from '@/_constant/colorConstants';
 
-export default function Loading({type = "circle", title, subTitle} : LoadingProps) {
+export default function Loading({
+  type = "circle",
+  circleSize = 40,
+  title,
+  subTitle
+} : LoadingProps) {
   const { isMobile } = useWindowSize();
 
   const circleProgressStyle = {
@@ -28,7 +33,7 @@ export default function Loading({type = "circle", title, subTitle} : LoadingProp
       {
         type === "circle" &&
         <CircularProgress
-          size={40}
+          size={circleSize}
           thickness={4}
           className={styles.spinner}
           sx={circleProgressStyle}
