@@ -118,7 +118,7 @@ export default function List() {
 // 글쓰기 모달 handler
   const handleAddClick = () => {
     const currentParamsString = searchParams.toString();
-    const destination = `/adm/setting/policy/add?${currentParamsString}`;
+    const destination = `/adm/setting/terms/add`;
     router.push(destination);
   };
 

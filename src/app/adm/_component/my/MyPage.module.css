@@ -37,23 +37,36 @@
 }
 
 .content_container {
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
   @apply gap-3
 }
 
 .content_container > li {
   display: flex;
-  /*flex-wrap: wrap;*/
   @apply gap-3;
 }
 
-.label {
+/* ---Label--- */
+.label_box {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.label_text {
   @apply font-bold text-md;
 }
 
-/* profile */
+.required {
+  color: #ff4d4f;
+  margin-left: 4px;
+}
+
+/* Profile */
 .profile_box {
   display: flex;
   flex-direction: row;
@@ -83,6 +96,8 @@
   50% { opacity: 0.4; }
 }
 
+/* ---Inputs Layout Start--- */
+/* 세로 정렬이 필요한 input+label */
 .inner_column {
   display: flex;
   flex-direction: column;
@@ -91,19 +106,14 @@
   @apply gap-3
 }
 
-.inner_row {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  @apply gap-1
-}
-
+/* 한 줄에 input이 row로 여러개 들어가야하는 경우 */
 .one_row_box {
   display: flex;
   flex-direction: row;
+  width: 100%;
 }
 
-/* inner_one_row - 한 줄에 인풋, 버튼 여러개 */
+/* 한 줄에 인풋, 버튼 여러개 */
 .inner_one_row {
   display: flex;
   flex-direction: column;
@@ -112,38 +122,14 @@
   @apply gap-1
 }
 
-.inner_row_set {
-  display: flex;
-  flex-direction: row;
-  @apply gap-2
-}
-
-.inner_row_set > input {
-  flex-grow: 1;
-  min-width: 0;
-}
-
-.inner_row_set > button:hover {
-  @apply bg-primary-dark
-}
-
-/* input-box: label-input 한쌍씩 */
+/* label-input 한쌍씩 */
 .input_box {
   display: flex;
   flex-direction: column;
+  width: 100%;
   @apply gap-1
 }
-
-.input_box > textarea {
-  height: 250px;
-}
-
-/* button */
-.button {
-  padding: 0 16px;
-  height: 100%;
-  @apply bg-primary text-surface
-}
+/* ---Inputs Layout End--- */
 
 @media (max-width: 767px) {
   .profile_box {

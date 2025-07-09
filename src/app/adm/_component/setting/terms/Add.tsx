@@ -1,6 +1,6 @@
 'use client'
 
-import styles from './Terms.module.css';
+import styles from './Add.module.css';
 import onInputsChange from '@/utils/onInputsChange';
 import { useEffect, useState } from 'react';
 import Editor from '@/adm/_component/common/inputs/Editor';
@@ -32,12 +32,11 @@ export default function MyPage() {
     content: "",
     img_list: []
   });
-  const [deletedImageIdxList, setDeletedImageIdxList] = useState([]);
+  const { images, deletedImageIds, addImages, deleteImage } = useImageManager({
+    initialImages: jsonData.img_list,
+  });
   const {handleChange, handleCustomChange} = onInputsChange(jsonData, setJsonData);
   const {showSnackbar} = useSnackbar();
-  const { images, addImages, deleteImage } = useImageManager({
-    initialImages: jsonData.img_list, // jsonData.img_list를 초기값으로 전달
-  });
 
   const createMutation = useMutation<ApiResponse<TermsResponse>, Error>({
     mutationFn: () => createTerms(jsonData),
@@ -52,47 +51,61 @@ export default function MyPage() {
     },
   });
 
-  // useEffect(() => {
-  //   console.log(jsonData);
-  // }, [jsonData]);
-
   return (
     <main className={styles.main}>
       <section className={styles.page_wrapper}>
         <div className={styles.top}>
-          <h3>이용약관</h3>
+          <h3>이용약관 등록</h3>
         </div>
         <div className={styles.bottom}>
-          <LabelInput
-            label="제목"
-            value={jsonData.title}
-            name="title"
-            maxLength={30}
-            placeholder="제목"
-            onChange={handleChange}
-          />
-          <LabelEditor
-            label="내용"
-            name="content"
-            value={jsonData.content}
-            onChange={handleCustomChange}
-          />
-          <Button
-            text="수정"
-            variant="contained"
-            color="primary"
-            size="md"
-            height="100%"
-            onClick={()=> createMutation.mutate()}
-          />
-
-          <ImageUploader onCompressedImages={addImages} />
-          <ImageList
-            images={images}
-            editMode={true}
-            onDelete={deleteImage}
-            onDownload={downloadImage}
-          />
+          <ul className={styles.content_container}>
+            <li className={styles.input_box}>
+              <LabelInput
+                label="제목"
+                name="title"
+                maxLength={30}
+                placeholder="제목"
+                required={true}
+                value={jsonData.title}
+                onChange={handleChange}
+              />
+            </li>
+            <li className={styles.input_box}>
+              <LabelEditor
+                label="내용"
+                name="content"
+                required={true}
+                value={jsonData.content}
+                onChange={handleCustomChange}
+              />
+            </li>
+            <li className={styles.file_box}>
+              <label className={styles.label_box}>
+                <div className={styles.label_text}>
+                  이미지 첨부
+                  <span className={styles.required}>*</span>
+                </div>
+              </label>
+              <ImageUploader onCompressedImages={addImages} />
+              <ImageList
+                images={images}
+                editMode={true}
+                onDelete={deleteImage}
+                onDownload={downloadImage}
+              />
+            </li>
+            <div className={styles.btn_box}>
+              <Button
+                text="등록"
+                variant="contained"
+                color="primary"
+                size="md"
+                width="fit-content"
+                height="100%"
+                onClick={()=> createMutation.mutate()}
+              />
+            </div>
+          </ul>
         </div>
       </section>
     </main>

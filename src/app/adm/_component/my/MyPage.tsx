@@ -165,8 +165,8 @@ export default function MyPage() {
               />
             </li>
             <li className={styles.one_row_box}>
-              <div className={styles.inner_row}>
-                <label className={styles.label}>웹 푸시 알림 설정</label>
+              <div className={styles.input_box}>
+                <label className={styles.label_text}>웹 푸시 알림 설정</label>
                 <NotificationButton />
               </div>
             </li>
