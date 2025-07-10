@@ -3,6 +3,7 @@ import { IoMdDownload } from "react-icons/io";
 import styles from './ImageList.module.css';
 import { ImageListItem, ImageListProps } from '@/types/files';
 import { LuSearch } from 'react-icons/lu';
+import { FaRegImage } from 'react-icons/fa';
 
 
 /* ✅ 이미지 목록을 표시하는 컴포넌트 */
@@ -26,11 +27,11 @@ export function ImageList({
           <div className={styles.button_box}>
             <button
               type="button"
-              onClick={() => onImageOpen(img, index)}
+              onClick={() => onImageOpen('image' ,img, index)}
               className={styles.viewer_button}
               title="이미지 미리보기"
             >
-              <LuSearch />
+              <FaRegImage />
             </button>
 
             {/* editMode 값에 따라 삭제 버튼 또는 다운로드 버튼을 조건부로 렌더링 */}

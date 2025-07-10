@@ -37,8 +37,8 @@ export default function MyPage() {
     file_list: [],
   });
   const [isPdfOpen, setIsPdfOpen] = useState(false);
-  const [isImageOpen, setIsImageOpen] = useState(false);
   const [pdfFile, setPdfFile] = useState<FileListItem | null>(null);
+  const [isImageOpen, setIsImageOpen] = useState(false);
   const [imageFileIndex, setImageFileIndex] = useState(0);
   const { images, deletedImageIds, addImages, deleteImage } = useImageManager({
     initialImages: jsonData.img_list,
@@ -46,17 +46,38 @@ export default function MyPage() {
   const {files, deletedFileIds, addFiles, deleteFile} = useFileManager({
     initialFiles: jsonData.file_list,
   });
+  const [fileListImage, setFileListImage] = useState<ImageListItem[]>([]);
   const {handleChange, handleCustomChange} = onInputsChange(jsonData, setJsonData);
   const {showSnackbar} = useSnackbar();
 
-  const handleImageOpen = (img: ImageListItem, index: number) => {
-    setImageFileIndex(index);
+  // 이미지 Viewer
+  const handleImageOpen = (type: string ,img: ImageListItem, index: number) => {
+    // type : 'image' | 'file' -> ImageList의 이미지인지, FileList의 이미지인지 구분 위한 로직
+    if (type === 'file') {
+      setFileListImage([{...img}])
+      setImageFileIndex(0); // FileList의 이미지는 단일 이미지이기 때문에 idnex가 무조건 0임
+    } else {
+      setImageFileIndex(index);
+    }
+
     setIsImageOpen(true);
   }
 
+  // PDF Viewer
   const handlePdfOpen = (file: FileListItem) => {
     setPdfFile(file);
     setIsPdfOpen(true);
+  }
+
+  // Viewer를 닫는 핸들러 함수(사용한 상태값들을 모두 정리)
+  const handleViewerClose = (type: string) => {
+    if (type === 'image') {
+      setImageFileIndex(0)
+      setFileListImage([])
+      setIsImageOpen(false);
+    } else {
+      setIsPdfOpen(false);
+    }
   }
 
   const createMutation = useMutation<ApiResponse<TermsResponse>, Error>({
@@ -133,6 +154,7 @@ export default function MyPage() {
                   onDelete={deleteFile}
                   onDownload={downloadFile}
                   onPdfOpen={handlePdfOpen}
+                  onImageOpen={handleImageOpen}
                 />
               </li>
 
@@ -154,17 +176,17 @@ export default function MyPage() {
 
       {isPdfOpen && (
         <PdfViewer
-          file={pdfFile?.file} // 로컬에서 추가한 경우만 적용되어 있음
-          onClose={() => setIsPdfOpen(false)}
+          file={pdfFile?.file || pdfFile?.file_url}
+          onClose={() => handleViewerClose('file')}
         />
       )}
 
       {isImageOpen && (
         <ImageViewer
-          mode="single"
-          images={images}
+          mode='carousel'
+          images={fileListImage.length > 0 ? fileListImage : images}
           initialIndex={imageFileIndex}
-          onClose={() => setIsImageOpen(false)}
+          onClose={() => handleViewerClose('image')}
         />
       )}
     </>
