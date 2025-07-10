@@ -3,6 +3,7 @@
   flex-direction: column;
   gap: 1rem;
   align-items: center;
+  width: 100%;
 }
 
 .controls {
@@ -25,13 +26,29 @@
 }
 
 .document_wrapper {
+  width: 100%;
+  max-height: 90dvh;
+  overflow: auto;
+  border: 1px solid;
+  @apply border-neutral-200
+}
+
+.exception_wrapper {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  min-width: 500px;
-  min-height: 400px;
-  overflow-y: auto;
-  border: 1px solid;
-  @apply border-neutral-200
+  width: 500px;
+  height: 400px;
+}
+
+@media screen and (max-width: 767px) {
+  .document_wrapper {
+    min-width: fit-content;
+  }
+
+  .exception_wrapper {
+    width: 300px;
+    height: 160px;
+  }
 }

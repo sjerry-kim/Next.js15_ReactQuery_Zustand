@@ -2,13 +2,10 @@
 
 import styles from './Add.module.css';
 import onInputsChange from '@/utils/onInputsChange';
-import { useEffect, useState } from 'react';
-import Editor from '@/adm/_component/common/inputs/Editor';
+import { useState } from 'react';
 import LabelInput from '@/adm/_component/common/inputs/LabelInput';
 import Button from '@/adm/_component/common/buttons/Button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Board } from '@/types/board';
-import { router } from 'next/client';
 import { useSnackbar } from '@/hooks/useSnackbar';
 import { createTerms } from '@/services/termsServices';
 import { TermsResponse } from '@/types/terms';
@@ -31,7 +28,7 @@ interface JsonData {
 }
 
 export default function MyPage() {
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
   const [jsonData, setJsonData] = useState<JsonData>({
     title: "",
     content: "",
@@ -39,7 +36,7 @@ export default function MyPage() {
     file_list: [],
   });
   const [isPdfOpen, setIsPdfOpen] = useState(false);
-  const myPdfUrl = "/files/test.pdf"; // public 폴더에 있는 파일 또는 외부 URL
+  const [pdfFile, setPdfFile] = useState<FileListItem | null>(null);
   const { images, deletedImageIds, addImages, deleteImage } = useImageManager({
     initialImages: jsonData.img_list,
   });
@@ -48,6 +45,11 @@ export default function MyPage() {
   });
   const {handleChange, handleCustomChange} = onInputsChange(jsonData, setJsonData);
   const {showSnackbar} = useSnackbar();
+
+  const handlePdfOpen = (file: FileListItem) => {
+    setPdfFile(file);
+    setIsPdfOpen(true);
+  }
 
   const createMutation = useMutation<ApiResponse<TermsResponse>, Error>({
     mutationFn: () => createTerms(jsonData),
@@ -121,18 +123,7 @@ export default function MyPage() {
                   editMode={true}
                   onDelete={deleteFile}
                   onDownload={downloadFile}
-                />
-              </li>
-
-              <li>
-                <Button
-                  text="PDF 보기"
-                  variant="outlined"
-                  color="primary"
-                  size="md"
-                  width="100%"
-                  height="100%"
-                  onClick={()=> setIsPdfOpen(true)}
+                  onPdfOpen={handlePdfOpen}
                 />
               </li>
 
@@ -154,7 +145,7 @@ export default function MyPage() {
 
       {isPdfOpen && (
         <PdfViewer
-          fileUrl={myPdfUrl}
+          file={pdfFile?.file} // 로컬에서 추가한 경우만 적용되어 있음
           onClose={() => setIsPdfOpen(false)}
         />
       )}

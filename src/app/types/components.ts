@@ -124,3 +124,11 @@ export interface LoadingProps {
   title?: string;
   subTitle?: string;
 }
+
+/* Fail */
+export interface FailProps {
+  title?: string;
+  subTitle?: string;
+  height? : string | number;
+  showButton?: boolean;
+}

@@ -51,4 +51,5 @@ export interface FileListProps {
   editMode: boolean;
   onDelete: (file: FileListItem) => void;
   onDownload: (file: FileListItem) => void;
+  onPdfOpen: (file: FileListItem) => void;
 }
