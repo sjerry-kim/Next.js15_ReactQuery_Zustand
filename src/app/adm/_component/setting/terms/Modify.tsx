@@ -2,12 +2,12 @@
 
 import styles from './Add.module.css';
 import onInputsChange from '@/utils/onInputsChange';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import LabelInput from '@/adm/_component/common/inputs/LabelInput';
 import Button from '@/adm/_component/common/buttons/Button';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from '@/hooks/useSnackbar';
-import { createTerms } from '@/services/termsServices';
+import { createTerms, getTerm, updateTerm } from '@/services/termsServices';
 import { TermsResponse } from '@/types/terms';
 import LabelEditor from '@/adm/_component/common/inputs/LabelEditor';
 import ImageUploader from '@/adm/_component/common/files/ImageUploader';
@@ -20,6 +20,12 @@ import FileUploader from '@/adm/_component/common/files/FileUploader';
 import { FileList } from '@/adm/_component/common/files/FileList';
 import PdfViewer from '@/adm/_component/common/files/PdfViewer';
 import ImageViewer from '@/adm/_component/common/files/ImageViewer';
+import { Board } from '@/types/board';
+import { useRouter } from 'next/navigation';
+
+type PageProps = {
+  id: string;
+};
 
 interface JsonData {
   title: string;
@@ -28,8 +34,16 @@ interface JsonData {
   file_list: FileListItem[];
 }
 
-export default function Add() {
+export default function Modify({ id }: PageProps) {
   // const queryClient = useQueryClient();
+  const router = useRouter();
+  const { data } = useQuery({
+    queryKey: ['term', id], // 서버에서 사용한 queryKey와 동일하게 설정
+    queryFn: () => getTerm(id), // 동일한 queryFn 사용
+    staleTime: 60 * 1000, // 1분동안 캐시 신선함 1분뒤 재요청
+    gcTime: 300 * 1000, // 5분뒤 메모리 정리
+    enabled: !!id,
+  });
   const [jsonData, setJsonData] = useState<JsonData>({
     title: "",
     content: "",
@@ -80,18 +94,42 @@ export default function Add() {
     }
   }
 
-  const createMutation = useMutation<ApiResponse<TermsResponse>, Error>({
-    mutationFn: () => createTerms(jsonData),
-    onSuccess: (res) => {
-      // queryClient.setQueryData(['Term'], (prevData: any) => {
-      //   return prevData ? [...prevData, {...res.data, rn: prevData.length+1}] : [res.data];
+  const updateMutation = useMutation<ApiResponse<Board>, Error>({
+    mutationFn: async () => updateTerm(Number(id), jsonData),
+    async onSuccess(res) {
+      // // boardList 갱신
+      // queryClient.setQueryData(['boardList'], (prevData?: Board[]) => {
+      //   if (!prevData) return [];
+      //
+      //   const newList = prevData.map((item) =>
+      //     item.id === res.data.id ? { ...res.data, rn: prevData.indexOf(item) + 1 } : item
+      //   );
+      //
+      //   return newList;
       // });
-      // console.log(res);
+      //
+      // // board 갱신
+      // queryClient.setQueryData(['board', id], (prevData?: board) => {
+      //   return res.data;
+      // });
+
+      router.back();
     },
     onError() {
       showSnackbar("통신 오류가 발생하였습니다.", "error")
     },
   });
+
+  useEffect(() => {
+    if (data) {
+      setJsonData((prevState)=>({
+        ...prevState,
+        idx: data?.data.idx || 0,
+        title: data?.data.title || '',
+        content: data?.data.content || '',
+      }));
+    }
+  }, [data]);
 
   return (
     <>
@@ -160,13 +198,13 @@ export default function Add() {
 
               <div className={styles.btn_box}>
                 <Button
-                  text="등록"
+                  text="수정"
                   variant="contained"
                   color="primary"
                   size="md"
                   width="fit-content"
                   height="100%"
-                  onClick={()=> createMutation.mutate()}
+                  onClick={()=> updateMutation.mutate()}
                 />
               </div>
             </ul>

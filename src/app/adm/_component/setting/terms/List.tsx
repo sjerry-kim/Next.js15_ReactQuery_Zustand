@@ -111,7 +111,7 @@ export default function List() {
 
   const handleRowClick = (itemId: number) => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
-    const destination = `/adm/setting/policy/${itemId}?${newSearchParams.toString()}`;
+    const destination = `/adm/setting/terms/${itemId}?${newSearchParams.toString()}`;
     router.push(destination);
   };
 
