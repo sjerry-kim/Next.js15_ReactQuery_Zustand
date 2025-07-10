@@ -210,7 +210,7 @@ export default function BoardListPage() {
     }));
   }, [searchTypeFromUrl, searchKeywordFromUrl]);
 
-  if (!isError) {
+  if (isError) {
     showSnackbar('통신 오류가 발생하였습니다.', 'error');
     return <Fail />;
   }
