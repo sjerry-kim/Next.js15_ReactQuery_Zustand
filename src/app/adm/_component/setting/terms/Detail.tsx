@@ -2,7 +2,7 @@
 
 import styles from './Add.module.css';
 import onInputsChange from '@/utils/onInputsChange';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import LabelInput from '@/adm/_component/common/inputs/LabelInput';
 import Button from '@/adm/_component/common/buttons/Button';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -23,6 +23,13 @@ import ImageViewer from '@/adm/_component/common/files/ImageViewer';
 import { Board } from '@/types/board';
 import { useRouter } from 'next/navigation';
 
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/free-mode';
+import 'swiper/css/pagination';
+import 'swiper/swiper-bundle.css';
+
+
 type PageProps = {
   id: string;
 };
@@ -37,6 +44,9 @@ interface JsonData {
 export default function Modify({ id }: PageProps) {
   // const queryClient = useQueryClient();
   const router = useRouter();
+  const swiperRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
   const { data } = useQuery({
     queryKey: ['term', id], // 서버에서 사용한 queryKey와 동일하게 설정
     queryFn: () => getTerm(id), // 동일한 queryFn 사용
@@ -164,13 +174,39 @@ export default function Modify({ id }: PageProps) {
                   </div>
                 </label>
                 <ImageUploader onCompressedImages={addImages} />
-                <ImageList
-                  images={images}
-                  editMode={true}
-                  onDelete={deleteImage}
-                  onDownload={downloadImage}
-                  onImageOpen={handleImageOpen}
-                />
+                {/*<ImageList*/}
+                {/*  images={images}*/}
+                {/*  editMode={true}*/}
+                {/*  onDelete={deleteImage}*/}
+                {/*  onDownload={downloadImage}*/}
+                {/*  onImageOpen={handleImageOpen}*/}
+                {/*/>*/}
+                
+                {/* todo Swiper로 이미지 띄워주기 */}
+                <Swiper
+                  ref={swiperRef}
+                  // slidesPerView={1}
+                  // pagination={false}
+                  onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
+                  // onSwiper={(swiper) => (swiperRef?.current = swiper)}
+                  loop={false}
+
+                >
+                  <SwiperSlide>
+                    <p className={styles.swiper_p}>총 누적 달성 수익</p>
+                    <h2>
+
+                    </h2>
+                  </SwiperSlide>
+                  <SwiperSlide>
+                    <p className={styles.swiper_p}>총 누적 미달성 수익</p>
+                    <h2>
+                    </h2>
+                  </SwiperSlide>
+                </Swiper>
+                
+                
+                
               </li>
 
               <li className={styles.file_box}>
