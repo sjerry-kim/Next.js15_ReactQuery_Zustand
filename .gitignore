@@ -44,3 +44,6 @@ next-env.d.ts
 
 #커스텀 ck에디터 관련
 ckeditor5-40.0.0/node_modules/
+
+#pdf 뷰어 관련
+public/pdf.worker.min.mjs
