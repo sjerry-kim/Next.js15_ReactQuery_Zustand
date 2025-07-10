@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
+import DOMPurify from 'isomorphic-dompurify';
 
 export async function GET(req: NextRequest, res: NextResponse) {
   try {
@@ -35,10 +36,13 @@ export async function POST(request: NextRequest): Promise<Response> {
   try {
     const { title, content } = await request.json();
 
+    // Ck edtior HTML 정제 (Sanitization)
+    const cleanContent = DOMPurify.sanitize(content);
+
     const response = await fetch('http://211.188.52.63/api/term', {
       method: "POST",
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, content }),
+      body: JSON.stringify({ title, content: cleanContent }),
     });
 
     // Prisma 없는 api 통신에서는 !response.ok가 필수
