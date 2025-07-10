@@ -6,6 +6,7 @@ export interface CommonModalButton {
   onClick: () => void;
   color?: 'primary' | 'grey' | 'info' | 'error' | 'warning' | 'success';
   variant?: 'contained' | 'outlined';
+  disabled: boolean;
 }
 
 export interface CommonModalProps {

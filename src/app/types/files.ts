@@ -27,6 +27,7 @@ export interface ImageListProps {
   editMode: boolean;
   onDelete: (image: ImageListItem) => void;
   onDownload: (image: ImageListItem) => void;
+  onImageOpen: (file: FileListItem, index: number) => void;
 }
 
 /* File*/
@@ -52,4 +53,19 @@ export interface FileListProps {
   onDelete: (file: FileListItem) => void;
   onDownload: (file: FileListItem) => void;
   onPdfOpen: (file: FileListItem) => void;
+}
+
+/* PDF Viewer */
+export interface PdfViewerProps {
+  file: string | File | Blob | undefined| null; // URL 문자열 외에 File, Blob 객체도 허용
+  onClose: () => void; // 모달을 닫는 함수
+}
+
+/* Image Viewer */
+export interface ImageViewerProps {
+  images: ImageListItem[];
+  initialIndex?: number;
+  // file: string | File | Blob | undefined| null; // URL 문자열 외에 File, Blob 객체도 허용
+  onClose: () => void; // 모달을 닫는 함수
+  mode: 'single' | 'carousel';
 }

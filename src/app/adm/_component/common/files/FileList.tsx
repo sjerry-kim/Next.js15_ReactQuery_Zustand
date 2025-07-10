@@ -28,7 +28,7 @@ export function FileList({
               <button
                 type="button"
                 onClick={() => onPdfOpen(file)}
-                className={styles.pdf_button}
+                className={styles.viewer_button}
                 title="PDF 미리보기"
               >
                 <LuSearch />

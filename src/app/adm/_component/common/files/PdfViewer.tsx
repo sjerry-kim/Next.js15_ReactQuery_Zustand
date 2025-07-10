@@ -9,14 +9,10 @@ import styles from './PdfViewer.module.css';
 import Loading from '@/adm/_component/common/Loading';
 import useWindowSize from '@/hooks/useWindowSize.';
 import Fail from '@/adm/_component/common/Fail';
+import { PdfViewerProps } from '@/types/files';
 
 // Worker 파일의 경로를 설정
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdf.worker.min.mjs`;
-
-interface PdfViewerProps {
-  file: string | File | Blob | undefined| null; // URL 문자열 외에 File, Blob 객체도 허용
-  onClose: () => void; // 모달을 닫는 함수
-}
 
 export default function PdfViewer({ file, onClose }: PdfViewerProps) {
   const [totalPages, setTotalPages] = useState<number | null>(null);

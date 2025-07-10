@@ -1,0 +1,70 @@
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import CommonModal from '@/adm/_component/common/modals/CommonModal';
+import styles from './ImageViewer.module.css';
+import Loading from '@/adm/_component/common/Loading';
+import { ImageViewerProps } from '@/types/files';
+import { CommonModalButton } from '@/types/modal';
+
+export default function ImageViewer({
+  images,
+  initialIndex = 0,
+  onClose,
+  mode, // 등록,수정에서는 single, 상세에서는 carousel
+}: ImageViewerProps) {
+  const [currentIndex, setCurrentIndex] = useState(initialIndex);
+  const [isLoading, setIsLoading] = useState(true);
+  const currentImage = images[currentIndex];
+
+  const goToPrev = () => setCurrentIndex((prev) => (prev > 0 ? prev - 1 : 0));
+  const goToNext = () => setCurrentIndex((prev) => (prev < images.length - 1 ? prev + 1 : prev));
+
+  useEffect(() => {
+    setIsLoading(true);
+  }, [currentIndex]);
+
+  const imageUrl = currentImage?.isNew && currentImage.file
+    ? URL.createObjectURL(currentImage.file)
+    : currentImage?.file_url;
+
+  const carouselButtons: CommonModalButton[] = mode === 'carousel' ? [
+    {
+      text: '이전',
+      variant: 'outlined',
+      color: 'grey',
+      disabled: currentIndex <= 0,
+      onClick: goToPrev,
+    },
+    {
+      text: '다음',
+      variant: 'outlined',
+      color: 'grey',
+      disabled: currentIndex >= images.length - 1,
+      onClick: goToNext,
+    },
+  ] : [];
+
+  return (
+    <CommonModal
+      modalTitle={currentImage?.file_init_name || '이미지 미리보기'}
+      buttons={carouselButtons} // 조건부로 생성된 버튼 배열을 전달
+      buttonsLocation="center"
+      // mode가 'carousel'일 때만 페이지 정보를 표시
+      currentPage={mode === 'carousel' ? currentIndex + 1 : undefined}
+      totalPages={mode === 'carousel' ? images.length : undefined}
+      onClose={onClose}
+    >
+      <div className={styles.image_viewer_container}>
+        {isLoading && <Loading />}
+        <img
+          src={imageUrl}
+          alt={currentImage?.file_init_name}
+          className={styles.image}
+          onLoad={() => setIsLoading(false)}
+          style={{ display: isLoading ? 'none' : 'block' }}
+        />
+      </div>
+    </CommonModal>
+  );
+}

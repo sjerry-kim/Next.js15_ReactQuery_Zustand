@@ -2,6 +2,7 @@ import { MdDelete } from "react-icons/md";
 import { IoMdDownload } from "react-icons/io";
 import styles from './ImageList.module.css';
 import { ImageListItem, ImageListProps } from '@/types/files';
+import { LuSearch } from 'react-icons/lu';
 
 
 /* ✅ 이미지 목록을 표시하는 컴포넌트 */
@@ -9,7 +10,8 @@ export function ImageList({
   images, // 표시할 이미지 리스트
   editMode, // 수정 모드 여부
   onDelete,
-  onDownload
+  onDownload,
+  onImageOpen
 } : ImageListProps) {
   if (!images || images.length === 0) {
     return null;
@@ -21,25 +23,36 @@ export function ImageList({
         <div key={index} className={styles.image_preview_item}>
           <p>{img.file_init_name}</p>
 
-          {/* editMode 값에 따라 삭제 버튼 또는 다운로드 버튼을 조건부로 렌더링 */}
-          {editMode ? (
+          <div className={styles.button_box}>
             <button
               type="button"
-              onClick={() => onDelete(img)}
-              className={styles.delete_button}
-              title="삭제"
+              onClick={() => onImageOpen(img, index)}
+              className={styles.viewer_button}
+              title="이미지 미리보기"
             >
-              <MdDelete />
+              <LuSearch />
             </button>
-          ) : (
-            <button
-              onClick={() => onDownload(img)}
-              className={styles.download_button}
-              title="다운로드"
-            >
-              <IoMdDownload />
-            </button>
-          )}
+
+            {/* editMode 값에 따라 삭제 버튼 또는 다운로드 버튼을 조건부로 렌더링 */}
+            {editMode ? (
+              <button
+                type="button"
+                onClick={() => onDelete(img)}
+                className={styles.delete_button}
+                title="삭제"
+              >
+                <MdDelete />
+              </button>
+            ) : (
+              <button
+                onClick={() => onDownload(img)}
+                className={styles.download_button}
+                title="다운로드"
+              >
+                <IoMdDownload />
+              </button>
+            )}
+          </div>
         </div>
       ))}
     </div>

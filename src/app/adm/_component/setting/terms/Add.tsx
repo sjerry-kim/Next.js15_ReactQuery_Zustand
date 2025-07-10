@@ -19,6 +19,7 @@ import { useFileManager } from '@/hooks/useFileManager';
 import FileUploader from '@/adm/_component/common/files/FileUploader';
 import { FileList } from '@/adm/_component/common/files/FileList';
 import PdfViewer from '@/adm/_component/common/files/PdfViewer';
+import ImageViewer from '@/adm/_component/common/files/ImageViewer';
 
 interface JsonData {
   title: string;
@@ -36,7 +37,9 @@ export default function MyPage() {
     file_list: [],
   });
   const [isPdfOpen, setIsPdfOpen] = useState(false);
+  const [isImageOpen, setIsImageOpen] = useState(false);
   const [pdfFile, setPdfFile] = useState<FileListItem | null>(null);
+  const [imageFileIndex, setImageFileIndex] = useState(0);
   const { images, deletedImageIds, addImages, deleteImage } = useImageManager({
     initialImages: jsonData.img_list,
   });
@@ -45,6 +48,11 @@ export default function MyPage() {
   });
   const {handleChange, handleCustomChange} = onInputsChange(jsonData, setJsonData);
   const {showSnackbar} = useSnackbar();
+
+  const handleImageOpen = (img: ImageListItem, index: number) => {
+    setImageFileIndex(index);
+    setIsImageOpen(true);
+  }
 
   const handlePdfOpen = (file: FileListItem) => {
     setPdfFile(file);
@@ -108,6 +116,7 @@ export default function MyPage() {
                   editMode={true}
                   onDelete={deleteImage}
                   onDownload={downloadImage}
+                  onImageOpen={handleImageOpen}
                 />
               </li>
 
@@ -147,6 +156,15 @@ export default function MyPage() {
         <PdfViewer
           file={pdfFile?.file} // 로컬에서 추가한 경우만 적용되어 있음
           onClose={() => setIsPdfOpen(false)}
+        />
+      )}
+
+      {isImageOpen && (
+        <ImageViewer
+          mode="single"
+          images={images}
+          initialIndex={imageFileIndex}
+          onClose={() => setIsImageOpen(false)}
         />
       )}
     </>

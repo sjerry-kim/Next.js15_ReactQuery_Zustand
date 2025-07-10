@@ -28,6 +28,7 @@
   display: flex;
 }
 
+.viewer_button,
 .delete_button,
 .download_button {
   width: 32px;
@@ -39,6 +40,7 @@
   @apply text-md text-neutral-600 transition duration-200 rounded-lg;
 }
 
+.viewer_button svg,
 .delete_button svg{
   @apply text-lg;
 }
@@ -47,7 +49,10 @@
   @apply bg-error-bg text-error-dark;
 }
 
+.viewer_button:hover {
+  @apply bg-success-bg text-success-dark;
+}
+
 .download_button:hover {
   @apply bg-primary-bg text-primary-dark;
-
 }
