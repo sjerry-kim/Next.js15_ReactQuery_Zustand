@@ -2,7 +2,7 @@
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { FormEvent, useCallback, useEffect, useState } from 'react';
+import React, { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { getBoardList } from '@/services/boardService';
 import type { Board, PaginatedBoardResponse } from '@/types/board';
 import Pagination from '@/adm/_component/common/Pagination';
@@ -86,6 +86,7 @@ export default function BoardListPage() {
   ];
   const [draftStartDate, setDraftStartDate] = useState<Moment | null>(null);
   const [draftEndDate, setDraftEndDate] = useState<Moment | null>(null);
+  const cardWrapperRef = useRef<HTMLElement>(null);
   const queryClient = useQueryClient();
   const {handleChange} = onInputsChange(jsonData, setJsonData);
   const { isMobile } = useWindowSize();
@@ -196,6 +197,13 @@ export default function BoardListPage() {
       searchKeyword: searchKeywordFromUrl
     }));
   }, [searchTypeFromUrl, searchKeywordFromUrl]);
+
+  // card section 스크롤 최상단 복귀
+  useEffect(() => {
+    if (cardWrapperRef.current) {
+      cardWrapperRef.current.scrollTop = 0;
+    }
+  }, [boardsToDisplay]);
 
   /* ----- Test Start ----- */
 
@@ -474,9 +482,11 @@ export default function BoardListPage() {
 
         {
           isMobile &&
-            <section className={styles.card_wrapper}>
+
+            <section ref={cardWrapperRef} className={styles.card_wrapper}>
               {
-                boardsToDisplay.map((item: Board, index) => (
+                isFetching ? <Loading type="circle" subTitle="로딩중..."/> :
+                  boardsToDisplay.map((item: Board, index) => (
                   <div key={index} className={styles.card}>
                     <ul className={styles.card_top_box}>
                       <li>{item.rn}</li>

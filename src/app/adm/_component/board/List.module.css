@@ -196,6 +196,7 @@
   flex-direction: column;
   margin: 10px auto;
   width: 100%;
+  min-height: 200px;
   overflow: auto;
   @apply gap-3;
 }

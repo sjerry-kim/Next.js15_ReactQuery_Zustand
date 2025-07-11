@@ -247,6 +247,7 @@
   flex-direction: column;
   margin: 10px auto;
   width: 100%;
+  min-height: 96px;
   overflow: auto;
   @apply gap-3;
 }
@@ -434,6 +435,7 @@
 
   .status_set {
     padding: 0 10px 0 0;
+    width: 90%;
   }
 
   .bottom_wrapper {

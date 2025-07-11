@@ -14,7 +14,7 @@
 .container {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  @apply gap-2
 }
 
 .container.row {

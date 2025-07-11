@@ -2,7 +2,7 @@
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { useState, useEffect, useCallback, FormEvent } from 'react';
+import React, { useState, useEffect, useCallback, FormEvent, useRef } from 'react';
 import { getBoardList } from '@/services/boardService';
 import Pagination from '@/adm/_component/common/Pagination';
 import { ITEMS_PER_PAGE } from '@/_constant/pagination';
@@ -50,6 +50,7 @@ export default function List() {
     { value: "id", label: "게시물코드" },
     { value: "content", label: "내용" },
   ];
+  const cardWrapperRef = useRef<HTMLElement>(null);
   const queryClient = useQueryClient();
   const {handleChange} = onInputsChange(jsonData, setJsonData);
   const { isMobile, isLaptop } = useWindowSize();
@@ -205,6 +206,13 @@ export default function List() {
   //   }));
   // }, [searchTypeFromUrl, searchKeywordFromUrl]);
 
+  // card section 스크롤 최상단 복귀
+  useEffect(() => {
+    if (cardWrapperRef.current) {
+      cardWrapperRef.current.scrollTop = 0;
+    }
+  }, [termsToDisplay]);
+
   if (isError) {
     showSnackbar('통신 오류가 발생하였습니다.', 'error');
     return <Fail />;
@@ -292,8 +300,9 @@ export default function List() {
 
         {
           isMobile &&
-          <section className={styles.card_wrapper}>
+          <section ref={cardWrapperRef} className={styles.card_wrapper}>
             {
+              isFetching ? <Loading type="circle" subTitle="로딩중..."/> :
               termsToDisplay.map((item: any, index: number) => (
                   <div key={index} className={styles.card}>
                     <ul className={styles.card_top_box}>

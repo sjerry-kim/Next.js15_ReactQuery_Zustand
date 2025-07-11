@@ -2,7 +2,7 @@
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { useState, useEffect, useCallback, FormEvent } from 'react';
+import React, { useState, useEffect, useCallback, FormEvent, useRef } from 'react';
 import { getBoardList } from '@/services/boardService';
 import type { Board, PaginatedBoardResponse } from '@/types/board';
 import Pagination from '@/adm/_component/common/Pagination';
@@ -50,6 +50,7 @@ export default function BoardListPage() {
     { value: "id", label: "게시물코드" },
     { value: "content", label: "내용" },
   ];
+  const cardWrapperRef = useRef<HTMLElement>(null);
   const queryClient = useQueryClient();
   const {handleChange} = onInputsChange(jsonData, setJsonData);
   const { isMobile, isLaptop } = useWindowSize();
@@ -211,6 +212,13 @@ export default function BoardListPage() {
     }));
   }, [searchTypeFromUrl, searchKeywordFromUrl]);
 
+  // card section 스크롤 최상단 복귀
+  useEffect(() => {
+    if (cardWrapperRef.current) {
+      cardWrapperRef.current.scrollTop = 0;
+    }
+  }, [boardsToDisplay]);
+
   if (isError) {
     showSnackbar('통신 오류가 발생하였습니다.', 'error');
     return <Fail />;
@@ -304,26 +312,27 @@ export default function BoardListPage() {
 
         {
           isMobile &&
-          <section className={styles.card_wrapper}>
-            {
-              boardsToDisplay.map((item: Board, index) => (
-                  <div key={index} className={styles.card}>
-                    <ul className={styles.card_top_box}>
-                      <li>{item.rn}</li>
-                      <li className={styles.card_content}>{item.content}</li>
-                    </ul>
-                    <ul className={styles.card_bottom_box}>
-                      <li className={styles.card_content}>ID: {item.id}</li>
-                      <li className={styles.card_content}>금액: 10,000원</li>
-                      <li className={styles.card_content}>작성일: {item.created_at ? new Date(item.created_at).toLocaleDateString() : '-'}</li>
-                      <li className={styles.card_content}>수정일: {item.updated_at ? new Date(item.updated_at).toLocaleDateString() : '-'}</li>
-                    </ul>
-                    <button onClick={() => handleRowClick(item.id)}><OpenInNewIcon /> 상세 보기</button>
-                  </div>
+            <section ref={cardWrapperRef} className={styles.card_wrapper}>
+              {
+                isFetching ? <Loading type="circle" subTitle="로딩중..."/> :
+                boardsToDisplay.map((item: Board, index) => (
+                    <div key={index} className={styles.card}>
+                      <ul className={styles.card_top_box}>
+                        <li>{item.rn}</li>
+                        <li className={styles.card_content}>{item.content}</li>
+                      </ul>
+                      <ul className={styles.card_bottom_box}>
+                        <li className={styles.card_content}>ID: {item.id}</li>
+                        <li className={styles.card_content}>금액: 10,000원</li>
+                        <li className={styles.card_content}>작성일: {item.created_at ? new Date(item.created_at).toLocaleDateString() : '-'}</li>
+                        <li className={styles.card_content}>수정일: {item.updated_at ? new Date(item.updated_at).toLocaleDateString() : '-'}</li>
+                      </ul>
+                      <button onClick={() => handleRowClick(item.id)}><OpenInNewIcon /> 상세 보기</button>
+                    </div>
+                  )
                 )
-              )
-            }
-          </section>
+              }
+            </section>
         }
 
         <section className={styles.bottom_wrapper}>
