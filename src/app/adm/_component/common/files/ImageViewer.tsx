@@ -6,6 +6,7 @@ import styles from './ImageViewer.module.css';
 import Loading from '@/adm/_component/common/Loading';
 import { ImageViewerProps } from '@/types/files';
 import { CommonModalButton } from '@/types/modal';
+import useWindowSize from '@/hooks/useWindowSize.';
 
 export default function ImageViewer({
   mode = 'single',
@@ -16,6 +17,7 @@ export default function ImageViewer({
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isLoading, setIsLoading] = useState(true);
   const currentImage = images[currentIndex];
+  const {isMobile} = useWindowSize();
 
   const goToPrev = () => setCurrentIndex((prev) => (prev > 0 ? prev - 1 : 0));
   const goToNext = () => setCurrentIndex((prev) => (prev < images.length - 1 ? prev + 1 : prev));
@@ -50,6 +52,8 @@ export default function ImageViewer({
     <CommonModal
       modalTitle={currentImage?.file_init_name || '이미지 미리보기'}
       buttons={carouselButtons} // 조건부로 생성된 버튼 배열을 전달
+      maxWidth={isMobile? '90%': '600px'}
+      maxHeight={isMobile? '90%': '600px'}
       buttonsLocation="center"
       currentPage={images.length > 1 && mode === 'carousel' ? currentIndex + 1 : undefined}
       totalPages={images.length > 1 && mode === 'carousel' ? images.length : undefined}
