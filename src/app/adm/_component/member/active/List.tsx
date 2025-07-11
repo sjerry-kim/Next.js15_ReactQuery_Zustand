@@ -30,6 +30,7 @@ import { useConfirm } from '@/hooks/useConfirm';
 import { useSnackbar } from '@/hooks/useSnackbar';
 import Loading from '@/adm/_component/common/Loading';
 import Fail from '@/adm/_component/common/Fail';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 // import MenuModal from '@/adm/_component/common/MenuModal';
 
 /* ------ 임시 타입, 함수 등 start ------ */
@@ -423,50 +424,77 @@ export default function BoardListPage() {
           </div>
         </section>
 
-        <section className={styles.table_wrapper}>
-          <table className={styles.table}>
-            <thead>
-            <tr>
-              <th>No.</th>
-              <th>ID</th>
-              <th>제목 (내용)</th>
-              <th>금액</th>
-              <th>작성일</th>
-              <th>수정일</th>
-            </tr>
-            </thead>
-            <tbody>
-            { isFetching ? (
-              <tr>
-                <td colSpan={6} className={styles.table_loading} >
-                  <Loading type="circle" />
-                </td>
-              </tr>
-            ) : boardsToDisplay.length > 0 ? (
-              boardsToDisplay.map((item: Board) => (
-                <tr
-                  key={item.id.toString()}
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => handleRowClick(item.id)}
-                >
-                  <td>{item.rn}</td>
-                  <td>{item.id.toString()}</td>
-                  <td>{item.content || '내용 없음'}</td>
-                  <td className={styles.need_right}>10,000원</td>
-                  <td>{item.created_at ? new Date(item.created_at).toLocaleDateString() : '-'}</td>
-                  <td>{item.updated_at ? new Date(item.updated_at).toLocaleDateString() : '-'}</td>
+        {
+          !isMobile &&
+            <section className={styles.table_wrapper}>
+              <table className={styles.table}>
+                <thead>
+                <tr>
+                  <th>No.</th>
+                  <th>ID</th>
+                  <th>제목 (내용)</th>
+                  <th>금액</th>
+                  <th>작성일</th>
+                  <th>수정일</th>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={6} style={{ textAlign: 'center', padding: '20px' }}>
-                  <h1>데이터가 없습니다.</h1>
-                </td>
-              </tr>
-            )}
-            </tbody>
-          </table>
-        </section>
+                </thead>
+                <tbody>
+                { isFetching ? (
+                  <tr>
+                    <td colSpan={6} className={styles.table_loading} >
+                      <Loading type="circle" />
+                    </td>
+                  </tr>
+                ) : boardsToDisplay.length > 0 ? (
+                  boardsToDisplay.map((item: Board) => (
+                    <tr
+                      key={item.id.toString()}
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => handleRowClick(item.id)}
+                    >
+                      <td>{item.rn}</td>
+                      <td>{item.id.toString()}</td>
+                      <td>{item.content || '내용 없음'}</td>
+                      <td className={styles.need_right}>10,000원</td>
+                      <td>{item.created_at ? new Date(item.created_at).toLocaleDateString() : '-'}</td>
+                      <td>{item.updated_at ? new Date(item.updated_at).toLocaleDateString() : '-'}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={6} style={{ textAlign: 'center', padding: '20px' }}>
+                      <h1>데이터가 없습니다.</h1>
+                    </td>
+                  </tr>
+                )}
+                </tbody>
+              </table>
+            </section>
+        }
+
+        {
+          isMobile &&
+            <section className={styles.card_wrapper}>
+              {
+                boardsToDisplay.map((item: Board, index) => (
+                  <div key={index} className={styles.card}>
+                    <ul className={styles.card_top_box}>
+                      <li>{item.rn}</li>
+                      <li className={styles.card_content}>{item.content}</li>
+                    </ul>
+                    <ul className={styles.card_bottom_box}>
+                      <li className={styles.card_content}>ID: {item.id}</li>
+                      <li className={styles.card_content}>금액: 10,000원</li>
+                      <li className={styles.card_content}>작성일: {item.created_at ? new Date(item.created_at).toLocaleDateString() : '-'}</li>
+                      <li className={styles.card_content}>수정일: {item.updated_at ? new Date(item.updated_at).toLocaleDateString() : '-'}</li>
+                    </ul>
+                    <button onClick={() => handleRowClick(item.id)}><OpenInNewIcon /> 상세 보기</button>
+                  </div>
+                )
+                )
+              }
+            </section>
+        }
 
         <section className={styles.bottom_wrapper}>
           {totalPages > 0 && (

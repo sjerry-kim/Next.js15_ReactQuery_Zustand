@@ -22,6 +22,8 @@ import Loading from '@/adm/_component/common/Loading';
 import Fail from '@/adm/_component/common/Fail';
 import { useSnackbar } from '@/hooks/useSnackbar';
 import { getTermsList } from '@/services/termsServices';
+import type { Board } from '@/types/board';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 interface JsonData {
   searchType: string;
@@ -247,44 +249,71 @@ export default function List() {
           </form>
         </section>
 
-        <section className={styles.table_wrapper}>
-          <table className={styles.table}>
-            <thead>
-            <tr>
-              <th>No.</th>
-              <th>ID</th>
-              <th>제목</th>
-            </tr>
-            </thead>
-            <tbody>
-            { isFetching ? (
-              <tr>
-                <td colSpan={6} className={styles.table_loading} >
-                  <Loading type="circle" />
-                </td>
-              </tr>
-            ) : termsToDisplay.length > 0 ? (
-              termsToDisplay.map((item: any) => (
-                <tr
-                  key={item.idx.toString()}
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => handleRowClick(item.idx)}
-                >
-                  <td>-</td>
-                  <td>{item.idx.toString()}</td>
-                  <td>{item.title || '제목 없음'}</td>
+        {
+          !isMobile &&
+            <section className={styles.table_wrapper}>
+              <table className={styles.table}>
+                <thead>
+                <tr>
+                  <th>No.</th>
+                  <th>ID</th>
+                  <th>제목</th>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={6} style={{ textAlign: 'center', padding: '20px' }}>
-                  <h1>데이터가 없습니다.</h1>
-                </td>
-              </tr>
-            )}
-            </tbody>
-          </table>
-        </section>
+                </thead>
+                <tbody>
+                { isFetching ? (
+                  <tr>
+                    <td colSpan={6} className={styles.table_loading} >
+                      <Loading type="circle" />
+                    </td>
+                  </tr>
+                ) : termsToDisplay.length > 0 ? (
+                  termsToDisplay.map((item: any) => (
+                    <tr
+                      key={item.idx.toString()}
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => handleRowClick(item.idx)}
+                    >
+                      <td>-</td>
+                      <td>{item.idx.toString()}</td>
+                      <td>{item.title || '제목 없음'}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={6} style={{ textAlign: 'center', padding: '20px' }}>
+                      <h1>데이터가 없습니다.</h1>
+                    </td>
+                  </tr>
+                )}
+                </tbody>
+              </table>
+            </section>
+        }
+
+        {
+          isMobile &&
+            <section className={styles.card_wrapper}>
+              {
+                termsToDisplay.map((item: any, index: number) => (
+                    <div key={index} className={styles.card}>
+                      <ul className={styles.card_top_box}>
+                        <li>{item.rn ? item.rn : '-'}</li>
+                        <li className={styles.card_content}>{item.title}</li>
+                      </ul>
+                      <ul className={styles.card_bottom_box}>
+                        <li className={styles.card_content}>ID: {item.id ? item.id : '-'}</li>
+                        <li className={styles.card_content}>금액: 10,000원</li>
+                        <li className={styles.card_content}>작성일: {item.created_at ? new Date(item.created_at).toLocaleDateString() : '-'}</li>
+                        <li className={styles.card_content}>수정일: {item.updated_at ? new Date(item.updated_at).toLocaleDateString() : '-'}</li>
+                      </ul>
+                      <button onClick={() => handleRowClick(item.idx)}><OpenInNewIcon /> 상세 보기</button>
+                    </div>
+                  )
+                )
+              }
+            </section>
+        }
 
         <section className={styles.bottom_wrapper}>
           {/*{totalPages > 0 && (*/}

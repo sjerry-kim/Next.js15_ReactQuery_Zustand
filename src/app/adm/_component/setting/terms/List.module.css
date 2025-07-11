@@ -179,6 +179,97 @@
   text-align: center;
 }
 
+/* card */
+.card_wrapper {
+  display: flex;
+  flex-direction: column;
+  margin: 10px auto;
+  width: 100%;
+  overflow: auto;
+  @apply gap-3;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 155px;
+  max-height: 155px;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid;
+  position: relative;
+  @apply bg-neutral-100 border-neutral-250 rounded-lg;
+}
+
+.card:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card_top_box {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  border-bottom: 1px solid;
+  @apply border-neutral-250;
+}
+
+.card_top_box > li {
+  padding: 7.5px 12.5px;
+  @apply text-base font-bold;
+}
+
+.card_top_box > li:first-child {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  border-right: 1px solid;
+  @apply border-neutral-250 rounded-tl-lg bg-neutral-150;
+}
+
+.card_content {
+  flex: 1; /* 가능하면 여백을 최대한 채우게 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card_bottom_box {
+  display: flex;
+  flex-direction: column;
+  padding: 7.5px 12.5px;
+  width: 100%;
+  height: 100%;
+}
+
+.card_bottom_box li {
+  margin-bottom: 5px;
+  @apply text-md
+}
+
+.card button {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: fit-content;
+  height: 36px;
+  padding: 5px 10px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  @apply gap-1 text-md cursor-pointer transition duration-300;
+}
+
+.card button:hover {
+  @apply font-bold;
+}
+
+.card button svg {
+  width: 18px;
+  height: 18px;
+}
+
 /* bottom */
 .bottom_wrapper {
   display: flex;
