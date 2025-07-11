@@ -22,13 +22,15 @@ import PdfViewer from '@/adm/_component/common/files/PdfViewer';
 import ImageViewer from '@/adm/_component/common/files/ImageViewer';
 import { Board } from '@/types/board';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
-import 'swiper/css/free-mode';
-import 'swiper/css/pagination';
-import 'swiper/swiper-bundle.css';
-
+// import { Swiper, SwiperSlide } from 'swiper/react';
+// import 'swiper/css';
+// import 'swiper/css/free-mode';
+// import 'swiper/css/pagination';
+// import 'swiper/swiper-bundle.css';
+// import { Pagination } from 'swiper/modules';
+// import type { SwiperRef } from 'swiper/react';
 
 type PageProps = {
   id: string;
@@ -44,7 +46,7 @@ interface JsonData {
 export default function Modify({ id }: PageProps) {
   // const queryClient = useQueryClient();
   const router = useRouter();
-  const swiperRef = useRef(null);
+  // const swiperRef = useRef<SwiperRef>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const { data } = useQuery({
@@ -174,39 +176,34 @@ export default function Modify({ id }: PageProps) {
                   </div>
                 </label>
                 <ImageUploader onCompressedImages={addImages} />
-                {/*<ImageList*/}
-                {/*  images={images}*/}
-                {/*  editMode={true}*/}
-                {/*  onDelete={deleteImage}*/}
-                {/*  onDownload={downloadImage}*/}
-                {/*  onImageOpen={handleImageOpen}*/}
-                {/*/>*/}
-                
-                {/* todo Swiper로 이미지 띄워주기 */}
-                <Swiper
-                  ref={swiperRef}
-                  // slidesPerView={1}
-                  // pagination={false}
-                  onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
-                  // onSwiper={(swiper) => (swiperRef?.current = swiper)}
-                  loop={false}
-
-                >
-                  <SwiperSlide>
-                    <p className={styles.swiper_p}>총 누적 달성 수익</p>
-                    <h2>
-
-                    </h2>
-                  </SwiperSlide>
-                  <SwiperSlide>
-                    <p className={styles.swiper_p}>총 누적 미달성 수익</p>
-                    <h2>
-                    </h2>
-                  </SwiperSlide>
-                </Swiper>
-                
-                
-                
+                <ImageList
+                  images={images}
+                  editMode={false}
+                  onDelete={deleteImage}
+                  onDownload={downloadImage}
+                  onImageOpen={handleImageOpen}
+                />
+                {/*<div className={styles.swiper_wrapper}>*/}
+                {/*  <Swiper*/}
+                {/*    ref={swiperRef}*/}
+                {/*    slidesPerView={5}*/}
+                {/*    spaceBetween={5}*/}
+                {/*    pagination={false}*/}
+                {/*    modules={[Pagination]}*/}
+                {/*    onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}*/}
+                {/*    // onSwiper={(swiper) => (swiperRef.current = swiper)}*/}
+                {/*    loop={false}*/}
+                {/*  >*/}
+                {/*    {*/}
+                {/*      images.length > 0 ?*/}
+                {/*        images.map((item, index) => (*/}
+                {/*          <SwiperSlide key={index}>*/}
+                {/*            <Image src="/images/notfound.png" alt="에러이미지" width={300} height={300}/>*/}
+                {/*          </SwiperSlide>*/}
+                {/*        )) : <></>*/}
+                {/*    }*/}
+                {/*  </Swiper>*/}
+                {/*</div>*/}
               </li>
 
               <li className={styles.file_box}>

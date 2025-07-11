@@ -1,3 +1,4 @@
+/* ---등록, 수정 페이지--- */
 .image_preview_list {
   display: flex;
   flex-direction: column;
@@ -24,23 +25,112 @@
   @apply text-md text-neutral-700;
 }
 
+/* ---상세 페이지: 스와이퍼--- */
+.image_swiper_list {
+  width: 100%;
+  position: relative;
+  padding: 1rem 0;
+}
+
+.image_swiper_list :global(.swiper-slide) {
+  /* 슬라이드의 너비를 자동으로 설정하여 내용물 크기에 맞춤 */
+  width: auto;
+  /* 슬라이드가 부모 너비에 맞춰 찌그러지는 것을 방지 */
+  flex-shrink: 0;
+}
+
+/* Swiper 기본 화살표(::after)를 제거 */
+.image_swiper_list :global(.swiper-button-prev)::after,
+.image_swiper_list :global(.swiper-button-next)::after {
+  content: '';
+}
+
+/* 커스텀 prev 버튼 */
+.image_swiper_list :global(.swiper-button-prev) svg {
+  left: 0; /* 화살표 위치 조정 */
+  color: #007aff; /* 화살표 색상 */
+  @apply fill-primary cursor-pointer;
+}
+
+/* 커스텀 next 버튼 */
+.image_swiper_list :global(.swiper-button-next) svg {
+  right: 0; /* 화살표 위치 조정 */
+  @apply fill-primary;
+}
+
+/* 비활성화 버튼 */
+.image_swiper_list :global(.swiper-button-disabled) {
+  @apply fill-primary-light cursor-none;
+}
+
+.image_box {
+  width: 180px;
+  height: 180px;
+  overflow: hidden; /* 이미지가 상자 밖으로 나가지 않도록 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid;
+  position: relative;
+  @apply border-neutral-200 rounded-lg;
+}
+
+.image_box:hover {
+  @apply border-primary-light transition duration-200;
+}
+
+.image_box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image_box img:hover {
+  background-color: rgba(255, 255, 255, 0.5) !important;
+  @apply bg-opacity-100;
+}
+
+/* ---버튼--- */
 .button_box {
   display: flex;
 }
 
+.swiper_button_box {
+  display: flex;
+  padding: 3px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  @apply gap-1
+}
+
 .viewer_button,
+.swiper_viewer_button,
 .delete_button,
 .download_button {
-  width: 32px;
-  height: 32px;
   padding: 3px;
   border: none;
   cursor: pointer;
   text-decoration: none;
-  @apply text-md text-neutral-600 transition duration-200 rounded-lg;
+  @apply text-md text-neutral-600 transition duration-200;
+}
+
+.viewer_button,
+.delete_button{
+  width: 32px;
+  height: 32px;
+  @apply rounded-lg;
+}
+
+.swiper_viewer_button,
+.download_button {
+  width: 26px;
+  height: 26px;
+  @apply bg-neutral-150 rounded-md;
 }
 
 .viewer_button svg,
+.swiper_viewer_button,
 .delete_button svg{
   @apply text-lg;
 }
@@ -49,7 +139,7 @@
   @apply bg-error-bg text-error-dark;
 }
 
-.viewer_button:hover {
+.viewer_button:hover, .swiper_viewer_button:hover {
   @apply bg-success-bg text-success-dark;
 }
 
