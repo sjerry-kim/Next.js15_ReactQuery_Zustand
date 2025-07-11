@@ -203,24 +203,40 @@ export default function Page({ id }: PageProps) {
           {/* todo 비밀번호 변경은 모달로 빼기 */}
           <li className={styles.one_row_box}>
             <LabelInputSet label="비밀번호 변경">
-              <LabelInput
+              {/*<LabelInput*/}
+              {/*  type="newPswd"*/}
+              {/*  name="newPswd"*/}
+              {/*  placeholder="새 비밀번호"*/}
+              {/*  value={jsonData.newPswd}*/}
+              {/*  maxLength={15}*/}
+              {/*  showCharCount*/}
+              {/*  showLabel={false}*/}
+              {/*  onChange={handleChange}*/}
+              {/*/>*/}
+              <input
                 type="newPswd"
                 name="newPswd"
                 placeholder="새 비밀번호"
                 value={jsonData.newPswd}
                 maxLength={15}
-                showCharCount
-                showLabel={false}
                 onChange={handleChange}
               />
-              <LabelInput
+              {/*<LabelInput*/}
+              {/*  type="confirmPswd"*/}
+              {/*  name="confirmPswd"*/}
+              {/*  placeholder="비밀번호 확인"*/}
+              {/*  value={jsonData.confirmPswd}*/}
+              {/*  maxLength={15}*/}
+              {/*  showCharCount*/}
+              {/*  showLabel={false}*/}
+              {/*  onChange={handleChange}*/}
+              {/*/>*/}
+              <input
                 type="confirmPswd"
                 name="confirmPswd"
                 placeholder="비밀번호 확인"
                 value={jsonData.confirmPswd}
                 maxLength={15}
-                showCharCount
-                showLabel={false}
                 onChange={handleChange}
               />
               <Button

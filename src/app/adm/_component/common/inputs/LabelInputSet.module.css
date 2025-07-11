@@ -14,7 +14,7 @@
   flex-direction: row;
   align-items: flex-end; /* 자식 요소들의 세로 정렬 */
   width: 100%;
-  height: 41.5px;
+  /*height: 41.5px;*/
   box-sizing: border-box;
   @apply gap-2;
 }
@@ -26,6 +26,7 @@
 
 .content_set > button {
   flex-grow: 0;
+  height: 100%;
 }
 
 @media (max-width: 767px) {

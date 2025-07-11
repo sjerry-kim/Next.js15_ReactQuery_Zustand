@@ -83,6 +83,7 @@
 
 /* profile */
 .profile_box {
+  justify-content: center;
   align-items: center;
   @apply gap-3 !important
 }
@@ -152,4 +153,8 @@
 
 .input_box > textarea {
   height: 250px;
+}
+
+@media (max-width: 767px) {
+
 }
