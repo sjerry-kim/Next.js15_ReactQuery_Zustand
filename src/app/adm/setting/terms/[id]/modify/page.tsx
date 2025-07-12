@@ -7,7 +7,7 @@ import { getTerm } from '@/services/termsServices';
 type PageParams = { params: { id: string } };
 
 export default async function Page({ params }: PageParams) {
-  const { id } = params;
+  const { id } = await params;
 
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({ queryKey: ['term', id], queryFn: () => getTerm(id) });

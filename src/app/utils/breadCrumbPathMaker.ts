@@ -1,4 +1,4 @@
-import { ADMIN_MENUS, ROLES } from '@/_auth/auth-config';
+import { ADMIN_MENUS, ROLES } from '@/_auth/path-menu';
 import { Menu, SubMenu } from '@/types/next-auth';
 
 interface BreadcrumbItem {

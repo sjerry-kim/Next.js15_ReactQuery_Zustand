@@ -1,4 +1,4 @@
-import { USER_MENUS, ADMIN_MENUS } from './auth-config';
+import { USER_MENUS, ADMIN_MENUS } from './path-menu';
 import { Menu } from '@/types/next-auth';
 
 interface ProtectedPath {

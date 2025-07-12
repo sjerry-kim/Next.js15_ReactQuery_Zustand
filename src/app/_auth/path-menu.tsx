@@ -121,7 +121,7 @@ export const ADMIN_MENUS: Menu[] = [
         idx: 3,
         title: "이용약관",
         path: "/adm/setting/terms",
-        roles: [ROLES.SUPER_ADMIN],
+        roles: [ROLES.MANAGER, ROLES.SUPER_ADMIN],
       },
     ]
   },

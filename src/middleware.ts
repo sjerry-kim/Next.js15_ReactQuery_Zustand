@@ -1,7 +1,8 @@
 import { verifyAccessToken, verifyRefreshToken } from '@/lib/jwt';
 import {TokenPayload} from '@/types/next-auth';
 import { NextRequest, NextResponse } from 'next/server';
-import { PROTECTED_PATHS } from '@/_auth/path-auth';
+import { PATH_RULES } from '@/_auth/auth-path';
+import { isPathMatch } from '@/utils/isPathMatch';
 
 export const config = {
   matcher: [
@@ -94,8 +95,8 @@ export async function middleware(req: NextRequest) {
 
       // 역할(Role) 기반 권한 체크를 수행
       // PROTECTED_PATHS를 길이 순으로 내림차순 정렬하여 가장 구체적인 경로부터 검사
-      const sortedProtectedPaths = [...PROTECTED_PATHS].sort((a, b) => b.path.length - a.path.length);
-      const matchedPath = sortedProtectedPaths.find(({ path }) => pathname.startsWith(path));
+      const sortedProtectedPaths = [...PATH_RULES].sort((a, b) => b.path.length - a.path.length);
+      const matchedPath = sortedProtectedPaths.find(({ path }) => isPathMatch(pathname, path));
 
       if (matchedPath && !matchedPath.roles?.includes(rtPayload.role)) {
         // console.log(`[Middleware] 접근 거부 (RefreshToken 기반): ${rtPayload.email}(${rtPayload.role}) -> ${pathname}`);
@@ -129,8 +130,8 @@ export async function middleware(req: NextRequest) {
   }
 
   // PROTECTED_PATHS를 길이 순으로 내림차순 정렬하여 가장 구체적인 경로부터 검사
-  const sortedProtectedPaths = [...PROTECTED_PATHS].sort((a, b) => b.path.length - a.path.length);
-  const matchedPath = sortedProtectedPaths.find(({ path }) => pathname.startsWith(path));
+  const sortedProtectedPaths = [...PATH_RULES].sort((a, b) => b.path.length - a.path.length);
+  const matchedPath = sortedProtectedPaths.find(({ path }) => isPathMatch(pathname, path));
 
 
   if (matchedPath && !matchedPath.roles?.includes(payload.role)) {
