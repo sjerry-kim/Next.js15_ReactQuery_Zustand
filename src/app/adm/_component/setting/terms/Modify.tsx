@@ -221,7 +221,7 @@ export default function Modify({ id }: PageProps) {
 
       {isImageOpen && (
         <ImageViewer
-          mode='carousel'
+          mode='single'
           images={fileListImage.length > 0 ? fileListImage : images}
           initialIndex={imageFileIndex}
           onClose={() => handleViewerClose('image')}
