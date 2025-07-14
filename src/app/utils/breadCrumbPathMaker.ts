@@ -1,5 +1,6 @@
-import { ADMIN_MENUS, ROLES } from '@/_auth/path-menu';
+import { ADMIN_MENUS } from '@/_auth/path-menu';
 import { Menu, SubMenu } from '@/types/next-auth';
+import { ROLES } from '@/_constant/userRole';
 
 interface BreadcrumbItem {
   title: string;

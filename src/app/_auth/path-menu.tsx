@@ -7,13 +7,7 @@ import BuildIcon from '@mui/icons-material/Build';
 import CodeIcon from '@mui/icons-material/Code';
 import PersonIcon from '@mui/icons-material/Person';
 import { Menu, Role } from '@/types/next-auth';
-
-export const ROLES = {
-  USER: 'user', // 일반회원
-  EDITOR: 'editor', // 일반관리자
-  MANAGER: 'manager', // 중간관리자
-  SUPER_ADMIN: 'super_admin', // 최고관리자
-} as const;
+import { ROLES } from '@/_constant/userRole';
 
 // 권한이 필요한 유저 메뉴
 export const USER_MENUS: Menu[] = [
@@ -42,13 +36,13 @@ export const ADMIN_MENUS: Menu[] = [
     icon: <EditNoteIcon sx={{ width: 22 }} />,
     roles: [ROLES.EDITOR, ROLES.MANAGER, ROLES.SUPER_ADMIN],
   },
-  {
-    idx: 102,
-    title: "상품",
-    path: "/adm/gds",
-    icon: <CardTravelIcon sx={{ width: 22 }} />,
-    roles: [ROLES.MANAGER, ROLES.SUPER_ADMIN],
-  },
+  // {
+  //   idx: 102,
+  //   title: "상품",
+  //   path: "/adm/gds",
+  //   icon: <CardTravelIcon sx={{ width: 22 }} />,
+  //   roles: [ROLES.MANAGER, ROLES.SUPER_ADMIN],
+  // },
   {
     idx: 103,
     title: "회원",
@@ -70,27 +64,27 @@ export const ADMIN_MENUS: Menu[] = [
       },
     ]
   },
-  {
-    idx: 104,
-    title: "계정",
-    path: "/adm/account",
-    icon: <PersonIcon sx={{ width: 22 }} />,
-    roles: [ROLES.MANAGER, ROLES.SUPER_ADMIN],
-    children: [
-      {
-        idx:1,
-        title: "본사",
-        path: "/adm/account/head",
-        roles: [ROLES.MANAGER, ROLES.SUPER_ADMIN],
-      },
-      {
-        idx: 2,
-        title: "외부 업체",
-        path: "/adm/account/partner",
-        roles: [ROLES.SUPER_ADMIN],
-      },
-    ]
-  },
+  // {
+  //   idx: 104,
+  //   title: "계정",
+  //   path: "/adm/account",
+  //   icon: <PersonIcon sx={{ width: 22 }} />,
+  //   roles: [ROLES.MANAGER, ROLES.SUPER_ADMIN],
+  //   children: [
+  //     {
+  //       idx:1,
+  //       title: "본사",
+  //       path: "/adm/account/head",
+  //       roles: [ROLES.MANAGER, ROLES.SUPER_ADMIN],
+  //     },
+  //     {
+  //       idx: 2,
+  //       title: "외부 업체",
+  //       path: "/adm/account/partner",
+  //       roles: [ROLES.SUPER_ADMIN],
+  //     },
+  //   ]
+  // },
   {
     idx: 105,
     title: "마이페이지",

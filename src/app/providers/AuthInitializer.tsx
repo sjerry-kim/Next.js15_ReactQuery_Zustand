@@ -8,7 +8,7 @@ import Loading from '@/adm/_component/common/Loading';
 import { useSnackbar } from '@/hooks/useSnackbar';
 
 /* ✅ zustand(클라이언트 메모리)에 Accesstoken을 남겨놓고, 
-      전역적으로 페이지 이동 및 로그아웃 처리가 필요한 로직을 위한 provider */
+  - 전역적으로 페이지 이동 및 로그아웃 처리가 필요한 로직을 위한 provider */
 export default function AuthInitializer({ children }: { children: React.ReactNode }) {
   const { isInitialized, setAccessToken, setInitialized, clearAccessToken } = useAuthStore();
   const user = useUserStore((state) => state.user);
@@ -100,7 +100,7 @@ export default function AuthInitializer({ children }: { children: React.ReactNod
       <Loading
         type={"line"}
         title={user ? "보안 확인중...": "로딩중..."}
-        subTitle={user ? "계정 상태를 확인하고 있습니다." : "잠시만 기다려주세요."}
+        subTitle={"로딩이 지속되면 새로고침 해주세요."}
       />
     );
   }
