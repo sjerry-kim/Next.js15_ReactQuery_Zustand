@@ -9,10 +9,18 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import onInputsChange from '@/utils/onInputsChange';
 import { Board } from '@/types/board';
 import { useSnackbar } from '@/hooks/useSnackbar';
+import LabelTextarea from '@/adm/_component/common/inputs/LabelTextarea';
+import MenuModal from '@/adm/_component/common/modals/MenuModal';
+import { ButtonProps } from '@/types/components';
 
 type PageProps = {
   id: string;
 };
+
+interface Tab {
+  key: string;
+  label: string;
+}
 
 export default function Page({ id }: PageProps) {
   const router = useRouter();
@@ -24,12 +32,32 @@ export default function Page({ id }: PageProps) {
     gcTime: 300 * 1000, // 5분뒤 메모리 정리
     enabled: !!id,
   });
+  const [currentTab, setCurrentTab] = useState<string>("info");
   const [jsonData, setJsonData] = useState({
     id: data?.id || 0,
-    content: data?.content || '',
+    content: '',
+    data1: "",
+    data2: "",
+    data3: "",
   });
+  const tabs: Tab[] = [
+    { key: 'info', label: '정보 입력' },
+    { key: 'option', label: '옵션 설정' },
+    { key: 'confirm', label: '최종 확인' },
+  ]
   const {handleChange} = onInputsChange(jsonData, setJsonData);
   const {showSnackbar} = useSnackbar();
+
+  const handleSubmit = () => console.log('저장');
+
+  const myModalButtons: ButtonProps[] = [
+    {
+      text: '수정',
+      variant: 'contained',
+      color: 'primary',
+      onClick: handleSubmit,
+    }
+  ];
 
   const updateMutation = useMutation<ApiResponse<Board>, Error>({
     mutationFn: async () => {
@@ -107,20 +135,122 @@ export default function Page({ id }: PageProps) {
 
   useEffect(() => {
     if (data) {
-      setJsonData({
-        ...data,
-      });
+      setJsonData((prevState)=>({
+        ...prevState,
+        content: data.content,
+      }));
     }
   }, [data]);
 
   return (
-    <div className={styles.modalBackground}>
-      <div className={styles.modal}>
-        <button onClick={() => router.back()}>X</button>
-        <input type="text" id="content" name="content" value={jsonData.content} onChange={handleChange} />
-        <button onClick={() => updateMutation.mutate()}>Modify</button>
-        <button onClick={() => deleteMutation.mutate()}>Delete</button>
-      </div>
-    </div>
+    <MenuModal
+      modalTitle="설정"
+      onClose={() => router.back()}
+      tabs={tabs}
+      buttons={myModalButtons}
+      maxWidth="90%"
+      onTabChange={(key) => setCurrentTab(key)}
+    >
+      {currentTab === 'info' && (
+        <ul className={styles.content_container}>
+          <li>
+            <LabelTextarea
+              label="내용"
+              name="data3"
+              value={jsonData.content}
+              maxLength={3000}
+              placeholder="정보2을 입력하세요"
+              showCharCount
+              onChange={handleChange}
+            />
+          </li>
+          <li>
+            <LabelTextarea
+              label="정보1"
+              name="data1"
+              value={jsonData.data1}
+              maxLength={10}
+              placeholder="정보1을 입력하세요"
+              showCharCount
+              onChange={handleChange}
+            />
+          </li>
+        </ul>
+      )}
+      {currentTab === 'option' &&
+        <ul className={styles.content_container}>
+          <li>
+            <LabelTextarea
+              label="정보1"
+              name="data1"
+              value={jsonData.data1}
+              maxLength={10}
+              placeholder="정보1을 입력하세요"
+              showCharCount
+              onChange={handleChange}
+            />
+          </li>
+          <li>
+            <LabelTextarea
+              label="정보2"
+              name="data3"
+              value={jsonData.data2}
+              maxLength={3000}
+              placeholder="정보2을 입력하세요"
+              showCharCount
+              onChange={handleChange}
+            />
+          </li>
+          <li>
+            <LabelTextarea
+              label="정보3"
+              name="data3"
+              value={jsonData.data3}
+              maxLength={3000}
+              placeholder="정보3을 입력하세요"
+              showCharCount
+              onChange={handleChange}
+            />
+          </li>
+        </ul>
+      }
+      {currentTab === 'confirm' &&
+        <ul className={styles.content_container}>
+          <li>
+            <LabelTextarea
+              label="정보1"
+              name="data1"
+              value={jsonData.data1}
+              maxLength={10}
+              placeholder="정보1을 입력하세요"
+              showCharCount
+              onChange={handleChange}
+            />
+          </li>
+          <li>
+            <LabelTextarea
+              label="정보2"
+              name="data3"
+              value={jsonData.data2}
+              maxLength={3000}
+              placeholder="정보2을 입력하세요"
+              showCharCount
+              onChange={handleChange}
+            />
+          </li>
+          <li>
+            <LabelTextarea
+              label="정보3"
+              name="data3"
+              value={jsonData.data3}
+              maxLength={3000}
+              placeholder="정보3을 입력하세요"
+              showCharCount
+              onChange={handleChange}
+            />
+          </li>
+        </ul>
+      }
+    </MenuModal>
   );
 }
