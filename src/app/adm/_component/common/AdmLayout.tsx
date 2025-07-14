@@ -311,7 +311,12 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
     setToggleOpen(false);
   };
 
-  function handleListKeyDown(event: React.KeyboardEvent) {
+  const handleMenuClick = (path: string) => {
+    router.push(path);
+    setToggleOpen(false);
+  }
+
+  const handleListKeyDown = (event: React.KeyboardEvent)=> {
     if (event.key === 'Tab') {
       event.preventDefault();
       setToggleOpen(false);
@@ -420,7 +425,7 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
               open={toggleOpen}
               anchorEl={anchorRef.current}
               role={undefined}
-              placement="bottom-start"
+              placement="top-start"
               transition
               disablePortal
               sx={{inset: "0px 19px auto auto !important", zIndex: 120}}
@@ -430,7 +435,7 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
                   {...TransitionProps}
                   style={{
                     transformOrigin:
-                      placement === 'bottom-start' ? 'left top' : 'left bottom',
+                      placement === 'top-start' ? 'right bottom' : 'right top',
                   }}
                 >
                   <Paper>
@@ -443,14 +448,14 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
                       >
                         <MenuItem
                           sx={{fontSize: "0.8125rem"}}
-                          onClick={handleClose}
+                          onClick={() => handleMenuClick('/')}
                         >
                           <HomeIcon sx={{ width: 18, marginRight: 1 }} />
                           홈으로 이동
                         </MenuItem>
                         <MenuItem
                           sx={{fontSize: "0.8125rem"}}
-                          onClick={handleClose}
+                          onClick={() => handleMenuClick('/adm/my')}
                         >
                           <ManageAccountsIcon sx={{ width: 18, marginRight: 1 }} />
                           마이페이지
