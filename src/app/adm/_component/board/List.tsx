@@ -31,38 +31,39 @@ interface JsonData {
   content: string;
 }
 
-interface SearchParams {
-  searchType?: string;
-  searchKeyword?: string;
-  searchStartDate?: string;
-  searchEndDate?: string;
-  searchSortOrder?: string;
-}
-
 export default function BoardListPage() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const queryClient = useQueryClient();
+  const cardWrapperRef = useRef<HTMLElement>(null);
+  const { isMobile, isLaptop } = useWindowSize();
+  const {showSnackbar} = useSnackbar();
+  const filters = {
+    page: parseInt(searchParams.get('page') || '1', 10),
+    pageSize: ITEMS_PER_PAGE,
+    searchType: searchParams.get('searchType') || '',
+    searchKeyword: searchParams.get('searchKeyword') || '',
+    startDate: searchParams.get('startDate') || '',
+    endDate: searchParams.get('endDate') || '',
+    sortOrder: searchParams.get('sortOrder') || 'desc',
+  };
   const [jsonData, setJsonData] = useState<JsonData>({
     searchType: "",
     searchKeyword: "",
     id: searchParams.get("id") || "0",
     content: searchParams.get("content") || "",
   });
-  const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const [draftStartDate, setDraftStartDate] = useState<Moment | null>(null);
   const [draftEndDate, setDraftEndDate] = useState<Moment | null>(null);
-  const [draftSortOrder, setDraftSortOrder] = useState('desc');
+  const [draftSortOrder, setDraftSortOrder] = useState(filters.sortOrder);
+  const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const searchOptions = [
     { value: "", label: "전체" },
     { value: "id", label: "게시물코드" },
     { value: "content", label: "내용" },
   ];
-  const cardWrapperRef = useRef<HTMLElement>(null);
-  const queryClient = useQueryClient();
   const {handleChange} = onInputsChange(jsonData, setJsonData);
-  const { isMobile, isLaptop } = useWindowSize();
-  const {showSnackbar} = useSnackbar();
 
   const getPageFromUrl = useCallback(() => {
     const pageParam = searchParams.get('page');
@@ -76,9 +77,9 @@ export default function BoardListPage() {
   const startDateFromUrl = searchParams.get('startDate') || "";
   const endDateFromUrl = searchParams.get('endDate') || "";
   const sortOrderFromUrl = searchParams.get('sortOrder') || 'desc';
-
-  const queryKey = ['boardList', currentPage, ITEMS_PER_PAGE, searchTypeFromUrl, searchKeywordFromUrl, startDateFromUrl, endDateFromUrl, sortOrderFromUrl];
-
+  
+  const queryKey = ['boardList', filters];
+  
   const {
     data: paginatedData,
     isLoading,
@@ -88,13 +89,7 @@ export default function BoardListPage() {
     isPlaceholderData,
   } = useQuery<PaginatedBoardResponse, Error>({
     queryKey: queryKey,
-    queryFn: () => getBoardList(currentPage, ITEMS_PER_PAGE, {
-      searchType: searchTypeFromUrl,
-      searchKeyword: searchKeywordFromUrl,
-      startDate: startDateFromUrl,
-      endDate: endDateFromUrl,
-      sortOrder: sortOrderFromUrl,
-    }),
+    queryFn: () => getBoardList(filters.page, filters.pageSize, filters),
     staleTime: 60 * 1000,
     gcTime: 5 * 60 * 1000,
     placeholderData: (previousData) => previousData,
@@ -107,30 +102,6 @@ export default function BoardListPage() {
   const totalItems = paginatedData?.totalItems;
 
   // Pagination의 onChangePage
-  // const handlePageChange = useCallback((newPage: number) => {
-  //   if (newPage === currentPage) return;
-  //
-  //   const currentSearchType = searchParams.get('searchType');
-  //   const currentSearchKeyword = searchParams.get('searchKeyword');
-  //   const currentStartDate = searchParams.get('startDate');
-  //   const currentEndDate = searchParams.get('endDate');
-  //   const currentSortOrder = searchParams.get('sortOrder');
-  //   const newSearchParams = new URLSearchParams();
-  //
-  //   // 새로운 페이지 번호를 설정
-  //   newSearchParams.set('page', newPage.toString());
-  //
-  //   // 기존 검색 조건이 존재할 경우, 그대로 다시 추가
-  //   if (currentSearchType) newSearchParams.set('searchType', currentSearchType);
-  //   if (currentSearchKeyword) newSearchParams.set('searchKeyword', currentSearchKeyword);
-  //   if (currentStartDate) newSearchParams.set('searchKeyword', currentStartDate);
-  //   if (currentEndDate) newSearchParams.set('searchKeyword', currentEndDate);
-  //   if (currentSortOrder) newSearchParams.set('searchKeyword', currentSortOrder);
-  //
-  //   // 완성된 쿼리 스트링으로 라우터를 push
-  //   router.push(`${pathname}?${newSearchParams.toString()}`, { scroll: false });
-  // }, [currentPage, pathname, router, searchParams]);
-
   const handlePageChange = useCallback((newPage: number) => {
     if (newPage === currentPage) return;
 
@@ -140,7 +111,7 @@ export default function BoardListPage() {
     // page 값만 새로운 번호로 설정하거나 변경
     newSearchParams.set('page', newPage.toString());
 
-    // 이제 모든 필터(검색어, 날짜, 정렬)가 유지된 채 페이지만 바뀝니다.
+    // 필터는 유지하고 페이지만 변경
     router.push(`${pathname}?${newSearchParams.toString()}`);
   }, [currentPage, pathname, router, searchParams]);
 
@@ -150,25 +121,14 @@ export default function BoardListPage() {
     router.push(destination);
   };
 
-// 글쓰기 모달 handler
+  // 등록 버튼
   const handleAddClick = () => {
     const currentParamsString = searchParams.toString();
     const destination = `/adm/board/add?${currentParamsString}`;
     router.push(destination);
   };
 
-  // const handleSearch = (event: FormEvent) => {
-  //   event.preventDefault();
-  //
-  //   const queryString = new URLSearchParams({
-  //     searchType: jsonData.searchType,
-  //     searchKeyword: jsonData.searchKeyword,
-  //     page: '1',
-  //   }).toString();
-  //
-  //   router.push(`${location.pathname}?${queryString}`);
-  // }
-
+  // 검색 버튼
   const handleSearch = (event: FormEvent) => {
     event.preventDefault();
     const newSearchParams = new URLSearchParams(searchParams.toString());
@@ -181,7 +141,7 @@ export default function BoardListPage() {
     router.push(`${pathname}?${newSearchParams.toString()}`);
   };
 
-  // 8. 기간 필터 모달을 여는 핸들러
+  // 필터 모달 오픈
   const handleOpenDateModal = () => {
     // 모달을 열 때, 현재 URL에 적용된 날짜를 임시 상태의 초기값으로 설정
     setDraftStartDate(startDateFromUrl ? moment(startDateFromUrl) : null);
@@ -190,7 +150,14 @@ export default function BoardListPage() {
     setIsDateModalOpen(true);
   };
 
-  // 9. 기간 필터 모달에서 '적용'을 눌렀을 때 실행될 핸들러
+  // 필터 초기화
+  const handleInitializeFilter = () => {
+    setDraftStartDate(null);
+    setDraftEndDate(null);
+    setDraftSortOrder('desc');
+  };
+
+  // 필터 적용
   const handleApplyDateFilter = () => {
     if ((draftStartDate && !draftEndDate) || (!draftStartDate && draftEndDate)) {
       showSnackbar('시작일과 종료일을 모두 선택해주세요.', 'warning');
@@ -200,8 +167,17 @@ export default function BoardListPage() {
     const newSearchParams = new URLSearchParams(searchParams.toString());
     newSearchParams.set('page', '1'); // 필터 적용 시 1페이지로 이동
 
-    if (draftStartDate) newSearchParams.set('startDate', draftStartDate.format('YYYY-MM-DD'));
-    if (draftEndDate) newSearchParams.set('endDate', draftEndDate.format('YYYY-MM-DD'));
+    if (draftStartDate) {
+      newSearchParams.set('startDate', draftStartDate.format('YYYY-MM-DD'));
+    } else {
+      newSearchParams.delete('startDate');
+    }
+
+    if (draftEndDate) {
+      newSearchParams.set('endDate', draftEndDate.format('YYYY-MM-DD'));
+    } else {
+      newSearchParams.delete('endDate');
+    }
 
     newSearchParams.set('sortOrder', draftSortOrder);
 
@@ -209,46 +185,17 @@ export default function BoardListPage() {
     setIsDateModalOpen(false); // 모달 닫기
   };
 
-  // todo 로직 리팩토링 필요
-  const handleInitializeFilter = () => {
-    setDraftStartDate(null);
-    setDraftEndDate(null);
-    setDraftSortOrder('desc');
-
-    router.push(`/adm/board`);
-    setIsDateModalOpen(false); // 모달 닫기
-  };
-
   // 다음 페이지 prefetch용 effect
   useEffect(() => {
-    if (
-      paginatedData &&
-      !isPlaceholderData &&
-      currentPage < paginatedData.totalPages
-    ) {
+    if (paginatedData && !isPlaceholderData && filters.page < paginatedData.totalPages) {
+      const nextPageFilters = { ...filters, page: filters.page + 1 };
       queryClient.prefetchQuery({
-        queryKey: queryKey,
-        queryFn: () => getBoardList(currentPage + 1, ITEMS_PER_PAGE, {
-          searchType: searchTypeFromUrl,
-          searchKeyword: searchKeywordFromUrl,
-          startDate: startDateFromUrl,
-          endDate: endDateFromUrl,
-          sortOrder: sortOrderFromUrl,
-        }),
+        queryKey: ['boardList', nextPageFilters],
+        queryFn: () => getBoardList(nextPageFilters.page, nextPageFilters.pageSize, nextPageFilters),
         staleTime: 60 * 1000,
       });
     }
-  }, [
-    paginatedData,
-    currentPage,
-    queryClient,
-    isPlaceholderData,
-    searchTypeFromUrl,
-    searchKeywordFromUrl,
-    startDateFromUrl,
-    endDateFromUrl,
-    sortOrderFromUrl
-  ]);
+  }, [paginatedData, isPlaceholderData, filters, queryClient]);
 
   // useState(jsonData)를 URL과 동기화하는 effect
   useEffect(() => {
@@ -385,8 +332,8 @@ export default function BoardListPage() {
         <section className={styles.bottom_wrapper}>
           {totalPages > 0 && (
             <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
+              currentPage={filters.page}
+              totalPages={paginatedData?.totalPages || 0}
               onPageChange={handlePageChange}
               totalItems={totalItems}
               pageNumbersToShow={isMobile ? 3 : 5}
@@ -411,11 +358,6 @@ export default function BoardListPage() {
               text: '초기화',
               variant: 'outlined',
               color: 'grey',
-              // onClick: () => {
-              //   setDraftStartDate(null);
-              //   setDraftEndDate(null);
-              //   setDraftSortOrder('desc');
-              // }
               onClick: handleInitializeFilter,
             },
             {

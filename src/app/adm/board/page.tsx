@@ -7,28 +7,35 @@ import { ITEMS_PER_PAGE } from '@/_constant/pagination';
 
 export const dynamic = 'force-dynamic';
 
+// 1. searchParams에서 값을 안전하게 추출하는 헬퍼 함수
+const getSearchParam = (param: string | string[] | undefined, defaultValue: string = '') => {
+  const value = Array.isArray(param) ? param[0] : param;
+  return value || defaultValue;
+};
+
 export default async function Page({ searchParams }: { searchParams: { [key:string]: string | string[] | undefined } }) {
   const queryClient = new QueryClient();
-  const sp = await searchParams;
-  const pageParam = sp?.page;
-  const searchTypeParam = sp?.searchType;
-  const searchKeywordParam = sp?.searchKeyword;
-  const startDateParam = sp?.startDate;
-  const endDateParam = sp?.endDate;
-  const sortOrderParam = sp?.sortOrder;
-  const searchType = Array.isArray(searchTypeParam) ? searchTypeParam[0] : searchTypeParam || '';
-  const searchKeyword = Array.isArray(searchKeywordParam) ? searchKeywordParam[0] : searchKeywordParam || '';
-  const startDate = Array.isArray(startDateParam) ? startDateParam[0] : startDateParam || '';
-  const endDate = Array.isArray(endDateParam) ? endDateParam[0] : endDateParam || '';
-  const sortOrder = Array.isArray(sortOrderParam) ? sortOrderParam[0] : sortOrderParam || '';
-  const currentPage = parseInt(Array.isArray(pageParam) ? pageParam[0] : pageParam || '1', 10);
-  const page = isNaN(currentPage) || currentPage < 1 ? 1 : currentPage;
 
-  const queryKey = ['boardList', currentPage, ITEMS_PER_PAGE, searchType, searchKeyword, startDate, endDate, sortOrder];
+  // 2. 모든 필터 관련 파라미터를 하나의 객체로 관리합니다.
+  const pageParam = parseInt(getSearchParam(searchParams.page, '1'), 10);
+  const filters = {
+    page: isNaN(pageParam) || pageParam < 1 ? 1 : pageParam,
+    pageSize: ITEMS_PER_PAGE,
+    searchType: getSearchParam(searchParams.searchType),
+    searchKeyword: getSearchParam(searchParams.searchKeyword),
+    startDate: getSearchParam(searchParams.startDate),
+    endDate: getSearchParam(searchParams.endDate),
+    sortOrder: getSearchParam(searchParams.sortOrder, 'desc'),
+  };
+
+  // 3. queryKey를 더 단순하고 명확하게 만듭니다.
+  //    React Query는 객체를 자동으로 비교하여 쿼리를 구별합니다.
+  const queryKey = ['boardList', filters];
 
   await queryClient.prefetchQuery({
     queryKey: queryKey,
-    queryFn: () => getBoardList(page, ITEMS_PER_PAGE, { searchType, searchKeyword, startDate, endDate, sortOrder }),
+    // 4. queryFn도 filters 객체를 사용하여 간결하게 호출합니다.
+    queryFn: () => getBoardList(filters.page, filters.pageSize, filters),
   });
 
   const dehydratedState = dehydrate(queryClient);
