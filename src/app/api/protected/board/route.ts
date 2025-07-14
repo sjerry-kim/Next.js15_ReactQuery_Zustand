@@ -9,6 +9,9 @@ export async function GET(request: NextRequest): Promise<NextResponse<PaginatedB
   const pageSize = parseInt(searchParams.get('pageSize') || '10', 10); // Default page size
   const searchType = searchParams.get('searchType') || '';
   const searchKeyword = searchParams.get('searchKeyword') || '';
+  const startDate = searchParams.get('startDate') || '';
+  const endDate = searchParams.get('endDate') || '';
+  const sortOrder = searchParams.get('sortOrder') || 'desc';
 
   if (isNaN(page) || page < 1) {
     return NextResponse.json({ message: 'Invalid page number. Must be a positive integer.' }, { status: 400 });
@@ -49,6 +52,19 @@ export async function GET(request: NextRequest): Promise<NextResponse<PaginatedB
     }
   }
 
+  // 시작일과 종료일이 모두 존재할 때만 created_at 조건을 추가
+  if (startDate && endDate) {
+    where.created_at = {
+      gte: new Date(startDate), // gte: >= (시작일 00:00:00부터)
+      lte: new Date(new Date(endDate).setHours(23, 59, 59, 999)), // lte: <= (종료일 23:59:59까지)
+    };
+  }
+
+  // 정렬 로직을 동적으로 설정
+  const orderBy: Prisma.boardOrderByWithRelationInput = {
+    created_at: sortOrder === 'asc' ? 'asc' : 'desc',
+  };
+
   try {
     // Use a transaction to get both data and total count efficiently
     const [boardsData, totalItems] = await prisma.$transaction([
@@ -60,23 +76,25 @@ export async function GET(request: NextRequest): Promise<NextResponse<PaginatedB
           created_at: true,
           updated_at: true,
         },
-        orderBy: {
-          // Consider a more stable ordering, e.g., created_at then id
-          created_at: 'desc', // Example: newest first
-          // id: 'desc', // if created_at can be the same
-        },
+        orderBy,
         skip: skip,
         take: take,
       }),
       prisma.board.count({ where }),
     ]);
 
-    // Convert BigInt IDs to numbers and add row numbers
-    const boardsWithRowNumber: Board[] = boardsData.map((board, index) => ({
-      ...board,
-      id: Number(board.id), // Convert BigInt to number
-      rn: skip + index + 1, // Calculate row number based on overall dataset
-    }));
+    //  정렬 순서에 따라 row number(rn)를 올바르게 계산
+    const boardsWithRowNumber: Board[] = boardsData.map((board, index) => {
+      const baseRn = sortOrder === 'asc'
+        ? skip + index + 1
+        : totalItems - (skip + index);
+
+      return {
+        ...board,
+        id: Number(board.id),
+        rn: baseRn,
+      };
+    });
 
     const totalPages = Math.ceil(totalItems / pageSize);
 

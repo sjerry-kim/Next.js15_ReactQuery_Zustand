@@ -1,6 +1,14 @@
 import { PaginatedBoardResponse, BoardCreatePayload, BoardUpdatePayload } from '@/types/board';
 import { apiFetch } from '@/utils/apiFetch';
-import { SearchParams } from 'next/dist/server/request/search-params';
+// import { SearchParams } from 'next/dist/server/request/search-params';
+
+interface SearchParams {
+  searchType?: string;
+  searchKeyword?: string;
+  startDate?: string;
+  endDate?: string;
+  sortOrder?: string;
+}
 
 export async function getBoardList(
   page: number = 1,
@@ -17,6 +25,19 @@ export async function getBoardList(
     params.append('searchType', search.searchType || ''); // @ts-ignore
     params.append('searchKeyword', search.searchKeyword);
   }
+
+  if (search.startDate) {
+    params.append('startDate', search.startDate);
+  }
+
+  if (search.endDate) {
+    params.append('endDate', search.endDate);
+  }
+
+  if (search.sortOrder) {
+    params.append('sortOrder', search.sortOrder);
+  }
+
 
   const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/protected/board?${params.toString()}`;
   const response = await apiFetch(apiUrl);
