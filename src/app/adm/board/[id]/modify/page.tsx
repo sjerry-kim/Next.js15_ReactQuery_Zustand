@@ -1,5 +1,5 @@
 import React from 'react';
-import Detail from '@/adm/_component/board/Detail';
+import Modify from '@/adm/_component/board/Modify';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { getBoard } from '@/services/boardService';
 import ReactQueryProviders from '@/providers/ReactQueryProvider';
@@ -7,7 +7,7 @@ import ReactQueryProviders from '@/providers/ReactQueryProvider';
 type PageParams = { params: { id: string } };
 
 export default async function Page({ params }: PageParams) {
-  const { id } = params;
+  const { id } = await params;
 
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({ queryKey: ['board', id], queryFn: () => getBoard(id) });
@@ -16,7 +16,7 @@ export default async function Page({ params }: PageParams) {
   return (
     <ReactQueryProviders>
       <HydrationBoundary state={dehydratedState}>
-        <Detail id={id} />
+        <Modify id={id} />
       </HydrationBoundary>
     </ReactQueryProviders>
   );

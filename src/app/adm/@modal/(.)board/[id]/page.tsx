@@ -1,5 +1,5 @@
 import React from 'react';
-import Modify from '@/adm/_component/board/Modify';
+import Detail from '@/adm/_component/board/Detail';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { getBoard } from '@/services/boardService';
 import ReactQueryProviders from '@/providers/ReactQueryProvider';
@@ -16,7 +16,7 @@ export default async function Page({ params }: PageParams) {
   return (
     <ReactQueryProviders>
       <HydrationBoundary state={dehydratedState}>
-        <Modify id={id} />
+        <Detail id={id} />
       </HydrationBoundary>
     </ReactQueryProviders>
   );

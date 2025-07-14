@@ -1,0 +1,11 @@
+.content_container {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 15px;
+  @apply gap-2
+}
+
+.content_container li {
+  display: flex;
+  flex-wrap: wrap;
+}

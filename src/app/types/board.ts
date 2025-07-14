@@ -15,3 +15,12 @@ export interface PaginatedBoardResponse {
   totalPages: number;
   pageSize: number;
 }
+
+export interface BoardCreatePayload {
+  content: string;
+}
+
+export interface BoardUpdatePayload {
+  id: number;
+  content: string;
+}
