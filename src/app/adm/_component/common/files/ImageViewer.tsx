@@ -52,7 +52,9 @@ export default function ImageViewer({
     <CommonModal
       modalTitle={currentImage?.file_init_name || '이미지 미리보기'}
       buttons={carouselButtons} // 조건부로 생성된 버튼 배열을 전달
+      width={"600px"}
       maxWidth={isMobile? '90%': '600px'}
+      height={"600px"}
       maxHeight={isMobile? '90%': '600px'}
       buttonsLocation="center"
       currentPage={images.length > 1 && mode === 'carousel' ? currentIndex + 1 : undefined}
