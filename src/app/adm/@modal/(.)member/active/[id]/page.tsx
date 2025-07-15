@@ -10,7 +10,7 @@ export default async function Page({ params }: PageParams) {
   const { id } = await params;
 
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery({ queryKey: ['board'], queryFn: () => getBoard(id) });
+  await queryClient.prefetchQuery({ queryKey: ['board', id], queryFn: () => getBoard(id) });
   const dehydratedState = dehydrate(queryClient);
 
   return (
