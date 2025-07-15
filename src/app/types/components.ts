@@ -55,8 +55,8 @@ export interface RadioSetProps {
   label: string;
   name: string;
   options: Option[];
-  value: Option | null;
-  onChange: (value: Option | null) => void;
+  value: string | number | null;
+  onChange: (value: string | number) => void;
   direction?: 'row' | 'column';
 }
 
@@ -67,16 +67,16 @@ export interface CheckboxProps extends ComponentProps<'input'> {
 export interface CheckboxSetProps {
   label: string;
   options: Option[];
-  value: Option[];
-  onChange: (value: Option[]) => void;
+  value: (string | number)[];
+  onChange: (value: (string | number)[]) => void;
   direction?: 'row' | 'column';
 }
 
 export interface SwitchSetProps {
   label: string;
   options: Option[];
-  value: Option[];
-  onChange: (value: Option[]) => void;
+  value: (string | number)[];
+  onChange: (value: (string | number)[]) => void;
   direction?: 'row' | 'column';
 }
 

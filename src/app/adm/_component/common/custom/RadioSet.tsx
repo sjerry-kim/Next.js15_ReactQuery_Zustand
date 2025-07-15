@@ -16,9 +16,9 @@ export default function RadioSet({
             key={option.value}
             name={name}
             label={option.label}
-            value={String(option.value)}
-            checked={value?.value === option.value}
-            onChange={() => onChange(option)}
+            value={option.value}
+            checked={value === option.value}
+            onChange={() => onChange(option.value)}
             disabled={option.disabled}
           />
         ))}

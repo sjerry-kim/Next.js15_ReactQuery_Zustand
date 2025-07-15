@@ -13,11 +13,14 @@ export default function SwitchSet({
   direction = 'row',
 }: SwitchSetProps) {
 
-  const handleChange = (checkedOption: Option) => {
-    const isChecked = value.some(item => item.value === checkedOption.value);
+  const handleChange = (checkedOptionValue: string | number) => {
+    // 현재 값 배열에 체크된 옵션의 값이 포함되어 있는지 확인
+    const isChecked = value.includes(checkedOptionValue);
+
+    // 포함되어 있다면 해당 값을 배열에서 제거, 없다면 추가
     const newValues = isChecked
-      ? value.filter((item) => item.value !== checkedOption.value)
-      : [...value, checkedOption];
+      ? value.filter((itemValue) => itemValue !== checkedOptionValue)
+      : [...value, checkedOptionValue];
 
     onChange(newValues);
   };
@@ -30,8 +33,8 @@ export default function SwitchSet({
           <div className={styles.switch_set_container} key={option.value}>
             <span className={styles.span}>{option.label}</span>
             <Switch
-              checked={value.some(item => item.value === option.value)}
-              onChange={() => handleChange(option)}
+              checked={value.includes(option.value)}
+              onChange={() => handleChange(option.value)}
               disabled={option.disabled}
               name={String(option.value)}
             />

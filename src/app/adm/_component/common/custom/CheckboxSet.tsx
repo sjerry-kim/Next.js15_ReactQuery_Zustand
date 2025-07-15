@@ -7,12 +7,12 @@ import { CheckboxSetProps, Option } from '@/types/components';
 export default function CheckboxSet({
   label, options, value, onChange, direction = 'row'
 }: CheckboxSetProps) {
-  const handleChange = (checkedOption: Option) => {
+  const handleChange = (checkedOptionValue: string | number) => {
     // 이미 선택되었는지 확인
-    const isChecked = value.some(item => item.value === checkedOption.value);
+    const isChecked = value.includes(checkedOptionValue);
     const newValues = isChecked
-      ? value.filter((item) => item.value !== checkedOption.value)
-      : [...value, checkedOption];
+      ? value.filter((itemValue) => itemValue !== checkedOptionValue)
+      : [...value, checkedOptionValue];
 
     onChange(newValues);
   };
@@ -26,8 +26,8 @@ export default function CheckboxSet({
             key={option.value}
             label={option.label}
             value={String(option.value)}
-            checked={value.some(item => item.value === option.value)}
-            onChange={() => handleChange(option)}
+            checked={value.includes(option.value)}
+            onChange={() => handleChange(option.value)}
             disabled={option.disabled}
           />
         ))}
