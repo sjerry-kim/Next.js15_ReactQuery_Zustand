@@ -13,6 +13,7 @@ import {ButtonProps} from '@/types/components'
 import LabelInput from '@/adm/_component/common/inputs/LabelInput';
 import LabelInputSet from '@/adm/_component/common/inputs/LabelInputSet';
 import LabelTextarea from '@/adm/_component/common/inputs/LabelTextarea';
+import { useConfirm } from '@/hooks/useConfirm';
 
 type PageProps = {
   id: string;
@@ -55,7 +56,7 @@ export default function Page({ id }: PageProps) {
     {
       text: '정지',
       onClick: () => {
-        handleTempBtn();
+        console.log('정지 버튼 클릭')
       },
       variant: 'outlined',
       color: 'grey',
@@ -63,13 +64,14 @@ export default function Page({ id }: PageProps) {
     {
       text: '탈퇴',
       onClick: () => {
-        handleTempBtn();
+        handleDeleteUser();
       },
       variant: 'contained',
       color: 'error',
       size: "md",
     },
   ];
+  const openConfirm = useConfirm();
   const {handleChange} = onInputsChange(jsonData, setJsonData);
 
   const { data } = useQuery<board>({
@@ -80,8 +82,17 @@ export default function Page({ id }: PageProps) {
     enabled: !!id,
   });
 
-  const handleTempBtn = () => {
-    console.log("클릭했습니다.")
+  const handleDeleteUser= async () => {
+    const userConfirmed = await openConfirm({
+      title: "정말 탈퇴하시겠습니까?",
+      message: "모든 데이터가 영구적으로 삭제됩니다.",
+    });
+
+    if (userConfirmed) {
+      console.log("탈퇴 처리 API가 호출되었습니다.");
+    } else {
+      console.log("탈퇴 작업을 취소했습니다.");
+    }
   }
 
   useEffect(() => {
