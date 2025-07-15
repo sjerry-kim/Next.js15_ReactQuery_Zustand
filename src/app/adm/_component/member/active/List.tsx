@@ -2,24 +2,19 @@
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { getBoardList } from '@/services/boardService';
 import type { Board, PaginatedBoardResponse } from '@/types/board';
 import Pagination from '@/adm/_component/common/Pagination';
 import styles from "./List.module.css";
-import { LuSearch } from "react-icons/lu";
-import { MdOutlineReplay } from "react-icons/md";
 import useWindowSize from '@/hooks/useWindowSize.';
 import onInputsChange from '@/utils/onInputsChange';
 import { ITEMS_PER_PAGE } from '@/_constant/pagination';
 import Button from '@/adm/_component/common/buttons/Button';
 import Select from '@/adm/_component/common/custom/Select';
-import SearchBar from '@/adm/_component/common/inputs/SearchBar';
-import DateRangePicker from '@/adm/_component/common/custom/DateRangePicker';
 import { Moment } from 'moment/moment';
 import SingleDatePicker from '@/adm/_component/common/custom/SingleDatePicker';
 import ResetButton from '@/adm/_component/common/buttons/ResetButton';
-import Checkbox from '@/adm/_component/common/custom/Checkbox';
 import CheckboxSet from '@/adm/_component/common/custom/CheckboxSet';
 import RadioSet from '../../common/custom/RadioSet';
 import SwitchSet from '@/adm/_component/common/custom/SwitchSet';
@@ -31,7 +26,6 @@ import { useSnackbar } from '@/hooks/useSnackbar';
 import Loading from '@/adm/_component/common/Loading';
 import Fail from '@/adm/_component/common/Fail';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-// import MenuModal from '@/adm/_component/common/MenuModal';
 
 /* ------ 임시 타입, 함수 등 start ------ */
 interface User {
@@ -59,154 +53,18 @@ async function searchUsers(filter: { type: string; keyword: string }): Promise<U
     { id: 8, name: '김철수', email: 'kim@example.com', createdAt: moment().format("YYYY.MM.DD")},
   ];
 }
-
 /* ------ 임시 타입, 함수 등 end ------ */
 
 interface JsonData {
   searchType: string;
   searchKeyword: string;
-  id: string;
-  content: string;
+  startDate: Moment | null;
+  endDate: Moment | null;
+  sortOrder: string;
 }
 
 export default function BoardListPage() {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const [jsonData, setJsonData] = useState<JsonData>({
-    searchType: "",
-    searchKeyword: "",
-    id: searchParams.get("id") || "0",
-    content: searchParams.get("content") || "",
-  });
-  const searchOptions = [
-    { value: "", label: "전체" },
-    { value: "id", label: "게시물코드" },
-    { value: "content", label: "내용" },
-  ];
-  const [draftStartDate, setDraftStartDate] = useState<Moment | null>(null);
-  const [draftEndDate, setDraftEndDate] = useState<Moment | null>(null);
-  const cardWrapperRef = useRef<HTMLElement>(null);
-  const queryClient = useQueryClient();
-  const {handleChange} = onInputsChange(jsonData, setJsonData);
-  const { isMobile } = useWindowSize();
-
-  const getPageFromUrl = useCallback(() => {
-    const pageParam = searchParams.get('page');
-    const page = parseInt(pageParam || '1', 10);
-    return isNaN(page) || page < 1 ? 1 : page;
-  }, [searchParams]);
-
-  const currentPage = getPageFromUrl();
-  const searchTypeFromUrl = searchParams.get('searchType') || "";
-  const searchKeywordFromUrl = searchParams.get('searchKeyword') || "";
-
-  const queryKey = ['boardList', currentPage, ITEMS_PER_PAGE, searchTypeFromUrl, searchKeywordFromUrl];
-
-  const {
-    data: paginatedData,
-    isLoading,
-    isError,
-    error,
-    isFetching,
-    isPlaceholderData,
-  } = useQuery<PaginatedBoardResponse, Error>({
-    queryKey: queryKey,
-    queryFn: () => getBoardList(currentPage, ITEMS_PER_PAGE, {
-      searchType: searchTypeFromUrl,
-      searchKeyword: searchKeywordFromUrl
-    }),
-    staleTime: 60 * 1000,
-    gcTime: 5 * 60 * 1000,
-    placeholderData: (previousData) => previousData,
-    enabled: currentPage > 0,
-  });
-
-  // 렌더링할 데이터 준비
-  const boardsToDisplay = paginatedData?.boards || [];
-  const totalPages = paginatedData?.totalPages || 0;
-  const totalItems = paginatedData?.totalItems;
-
-  // Pagination의 onChangePage
-  const handlePageChange = useCallback((newPage: number) => {
-    if (newPage === currentPage) return;
-
-    const currentSearchType = searchParams.get('searchType');
-    const currentSearchKeyword = searchParams.get('searchKeyword');
-    const newSearchParams = new URLSearchParams();
-
-    // 새로운 페이지 번호를 설정
-    newSearchParams.set('page', newPage.toString());
-
-    // 기존 검색 조건이 존재할 경우, 그대로 다시 추가
-    if (currentSearchType) newSearchParams.set('searchType', currentSearchType);
-    if (currentSearchKeyword) newSearchParams.set('searchKeyword', currentSearchKeyword);
-
-    // 완성된 쿼리 스트링으로 라우터를 push
-    router.push(`${pathname}?${newSearchParams.toString()}`, { scroll: false });
-  }, [currentPage, pathname, router, searchParams]);
-
-  const handleRowClick = (itemId: number) => {
-    const newSearchParams = new URLSearchParams(searchParams.toString());
-    const destination = `/adm/member/active/${itemId}?${newSearchParams.toString()}`;
-    router.push(destination);
-  };
-
-  const handleAddClick = () => {
-    const newSearchParams = new URLSearchParams(searchParams);
-    const destination = `/adm/member/active/add?${newSearchParams.toString()}`;
-
-    router.push(destination);
-  };
-
-  const handleSearch = (event: FormEvent) => {
-    event.preventDefault();
-
-    const queryString = new URLSearchParams({
-      searchType: jsonData.searchType,
-      searchKeyword: jsonData.searchKeyword,
-      page: '1',
-    }).toString();
-
-    router.push(`${location.pathname}?${queryString}`);
-  }
-
-  // 다음 페이지 prefetch용 effect
-  useEffect(() => {
-    if (
-      paginatedData &&
-      !isPlaceholderData &&
-      currentPage < paginatedData.totalPages
-    ) {
-      queryClient.prefetchQuery({
-        queryKey: queryKey,
-        queryFn: () => getBoardList(currentPage + 1, ITEMS_PER_PAGE, {
-          searchType: searchTypeFromUrl,
-          searchKeyword: searchKeywordFromUrl
-        }),
-        staleTime: 60 * 1000,
-      });
-    }
-  }, [paginatedData, currentPage, queryClient, isPlaceholderData, searchTypeFromUrl, searchKeywordFromUrl]);
-
-  // useState(jsonData)를 URL과 동기화하는 effect
-  useEffect(() => {
-    setJsonData(prev => ({
-      ...prev,
-      searchType: searchTypeFromUrl,
-      searchKeyword: searchKeywordFromUrl
-    }));
-  }, [searchTypeFromUrl, searchKeywordFromUrl]);
-
-  // card section 스크롤 최상단 복귀
-  useEffect(() => {
-    if (cardWrapperRef.current) {
-      cardWrapperRef.current.scrollTop = 0;
-    }
-  }, [boardsToDisplay]);
-
   /* ----- Test Start ----- */
-
   // checkbox, radio, switch 등
   const fruitOptions : Option[] = [
     { label: '사과', value: 'apple' },
@@ -221,23 +79,17 @@ export default function BoardListPage() {
     { label: '이메일 알림', value: 'email' },
     { label: 'SMS 알림', value: 'sms' },
   ]
-  const [selectedFruits, setSelectedFruits] = useState<Option[]>([
-    { label: '사과', value: 'apple' }
-  ]);
-  const [sortOrder, setSortOrder] = useState<Option | null>(sortOptions[0]);
-  const [settings, setSettings] = useState<Option[] | []>([{ label: '이메일 알림', value: 'email' },]);
+  const [selectedFruits, setSelectedFruits] = useState<(string | number)[]>(['apple']);
+  // const [sortOrder, setSortOrder] = useState<Option | null>(sortOptions[0]);
+  const [settings, setSettings] = useState<(string | number)[]>(['email']);
 
-  // useEffect(()=>{
+  // useEffect(() => {
   //   console.log(selectedFruits);
-  // }, [selectedFruits])
+  // }, [selectedFruits]);
   //
-  // useEffect(()=>{
-  //   console.log(sortOrder);
-  // }, [sortOrder])
-  //
-  // useEffect(()=>{
+  // useEffect(() => {
   //   console.log(settings);
-  // }, [settings])
+  // }, [settings]);
 
   // search modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -271,8 +123,168 @@ export default function BoardListPage() {
     showSnackbar('에러 저장되었습니다.', 'error')
     showSnackbar('알림 저장되었습니다.', 'info')
   }
-
   /* ----- Test End ----- */
+
+
+
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const queryClient = useQueryClient();
+  const cardWrapperRef = useRef<HTMLElement>(null);
+  // URL 파라미터를 기반으로 필터의 '적용된' 상태를 객체로 관리 (useQuery용)
+  const appliedFilters = {
+    page: parseInt(searchParams.get('page') || '1', 10),
+    pageSize: ITEMS_PER_PAGE,
+    searchType: searchParams.get('searchType') || '',
+    searchKeyword: searchParams.get('searchKeyword') || '',
+    startDate: searchParams.get('startDate') || '',
+    endDate: searchParams.get('endDate') || '',
+    sortOrder: searchParams.get('sortOrder') || 'desc',
+  };
+  const [jsonData, setJsonData] = useState<JsonData>({
+    searchType: searchParams.get('searchType') || '',
+    searchKeyword: searchParams.get('searchKeyword') || '',
+    startDate: searchParams.get('startDate') ? moment(searchParams.get('startDate')) : null,
+    endDate: searchParams.get('endDate') ? moment(searchParams.get('endDate')) : null,
+    sortOrder: searchParams.get('sortOrder') || 'desc',
+  });
+  const searchOptions = [
+    { value: "", label: "전체" },
+    { value: "id", label: "게시물코드" },
+    { value: "content", label: "내용" },
+  ];
+  const { isMobile } = useWindowSize();
+  const {handleChange} = onInputsChange(jsonData, setJsonData);
+
+  const getPageFromUrl = useCallback(() => {
+    const pageParam = searchParams.get('page');
+    const page = parseInt(pageParam || '1', 10);
+    return isNaN(page) || page < 1 ? 1 : page;
+  }, [searchParams]);
+
+  const currentPage = getPageFromUrl();
+  const queryKey = ['boardList', appliedFilters];
+
+  const {
+    data: paginatedData,
+    isLoading,
+    isError,
+    error,
+    isFetching,
+    isPlaceholderData,
+  } = useQuery<PaginatedBoardResponse, Error>({
+    queryKey: queryKey,
+    queryFn: () => getBoardList(appliedFilters.page, appliedFilters.pageSize, appliedFilters),
+    staleTime: 60 * 1000,
+    gcTime: 5 * 60 * 1000,
+    placeholderData: (previousData) => previousData,
+    enabled: currentPage > 0,
+  });
+
+  // 렌더링할 데이터 준비
+  const boardsToDisplay = paginatedData?.boards || [];
+  const totalPages = paginatedData?.totalPages || 0;
+  const totalItems = paginatedData?.totalItems;
+
+  // Pagination의 onChangePage
+  const handlePageChange = useCallback((newPage: number) => {
+    if (newPage === currentPage) return;
+
+    // 기존 searchParams를 그대로 복사하여 사용
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+
+    // page 값만 새로운 번호로 설정하거나 변경
+    newSearchParams.set('page', newPage.toString());
+
+    // 필터는 유지하고 페이지만 변경
+    router.push(`${pathname}?${newSearchParams.toString()}`);
+  }, [currentPage, pathname, router, searchParams]);
+
+  const handleRowClick = (itemId: number) => {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    const destination = `/adm/member/active/${itemId}?${newSearchParams.toString()}`;
+    router.push(destination);
+  };
+
+  // 등록 버튼
+  const handleAddClick = () => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    const destination = `/adm/member/active/add?${newSearchParams.toString()}`;
+
+    router.push(destination);
+  };
+
+  // 검색 버튼
+  const handleSearch = () => {
+    if ((jsonData.startDate && !jsonData.endDate) || (!jsonData.startDate && jsonData.endDate)) {
+      showSnackbar('시작일과 종료일을 모두 선택해주세요.', 'warning');
+      return;
+    }
+
+    const newSearchParams = new URLSearchParams();
+
+    // jsonData: 항상 UI의 최신 상태를 반영
+    if (jsonData.searchKeyword) {
+      newSearchParams.set('searchType', jsonData.searchType);
+      newSearchParams.set('searchKeyword', jsonData.searchKeyword);
+    }
+    if (jsonData.startDate) newSearchParams.set('startDate', jsonData.startDate.format('YYYY-MM-DD'));
+    if (jsonData.endDate) newSearchParams.set('endDate', jsonData.endDate.format('YYYY-MM-DD'));
+    newSearchParams.set('sortOrder', jsonData.sortOrder);
+    newSearchParams.set('page', '1');
+
+    router.push(`${pathname}?${newSearchParams.toString()}`);
+  };
+
+  // 초기화
+  const handleResetFilters = () => {
+    // UI 상태 초기화
+    setJsonData({
+      searchType: '',
+      searchKeyword: '',
+      startDate: null,
+      endDate: null,
+      sortOrder: 'desc',
+    });
+    router.push(pathname);
+  };
+
+  // 다음 페이지 prefetch용 effect
+  useEffect(() => {
+    if (paginatedData && !isPlaceholderData && appliedFilters.page < paginatedData.totalPages) {
+      const nextPageFilters = { ...appliedFilters, page: appliedFilters.page + 1 };
+      queryClient.prefetchQuery({
+        queryKey: ['boardList', nextPageFilters],
+        queryFn: () => getBoardList(nextPageFilters.page, nextPageFilters.pageSize, nextPageFilters),
+        staleTime: 60 * 1000,
+      });
+    }
+  }, [paginatedData, isPlaceholderData, jsonData, queryClient]);
+
+  useEffect(() => {
+      // 검색어 UI 동기화
+      setJsonData(prev => ({
+        ...prev,
+        searchType: appliedFilters.searchType,
+        searchKeyword: appliedFilters.searchKeyword,
+      }));
+
+    setJsonData({
+      searchType: appliedFilters.searchType,
+      searchKeyword: appliedFilters.searchKeyword,
+      startDate: appliedFilters.startDate ? moment(appliedFilters.startDate) : null,
+      endDate: appliedFilters.endDate ? moment(appliedFilters.endDate) : null,
+      sortOrder: appliedFilters.sortOrder,
+    });
+  }, [searchParams]);
+
+  // card section 스크롤 최상단 복귀
+  useEffect(() => {
+    if (cardWrapperRef.current) {
+      cardWrapperRef.current.scrollTop = 0;
+    }
+  }, [boardsToDisplay]);
 
   if (isError) {
     showSnackbar('통신 오류가 발생하였습니다.', 'error');
@@ -307,8 +319,9 @@ export default function BoardListPage() {
                     label="정렬"
                     name="sortOrder"
                     options={sortOptions}
-                    value={sortOrder}
-                    onChange={setSortOrder}
+                    value={jsonData.sortOrder}
+                    onChange={(value) => setJsonData(prevState => ({
+                      ...prevState, sortOrder: String(value) }))}
                   />
                 </div>
               </div>
@@ -357,16 +370,18 @@ export default function BoardListPage() {
                 <div className={styles.double_row_div}>
                   <SingleDatePicker
                     width="100%"
-                    value={draftStartDate}
+                    value={jsonData.startDate}
                     placeholder="시작일 선택"
-                    onChange={setDraftStartDate}
+                    onChange={(value) => setJsonData((prevState)=>({
+                      ...prevState, startDate: value}))}
                     borderRight
                   />
                   <SingleDatePicker
                     width="100%"
-                    value={draftEndDate}
+                    value={jsonData.endDate}
                     placeholder="종료일 선택"
-                    onChange={setDraftEndDate}
+                    onChange={(value) => setJsonData((prevState)=>({
+                      ...prevState, endDate: value}))}
                   />
                 </div>
               </div>
@@ -389,16 +404,18 @@ export default function BoardListPage() {
                 <div className={styles.double_row_div}>
                   <SingleDatePicker
                     width="100%"
-                    value={draftStartDate}
+                    value={jsonData.startDate}
                     placeholder="시작일 선택"
-                    onChange={setDraftStartDate}
+                    onChange={(value) => setJsonData((prevState)=>({
+                      ...prevState, startDate: value}))}
                     borderRight
                   />
                   <SingleDatePicker
                     width="100%"
-                    value={draftEndDate}
+                    value={jsonData.endDate}
                     placeholder="종료일 선택"
-                    onChange={setDraftEndDate}
+                    onChange={(value) => setJsonData((prevState)=>({
+                      ...prevState, endDate: value}))}
                   />
                 </div>
               </div>
@@ -426,8 +443,9 @@ export default function BoardListPage() {
                 text="검색"
                 variant="contained"
                 color="primary"
+                onClick={handleSearch}
               />
-              <ResetButton />
+              <ResetButton onClick={handleResetFilters} />
             </div>
           </div>
         </section>
@@ -482,7 +500,6 @@ export default function BoardListPage() {
 
         {
           isMobile &&
-
             <section ref={cardWrapperRef} className={styles.card_wrapper}>
               {
                 isFetching ? <Loading type="circle" subTitle="로딩중..."/> :
@@ -509,8 +526,8 @@ export default function BoardListPage() {
         <section className={styles.bottom_wrapper}>
           {totalPages > 0 && (
             <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
+              currentPage={appliedFilters.page}
+              totalPages={paginatedData?.totalPages || 0}
               onPageChange={handlePageChange}
               totalItems={totalItems}
               pageNumbersToShow={isMobile ? 3 : 5}

@@ -16,7 +16,7 @@ const getSearchParam = (param: string | string[] | undefined, defaultValue: stri
 export default async function Page({ searchParams }: { searchParams: { [key:string]: string | string[] | undefined } }) {
   const queryClient = new QueryClient();
 
-  // 2. 모든 필터 관련 파라미터를 하나의 객체로 관리합니다.
+  // 2. 모든 필터 관련 파라미터를 하나의 객체로 관리
   const pageParam = parseInt(getSearchParam(searchParams.page, '1'), 10);
   const filters = {
     page: isNaN(pageParam) || pageParam < 1 ? 1 : pageParam,
@@ -28,13 +28,13 @@ export default async function Page({ searchParams }: { searchParams: { [key:stri
     sortOrder: getSearchParam(searchParams.sortOrder, 'desc'),
   };
 
-  // 3. queryKey를 더 단순하고 명확하게 만듭니다.
-  //    React Query는 객체를 자동으로 비교하여 쿼리를 구별합니다.
+  // 3. queryKey 선언
+  // - React Query는 객체를 자동으로 비교하여 쿼리를 구별
   const queryKey = ['boardList', filters];
 
   await queryClient.prefetchQuery({
     queryKey: queryKey,
-    // 4. queryFn도 filters 객체를 사용하여 간결하게 호출합니다.
+    // 4. queryFn도 filters 객체를 사용하여 간결하게 호출
     queryFn: () => getBoardList(filters.page, filters.pageSize, filters),
   });
 

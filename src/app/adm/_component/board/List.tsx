@@ -37,8 +37,6 @@ export default function BoardListPage() {
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
   const cardWrapperRef = useRef<HTMLElement>(null);
-  const { isMobile, isLaptop } = useWindowSize();
-  const {showSnackbar} = useSnackbar();
   const filters = {
     page: parseInt(searchParams.get('page') || '1', 10),
     pageSize: ITEMS_PER_PAGE,
@@ -63,6 +61,8 @@ export default function BoardListPage() {
     { value: "id", label: "게시물코드" },
     { value: "content", label: "내용" },
   ];
+  const { isMobile, isLaptop } = useWindowSize();
+  const {showSnackbar} = useSnackbar();
   const {handleChange} = onInputsChange(jsonData, setJsonData);
 
   const getPageFromUrl = useCallback(() => {
