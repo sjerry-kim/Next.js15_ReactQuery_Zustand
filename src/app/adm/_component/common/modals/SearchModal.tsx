@@ -134,6 +134,7 @@ export default function SearchModal<T extends { id: number | string }>({
             placeholder="검색어를 입력하세요"
             onChange={handleChange}
             width="100%"
+            height="100%"
           />
         </form>
 
