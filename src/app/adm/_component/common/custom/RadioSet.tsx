@@ -5,7 +5,12 @@ import styles from './Set.module.css';
 import { RadioSetProps } from '@/types/components';
 
 export default function RadioSet({
-  label, name, options, value, onChange, direction = 'row'
+  label,
+  name,
+  options,
+  value, // 단일 값으로 주고 받음
+  onChange,
+  direction = 'row'
 }: RadioSetProps) {
   return (
     <fieldset className={styles.wrapper}>

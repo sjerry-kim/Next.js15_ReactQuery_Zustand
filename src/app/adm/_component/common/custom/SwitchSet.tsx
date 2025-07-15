@@ -4,11 +4,10 @@ import Switch from '@/adm/_component/common/custom/Switch';
 import styles from './Set.module.css';
 import { SwitchSetProps, Option } from '@/types/components';
 
-// 나머지 코드는 이전 답변과 100% 동일합니다.
 export default function SwitchSet({
   label,
   options,
-  value,
+  value, // 배열 값으로 주고받음
   onChange,
   direction = 'row',
 }: SwitchSetProps) {

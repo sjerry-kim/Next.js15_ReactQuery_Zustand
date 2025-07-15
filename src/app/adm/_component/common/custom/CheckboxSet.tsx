@@ -5,7 +5,11 @@ import styles from './Set.module.css';
 import { CheckboxSetProps, Option } from '@/types/components';
 
 export default function CheckboxSet({
-  label, options, value, onChange, direction = 'row'
+  label,
+  options,
+  value, // 배열값으로 주고 받음
+  onChange,
+  direction = 'row'
 }: CheckboxSetProps) {
   const handleChange = (checkedOptionValue: string | number) => {
     // 이미 선택되었는지 확인
