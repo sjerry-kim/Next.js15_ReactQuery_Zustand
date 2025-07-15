@@ -47,8 +47,6 @@ export default function SearchModal<T extends { id: number | string }>({
     setCurrentSelectedItems(prev => {
       const isSelected = prev.some(selected => selected.id === item.id);
 
-      console.log(multiSelect)
-
       // 다중 선택 모드
       if (multiSelect) {
         if (isSelected) {

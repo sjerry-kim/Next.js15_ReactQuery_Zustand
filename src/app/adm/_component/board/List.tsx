@@ -18,26 +18,29 @@ import moment, { Moment } from 'moment';
 import CommonModal from '@/adm/_component/common/modals/CommonModal';
 import DateRangePicker from '@/adm/_component/common/custom/DateRangePicker';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 import Loading from '@/adm/_component/common/Loading';
 import Fail from '@/adm/_component/common/Fail';
 import { useSnackbar } from '@/hooks/useSnackbar';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import RadioSet from '@/adm/_component/common/custom/RadioSet';
+import { Option } from '@/types/components';
 
 interface JsonData {
   searchType: string;
   searchKeyword: string;
-  id: string;
-  content: string;
+  startDate: Moment | null;
+  endDate: Moment | null;
+  sortOrder: string;
 }
 
-export default function BoardListPage() {
+export default function List() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
   const cardWrapperRef = useRef<HTMLElement>(null);
-  const filters = {
+  // URL 파라미터를 기반으로 필터의 '적용된' 상태를 객체로 관리 (useQuery용)
+  const appliedFilters = {
     page: parseInt(searchParams.get('page') || '1', 10),
     pageSize: ITEMS_PER_PAGE,
     searchType: searchParams.get('searchType') || '',
@@ -46,20 +49,23 @@ export default function BoardListPage() {
     endDate: searchParams.get('endDate') || '',
     sortOrder: searchParams.get('sortOrder') || 'desc',
   };
+  // UI 필터 상태를 담는 jsonData 변수
   const [jsonData, setJsonData] = useState<JsonData>({
-    searchType: "",
-    searchKeyword: "",
-    id: searchParams.get("id") || "0",
-    content: searchParams.get("content") || "",
+    searchType: appliedFilters.searchType,
+    searchKeyword: appliedFilters.searchKeyword,
+    startDate: appliedFilters.startDate ? moment(appliedFilters.startDate) : null,
+    endDate: appliedFilters.endDate ? moment(appliedFilters.endDate) : null,
+    sortOrder: appliedFilters.sortOrder,
   });
-  const [draftStartDate, setDraftStartDate] = useState<Moment | null>(null);
-  const [draftEndDate, setDraftEndDate] = useState<Moment | null>(null);
-  const [draftSortOrder, setDraftSortOrder] = useState(filters.sortOrder);
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const searchOptions = [
     { value: "", label: "전체" },
     { value: "id", label: "게시물코드" },
     { value: "content", label: "내용" },
+  ];
+  const sortOptions: Option[] = [
+    { label: '최신순', value: 'desc' },
+    { label: '오래된순', value: 'asc' },
   ];
   const { isMobile, isLaptop } = useWindowSize();
   const {showSnackbar} = useSnackbar();
@@ -72,13 +78,7 @@ export default function BoardListPage() {
   }, [searchParams]);
 
   const currentPage = getPageFromUrl();
-  const searchTypeFromUrl = searchParams.get('searchType') || "";
-  const searchKeywordFromUrl = searchParams.get('searchKeyword') || "";
-  const startDateFromUrl = searchParams.get('startDate') || "";
-  const endDateFromUrl = searchParams.get('endDate') || "";
-  const sortOrderFromUrl = searchParams.get('sortOrder') || 'desc';
-  
-  const queryKey = ['boardList', filters];
+  const queryKey = ['boardList', appliedFilters];
   
   const {
     data: paginatedData,
@@ -89,7 +89,7 @@ export default function BoardListPage() {
     isPlaceholderData,
   } = useQuery<PaginatedBoardResponse, Error>({
     queryKey: queryKey,
-    queryFn: () => getBoardList(filters.page, filters.pageSize, filters),
+    queryFn: () => getBoardList(appliedFilters.page, appliedFilters.pageSize, appliedFilters),
     staleTime: 60 * 1000,
     gcTime: 5 * 60 * 1000,
     placeholderData: (previousData) => previousData,
@@ -115,96 +115,73 @@ export default function BoardListPage() {
     router.push(`${pathname}?${newSearchParams.toString()}`);
   }, [currentPage, pathname, router, searchParams]);
 
+  // 상세 이동
   const handleRowClick = (itemId: number) => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
     const destination = `/adm/board/${itemId}?${newSearchParams.toString()}`;
+
     router.push(destination);
   };
 
-  // 등록 버튼
+  // 등록 이동
   const handleAddClick = () => {
     const currentParamsString = searchParams.toString();
     const destination = `/adm/board/add?${currentParamsString}`;
     router.push(destination);
   };
 
-  // 검색 버튼
-  const handleSearch = (event: FormEvent) => {
-    event.preventDefault();
-    const newSearchParams = new URLSearchParams(searchParams.toString());
-    newSearchParams.set('page', '1');
-    newSearchParams.set('searchType', jsonData.searchType);
-    newSearchParams.set('searchKeyword', jsonData.searchKeyword);
+  // 검색 및 필터 적용
+  const handleApplyFilters = (e?: FormEvent) => {
+    e?.preventDefault();
 
-    // 키워드/타입 검색 시에도 기존 기간 필터는 URL에 유지되도록 함.
-    // (searchParams.toString()이 이미 이 작업을 처리함)
-    router.push(`${pathname}?${newSearchParams.toString()}`);
-  };
-
-  // 필터 모달 오픈
-  const handleOpenDateModal = () => {
-    // 모달을 열 때, 현재 URL에 적용된 날짜를 임시 상태의 초기값으로 설정
-    setDraftStartDate(startDateFromUrl ? moment(startDateFromUrl) : null);
-    setDraftEndDate(endDateFromUrl ? moment(endDateFromUrl) : null);
-    setDraftSortOrder(sortOrderFromUrl);
-    setIsDateModalOpen(true);
-  };
-
-  // 필터 초기화
-  const handleInitializeFilter = () => {
-    setDraftStartDate(null);
-    setDraftEndDate(null);
-    setDraftSortOrder('desc');
-  };
-
-  // 필터 적용
-  const handleApplyDateFilter = () => {
-    if ((draftStartDate && !draftEndDate) || (!draftStartDate && draftEndDate)) {
+    if ((jsonData.startDate && !jsonData.endDate) || (!jsonData.startDate && jsonData.endDate)) {
       showSnackbar('시작일과 종료일을 모두 선택해주세요.', 'warning');
       return;
     }
 
-    const newSearchParams = new URLSearchParams(searchParams.toString());
-    newSearchParams.set('page', '1'); // 필터 적용 시 1페이지로 이동
+    const newSearchParams = new URLSearchParams();
 
-    if (draftStartDate) {
-      newSearchParams.set('startDate', draftStartDate.format('YYYY-MM-DD'));
-    } else {
-      newSearchParams.delete('startDate');
+    // 현재 UI 상태인 `jsonData`를 기준으로 URL 파라미터를 생성
+    if (jsonData.searchKeyword) {
+      newSearchParams.set('searchType', jsonData.searchType);
+      newSearchParams.set('searchKeyword', jsonData.searchKeyword);
     }
-
-    if (draftEndDate) {
-      newSearchParams.set('endDate', draftEndDate.format('YYYY-MM-DD'));
-    } else {
-      newSearchParams.delete('endDate');
-    }
-
-    newSearchParams.set('sortOrder', draftSortOrder);
+    if (jsonData.startDate) newSearchParams.set('startDate', jsonData.startDate.format('YYYY-MM-DD'));
+    if (jsonData.endDate) newSearchParams.set('endDate', jsonData.endDate.format('YYYY-MM-DD'));
+    newSearchParams.set('sortOrder', jsonData.sortOrder);
+    newSearchParams.set('page', '1');
 
     router.push(`${pathname}?${newSearchParams.toString()}`);
-    setIsDateModalOpen(false); // 모달 닫기
+    setIsDateModalOpen(false); // 모달 필터의 경우 모달 닫음
   };
+
+  // 초기화 (바깥 초기화 버튼만)
+  const handleResetFilters = () => {
+    router.push(pathname);
+  };
+
+  // URL이 변경될 때마다 UI 필터 상태(`jsonData`)를 동기화
+  useEffect(() => {
+    setJsonData({
+      searchType: appliedFilters.searchType,
+      searchKeyword: appliedFilters.searchKeyword,
+      startDate: appliedFilters.startDate ? moment(appliedFilters.startDate) : null,
+      endDate: appliedFilters.endDate ? moment(appliedFilters.endDate) : null,
+      sortOrder: appliedFilters.sortOrder,
+    });
+  }, [searchParams]);
 
   // 다음 페이지 prefetch용 effect
   useEffect(() => {
-    if (paginatedData && !isPlaceholderData && filters.page < paginatedData.totalPages) {
-      const nextPageFilters = { ...filters, page: filters.page + 1 };
+    if (paginatedData && !isPlaceholderData && appliedFilters.page < paginatedData.totalPages) {
+      const nextPageFilters = { ...appliedFilters, page: appliedFilters.page + 1 };
       queryClient.prefetchQuery({
         queryKey: ['boardList', nextPageFilters],
         queryFn: () => getBoardList(nextPageFilters.page, nextPageFilters.pageSize, nextPageFilters),
         staleTime: 60 * 1000,
       });
     }
-  }, [paginatedData, isPlaceholderData, filters, queryClient]);
-
-  // useState(jsonData)를 URL과 동기화하는 effect
-  useEffect(() => {
-    setJsonData(prev => ({
-      ...prev,
-      searchType: searchTypeFromUrl,
-      searchKeyword: searchKeywordFromUrl
-    }));
-  }, [searchTypeFromUrl, searchKeywordFromUrl]);
+  }, [paginatedData, isPlaceholderData, appliedFilters, queryClient]);
 
   // card section 스크롤 최상단 복귀
   useEffect(() => {
@@ -233,7 +210,7 @@ export default function BoardListPage() {
             <div className={styles.gradient_overlay}></div>
           </div>
 
-          <form className={styles.search_container} onSubmit={handleSearch}>
+          <form className={styles.search_container} onSubmit={handleApplyFilters}>
             <Select
               name="searchType"
               value={jsonData.searchType}
@@ -247,10 +224,10 @@ export default function BoardListPage() {
               placeholder="검색어를 입력하세요"
               onChange={handleChange}
             />
-            <div title={"초기화"} className={styles.search_reset_box}>
+            <div title={"초기화"} className={styles.search_reset_box} onClick={() => handleResetFilters()}>
               <MdOutlineReplay />
             </div>
-            <div title={"필터 추가"} className={styles.search_reset_box} onClick={handleOpenDateModal}>
+            <div title={"필터 추가"} className={styles.search_reset_box} onClick={() => setIsDateModalOpen(true)}>
               <FilterAltIcon />
             </div>
           </form>
@@ -332,7 +309,7 @@ export default function BoardListPage() {
         <section className={styles.bottom_wrapper}>
           {totalPages > 0 && (
             <Pagination
-              currentPage={filters.page}
+              currentPage={appliedFilters.page}
               totalPages={paginatedData?.totalPages || 0}
               onPageChange={handlePageChange}
               totalItems={totalItems}
@@ -358,13 +335,20 @@ export default function BoardListPage() {
               text: '초기화',
               variant: 'outlined',
               color: 'grey',
-              onClick: handleInitializeFilter,
+              onClick: () => {
+                setJsonData(prev => ({
+                  ...prev,
+                  startDate: null,
+                  endDate: null,
+                  sortOrder: 'desc',
+                }));
+              },
             },
             {
               text: '적용',
               variant: 'contained',
               color: 'primary',
-              onClick: handleApplyDateFilter,
+              onClick: handleApplyFilters,
             }
           ]}
           width="400px"
@@ -374,37 +358,23 @@ export default function BoardListPage() {
           <ul className={styles.content_container}>
             <li className={styles.modal_row}>
               <label className={styles.modal_label}>옵션</label>
-              <FormGroup row>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={draftSortOrder === 'desc'}
-                      onChange={() => setDraftSortOrder('desc')}
-                      value="desc"
-                    />
-                  }
-                  label="최신순"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={draftSortOrder === 'asc'}
-                      onChange={() => setDraftSortOrder('asc')}
-                      value="asc"
-                    />
-                  }
-                  label="오래된 순"
-                />
-              </FormGroup>
+              <RadioSet
+                label="정렬"
+                name="sortOrder"
+                options={sortOptions}
+                value={jsonData.sortOrder}
+                onChange={(value) => setJsonData(prevState => ({
+                  ...prevState, sortOrder: String(value) }))}
+              />
             </li>
             <li className={styles.modal_row}>
               <label className={styles.modal_label}>작성일</label>
               <DateRangePicker
                 width='100%'
-                startDate={draftStartDate}
-                endDate={draftEndDate}
-                onStartDateChange={setDraftStartDate}
-                onEndDateChange={setDraftEndDate}
+                startDate={jsonData.startDate}
+                endDate={jsonData.endDate}
+                onStartDateChange={(date) => setJsonData(prev => ({ ...prev, startDate: date }))}
+                onEndDateChange={(date) => setJsonData(prev => ({ ...prev, endDate: date }))}
               />
             </li>
           </ul>

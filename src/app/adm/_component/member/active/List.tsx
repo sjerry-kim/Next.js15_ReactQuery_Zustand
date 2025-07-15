@@ -2,7 +2,7 @@
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { getBoardList } from '@/services/boardService';
 import type { Board, PaginatedBoardResponse } from '@/types/board';
 import Pagination from '@/adm/_component/common/Pagination';
@@ -21,39 +21,19 @@ import SwitchSet from '@/adm/_component/common/custom/SwitchSet';
 import { Option } from '@/types/components';
 import SearchModal from '@/adm/_component/common/modals/SearchModal';
 import moment from 'moment';
-import { useConfirm } from '@/hooks/useConfirm';
-import { useSnackbar } from '@/hooks/useSnackbar';
 import Loading from '@/adm/_component/common/Loading';
 import Fail from '@/adm/_component/common/Fail';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { useSnackbar } from '@/hooks/useSnackbar';
 
-/* ------ 임시 타입, 함수 등 start ------ */
-interface User {
+/* ------ 🔽 검색&선택 결과 테스트용 임시 타입 ------ */
+export interface Result {
   id: number;
   name: string;
   email: string;
   createdAt: string;
 }
-
-async function searchUsers(filter: { type: string; keyword: string }): Promise<User[]> {
-  // console.log('Searching users with filter:', filter);
-  // 여기에 실제 fetch 로직을 구현합니다.
-  // const res = await fetch(`/api/users?type=${filter.type}&keyword=${filter.keyword}`);
-  // return res.json();
-
-  // 임시 목업 데이터 반환
-  return [
-    { id: 1, name: '홍길동', email: 'hong@example.com', createdAt: moment().format("YYYY.MM.DD")},
-    { id: 2, name: '김철수', email: 'kim@example.com', createdAt: moment().format("YYYY.MM.DD")},
-    { id: 3, name: '홍길동', email: 'hong@example.com', createdAt: moment().format("YYYY.MM.DD")},
-    { id: 4, name: '김철수', email: 'kim@example.com', createdAt: moment().format("YYYY.MM.DD")},
-    { id: 5, name: '홍길동', email: 'hong@example.com', createdAt: moment().format("YYYY.MM.DD")},
-    { id: 6, name: '김철수', email: 'kim@example.com', createdAt: moment().format("YYYY.MM.DD")},
-    { id: 7, name: '홍길동', email: 'hong@example.com', createdAt: moment().format("YYYY.MM.DD")},
-    { id: 8, name: '김철수', email: 'kim@example.com', createdAt: moment().format("YYYY.MM.DD")},
-  ];
-}
-/* ------ 임시 타입, 함수 등 end ------ */
+/* ------ 임시 타입 end ------ */
 
 interface JsonData {
   searchType: string;
@@ -61,72 +41,12 @@ interface JsonData {
   startDate: Moment | null;
   endDate: Moment | null;
   sortOrder: string;
+  // 🔽 CheckboxSet, SwitchSet 테스트용 type들
+  fruit: (string | number)[];
+  alrm: (string | number)[];
 }
 
-export default function BoardListPage() {
-  /* ----- Test Start ----- */
-  // checkbox, radio, switch 등
-  const fruitOptions : Option[] = [
-    { label: '사과', value: 'apple' },
-    { label: '바나나', value: 'banana' },
-    { label: '오렌지', value: 'orange' },
-  ];
-  const sortOptions: Option[] = [
-    { label: '최신순', value: 'desc' },
-    { label: '오래된순', value: 'asc' },
-  ];
-  const settingOptions: Option[] = [
-    { label: '이메일 알림', value: 'email' },
-    { label: 'SMS 알림', value: 'sms' },
-  ]
-  const [selectedFruits, setSelectedFruits] = useState<(string | number)[]>(['apple']);
-  // const [sortOrder, setSortOrder] = useState<Option | null>(sortOptions[0]);
-  const [settings, setSettings] = useState<(string | number)[]>(['email']);
-
-  // useEffect(() => {
-  //   console.log(selectedFruits);
-  // }, [selectedFruits]);
-  //
-  // useEffect(() => {
-  //   console.log(settings);
-  // }, [settings]);
-
-  // search modal
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
-
-  const handleApplyUsers = (users: User[]) => {
-    // console.log('적용된 유저들:', users);
-    setSelectedUsers(users);
-  };
-
-  // ConfirmModal
-  const openConfirm = useConfirm();
-  const handleTempAlert = async () => {
-    const userConfirmed = await openConfirm({
-      title: "정말 탈퇴하시겠습니까?",
-      message: "모든 데이터가 영구적으로 삭제됩니다.",
-    });
-
-    if (userConfirmed) {
-      console.log("탈퇴 처리 API가 호출되었습니다.");
-    } else {
-      console.log("탈퇴 작업을 취소했습니다.");
-    }
-  }
-
-  // Snackbar
-  const { showSnackbar } = useSnackbar();
-  const handleTempSnackbar = () => {
-    showSnackbar('성공적으로 저장되었습니다.', 'success')
-    showSnackbar('경고 저장되었습니다.', 'warning')
-    showSnackbar('에러 저장되었습니다.', 'error')
-    showSnackbar('알림 저장되었습니다.', 'info')
-  }
-  /* ----- Test End ----- */
-
-
-
+export default function List() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -141,20 +61,48 @@ export default function BoardListPage() {
     startDate: searchParams.get('startDate') || '',
     endDate: searchParams.get('endDate') || '',
     sortOrder: searchParams.get('sortOrder') || 'desc',
+    // 🔽 CheckboxSet, SwitchSet 테스트용 key, value들
+    fruit: searchParams.get('fruit')?.split(',') || [],
+    alrm: searchParams.get('alrm')?.split(',') || [],
   };
+  // UI 필터 상태를 담는 jsonData 변수
   const [jsonData, setJsonData] = useState<JsonData>({
     searchType: searchParams.get('searchType') || '',
     searchKeyword: searchParams.get('searchKeyword') || '',
     startDate: searchParams.get('startDate') ? moment(searchParams.get('startDate')) : null,
     endDate: searchParams.get('endDate') ? moment(searchParams.get('endDate')) : null,
     sortOrder: searchParams.get('sortOrder') || 'desc',
+    // 🔽 CheckboxSet, SwitchSet 테스트용 key, value들
+    fruit: searchParams.get('fruit')?.split(',') || [],
+    alrm: searchParams.get('alrm')?.split(',') || [],
+    // results: searchParams.get('results')?.split('') || []
   });
+  // 🔽 검색&선택 결과 테스트용 변수
+  // - jsonData에 담지 않은 이유 : 상태 관리 & 관심사 분리
+  // - 모달을 통해서 상태가 변하기 때문에 useEffect로 상태 동기화 등이 필요 없음
+  const [selectedResult, setSelectedResult] = useState<Result[]>([]);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const searchOptions = [
     { value: "", label: "전체" },
     { value: "id", label: "게시물코드" },
     { value: "content", label: "내용" },
   ];
+  const sortOptions: Option[] = [
+    { label: '최신순', value: 'desc' },
+    { label: '오래된순', value: 'asc' },
+  ];
+  // 🔽 CheckboxSet, SwitchSet 테스트용 Options 변수들
+  const fruitOptions : Option[] = [
+    { label: '사과', value: 'apple' },
+    { label: '바나나', value: 'banana' },
+    { label: '오렌지', value: 'orange' },
+  ];
+  const alrmOptions: Option[] = [
+    { label: '이메일 알림', value: 'email' },
+    { label: 'SMS 알림', value: 'sms' },
+  ]
   const { isMobile } = useWindowSize();
+  const {showSnackbar} = useSnackbar();
   const {handleChange} = onInputsChange(jsonData, setJsonData);
 
   const getPageFromUrl = useCallback(() => {
@@ -201,13 +149,14 @@ export default function BoardListPage() {
     router.push(`${pathname}?${newSearchParams.toString()}`);
   }, [currentPage, pathname, router, searchParams]);
 
+  // 상세 이동
   const handleRowClick = (itemId: number) => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
     const destination = `/adm/member/active/${itemId}?${newSearchParams.toString()}`;
     router.push(destination);
   };
 
-  // 등록 버튼
+  // 등록 이동
   const handleAddClick = () => {
     const newSearchParams = new URLSearchParams(searchParams);
     const destination = `/adm/member/active/add?${newSearchParams.toString()}`;
@@ -215,8 +164,35 @@ export default function BoardListPage() {
     router.push(destination);
   };
 
-  // 검색 버튼
-  const handleSearch = () => {
+  // 검색 모달용 ((임시)) api fetch용 핸들러 함수
+  const handleGetResults = (filter: { type: string; keyword: string }): Promise<Result[]> => {
+    // 여기에 실제 fetch 로직을 구현
+    // const res = await fetch(`/api/users?type=${filter.type}&keyword=${filter.keyword}`);
+    // return res.json();
+
+    // 임시 목업 데이터 반환
+    // @ts-ignore
+    return [
+      { id: 1, name: '홍길동', email: 'hong@example.com', createdAt: moment().format("YYYY.MM.DD")},
+      { id: 2, name: '김철수', email: 'kim@example.com', createdAt: moment().format("YYYY.MM.DD")},
+      { id: 3, name: '오나라', email: 'hong@example.com', createdAt: moment().format("YYYY.MM.DD")},
+      { id: 4, name: '도미노', email: 'kim@example.com', createdAt: moment().format("YYYY.MM.DD")},
+      { id: 5, name: '이재모', email: 'hong@example.com', createdAt: moment().format("YYYY.MM.DD")},
+      { id: 6, name: '심청이', email: 'kim@example.com', createdAt: moment().format("YYYY.MM.DD")},
+      { id: 7, name: '천우희', email: 'hong@example.com', createdAt: moment().format("YYYY.MM.DD")},
+      { id: 8, name: '김제니', email: 'kim@example.com', createdAt: moment().format("YYYY.MM.DD")},
+    ];
+  }
+
+  // 검색 결과 선택 사항 적용
+  const handleApplySelected = (users: Result[]) => {
+    setSelectedResult(users)
+  };
+
+  // 검색 및 필터 적용
+  const handleApplyFilters = (e?: FormEvent) => {
+    e?.preventDefault();
+
     if ((jsonData.startDate && !jsonData.endDate) || (!jsonData.startDate && jsonData.endDate)) {
       showSnackbar('시작일과 종료일을 모두 선택해주세요.', 'warning');
       return;
@@ -224,7 +200,7 @@ export default function BoardListPage() {
 
     const newSearchParams = new URLSearchParams();
 
-    // jsonData: 항상 UI의 최신 상태를 반영
+    // 현재 UI 상태인 `jsonData`를 기준으로 URL 파라미터를 생성
     if (jsonData.searchKeyword) {
       newSearchParams.set('searchType', jsonData.searchType);
       newSearchParams.set('searchKeyword', jsonData.searchKeyword);
@@ -234,21 +210,51 @@ export default function BoardListPage() {
     newSearchParams.set('sortOrder', jsonData.sortOrder);
     newSearchParams.set('page', '1');
 
+    // 🔽 CheckboxSet, SwitchSet 테스트용
+    if (jsonData.fruit.length > 0) {
+      newSearchParams.set('fruit', jsonData.fruit.join(','));
+    }
+    if (jsonData.alrm.length > 0) {
+      newSearchParams.set('alrm', jsonData.alrm.join(','));
+    }
+
+    // 🔽 검색&선택 결과 테스트용 : id만 넣어서 줌
+    const selectedResultsIds = selectedResult.map(user => user.id);
+
+    if (selectedResultsIds.length > 0) {
+      newSearchParams.set('results', selectedResultsIds.join(','));
+    }
+
     router.push(`${pathname}?${newSearchParams.toString()}`);
   };
 
   // 초기화
   const handleResetFilters = () => {
-    // UI 상태 초기화
     setJsonData({
       searchType: '',
       searchKeyword: '',
       startDate: null,
       endDate: null,
       sortOrder: 'desc',
+      fruit: [],
+      alrm: [],
     });
     router.push(pathname);
   };
+
+  // URL이 변경될 때마다 UI 필터 상태(`jsonData`)를 동기화
+  useEffect(() => {
+    setJsonData((prevState) => ({
+      ...prevState,
+      searchType: appliedFilters.searchType,
+      searchKeyword: appliedFilters.searchKeyword,
+      startDate: appliedFilters.startDate ? moment(appliedFilters.startDate) : null,
+      endDate: appliedFilters.endDate ? moment(appliedFilters.endDate) : null,
+      sortOrder: appliedFilters.sortOrder,
+      fruit: appliedFilters.fruit,
+      alrm: appliedFilters.alrm,
+    }));
+  }, [searchParams]);
 
   // 다음 페이지 prefetch용 effect
   useEffect(() => {
@@ -261,23 +267,6 @@ export default function BoardListPage() {
       });
     }
   }, [paginatedData, isPlaceholderData, jsonData, queryClient]);
-
-  useEffect(() => {
-      // 검색어 UI 동기화
-      setJsonData(prev => ({
-        ...prev,
-        searchType: appliedFilters.searchType,
-        searchKeyword: appliedFilters.searchKeyword,
-      }));
-
-    setJsonData({
-      searchType: appliedFilters.searchType,
-      searchKeyword: appliedFilters.searchKeyword,
-      startDate: appliedFilters.startDate ? moment(appliedFilters.startDate) : null,
-      endDate: appliedFilters.endDate ? moment(appliedFilters.endDate) : null,
-      sortOrder: appliedFilters.sortOrder,
-    });
-  }, [searchParams]);
 
   // card section 스크롤 최상단 복귀
   useEffect(() => {
@@ -304,8 +293,9 @@ export default function BoardListPage() {
                   <CheckboxSet
                     label="좋아하는 과일"
                     options={fruitOptions}
-                    value={selectedFruits}
-                    onChange={setSelectedFruits}
+                    value={jsonData.fruit}
+                    onChange={(value) => setJsonData(prevState => ({
+                      ...prevState, fruit: value }))}
                   />
                 </div>
               </div>
@@ -333,9 +323,10 @@ export default function BoardListPage() {
                 <div>
                   <SwitchSet
                     label="알림 설정"
-                    options={settingOptions}
-                    value={settings}
-                    onChange={setSettings}
+                    options={alrmOptions}
+                    value={jsonData.alrm}
+                    onChange={(value) => setJsonData(prevState => ({
+                      ...prevState, alrm: value }))}
                     direction="column"
                   />
                 </div>
@@ -388,10 +379,10 @@ export default function BoardListPage() {
               <div className={styles.filter_set}>
                 <label className={isMobile ? "" : styles.middle_label}>정렬1</label>
                 <div>
-                  <button onClick={() => setIsModalOpen(true)}>회원 검색</button>
-                  {selectedUsers.length > 0 && (
+                  <button onClick={() => setIsSearchModalOpen(true)}>회원 검색</button>
+                  {selectedResult.length > 0 && (
                     <div>
-                      <p>선택된 회원: {selectedUsers.map(u => u.name).join(', ')}</p>
+                      <p>선택된 회원: {selectedResult.map(user => user.name).join(', ')}</p>
                     </div>
                   )}
                 </div>
@@ -430,8 +421,8 @@ export default function BoardListPage() {
           <div className={styles.filter_bottom_container}>
             <div className={styles.status_box}>
               <ul className={styles.status_set}>
-                <li onClick={handleTempAlert}>전체</li>
-                <li onClick={handleTempSnackbar}>대기</li>
+                <li>전체</li>
+                <li>대기</li>
                 <li>예약</li>
                 <li>구매</li>
                 <li>취소</li>
@@ -443,7 +434,7 @@ export default function BoardListPage() {
                 text="검색"
                 variant="contained"
                 color="primary"
-                onClick={handleSearch}
+                onClick={handleApplyFilters}
               />
               <ResetButton onClick={handleResetFilters} />
             </div>
@@ -544,13 +535,13 @@ export default function BoardListPage() {
         </section>
       </main>
 
-      {isModalOpen && (
+      {isSearchModalOpen && (
         <SearchModal
           modalTitle="회원 검색"
           width="600px"
           height="550px"
-          // multiSelect={true}
-          selectedItems={selectedUsers}
+          multiSelect={true}
+          selectedItems={selectedResult}
           searchOptions={[
             { value: 'name', label: '이름' },
             { value: 'email', label: '이메일' },
@@ -561,9 +552,9 @@ export default function BoardListPage() {
             { key: 'email', header: '이메일' },
             { key: 'createdAt', header: '가입일'},
           ]}
-          onClose={() => setIsModalOpen(false)}
-          onApply={handleApplyUsers}
-          queryFn={searchUsers} // dataFetch 함수
+          onClose={() => setIsSearchModalOpen(false)}
+          onApply={handleApplySelected}
+          queryFn={handleGetResults} // dataFetch 함수
         />
       )}
     </>
