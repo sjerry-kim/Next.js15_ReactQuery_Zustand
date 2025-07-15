@@ -27,6 +27,9 @@ export default async function Page({ searchParams }: { searchParams: { [key:stri
     startDate: getSearchParam(sp.startDate),
     endDate: getSearchParam(sp.endDate),
     sortOrder: getSearchParam(sp.sortOrder, 'desc'),
+    // 🔽 CheckboxSet, SwitchSet 테스트용
+    fruit: getSearchParam(sp.fruit),
+    alrm: getSearchParam(sp.alrm),
   };
 
   // 3. queryKey 선언
