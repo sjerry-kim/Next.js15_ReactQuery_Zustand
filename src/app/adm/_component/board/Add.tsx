@@ -7,7 +7,6 @@ import onInputsChange from '@/utils/onInputsChange';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createBoard } from '@/services/boardService';
 import MenuModal from '@/adm/_component/common/modals/MenuModal';
-import { ButtonProps } from '@/types/components';
 import LabelTextarea from '@/adm/_component/common/inputs/LabelTextarea';
 import { useSnackbar } from '@/hooks/useSnackbar';
 import { Board, BoardCreatePayload } from '@/types/board';
@@ -26,26 +25,19 @@ export default function Page({}) {
     data2: "",
     data3: "",
   });
-  const {handleChange} = onInputsChange(jsonData, setJsonData);
+  const [currentTab, setCurrentTab] = useState<string>("info");
   const tabs: Tab[] = [
     { key: 'info', label: '정보 입력' },
     { key: 'option', label: '옵션 설정' },
     { key: 'confirm', label: '최종 확인' },
   ]
-  const [currentTab, setCurrentTab] = useState<string>("info");
   const {showSnackbar} = useSnackbar();
+  const {handleChange} = onInputsChange(jsonData, setJsonData);
 
+  // 등록
   const handleSubmit = () => createMutation.mutate(jsonData);
 
-  const myModalButtons: ButtonProps[] = [
-    {
-      text: '등록',
-      variant: 'contained',
-      color: 'primary',
-      onClick: handleSubmit,
-    }
-  ];
-
+  // 등록 mutation
   const createMutation = useMutation<ApiResponse<Board>, Error, BoardCreatePayload >({
     mutationFn: (data) => createBoard(data),
     onSuccess: (res) => {
@@ -62,7 +54,14 @@ export default function Page({}) {
       modalTitle="설정"
       onClose={() => router.back()}
       tabs={tabs}
-      buttons={myModalButtons}
+      buttons={[
+        {
+          text: '등록',
+          variant: 'contained',
+          color: 'primary',
+          onClick: handleSubmit,
+        }
+      ]}
       maxWidth="90%"
       onTabChange={(key) => setCurrentTab(key)}
     >

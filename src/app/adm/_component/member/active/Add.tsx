@@ -4,94 +4,32 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './Add.module.css';
 import onInputsChange from '@/utils/onInputsChange';
-import dynamic from 'next/dynamic';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { board } from '@prisma/client';
-import { getBoardList } from '@/services/boardService';
-import { Board } from '@/types/board';
-
-import CloseIcon from '@mui/icons-material/Close';
+import { Board, BoardCreatePayload } from '@/types/board';
 import CommonModal from '@/adm/_component/common/modals/CommonModal';
-import MenuModal from '@/adm/_component/common/modals/MenuModal';
-import { ButtonProps } from '@/types/components';
-import LabelTextarea from '@/adm/_component/common/inputs/LabelTextarea';
 import { useSnackbar } from '@/hooks/useSnackbar';
-import Loading from '@/adm/_component/common/Loading';
-
-const Editor = dynamic(() => import('@/adm/_component/common/inputs/Editor'), {
-  ssr: false,
-  loading: () =>
-    <div style={{height: "500px"}}>
-      <Loading subTitle={"로딩이 지속되면 새로고침 해주세요."} />
-    </div>
-});
-
-interface Tab {
-  key: string;
-  label: string;
-}
+import LabelTextarea from '@/adm/_component/common/inputs/LabelTextarea';
+import LabelInput from '@/adm/_component/common/inputs/LabelInput';
+import { createBoard } from '@/services/boardService';
 
 export default function Page({}) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [jsonData, setJsonData] = useState({
+    title: '',
     content: '',
-    data1: "",
-    data2: "",
-    data3: "",
   });
-  const {handleChange, handleCustomChange} = onInputsChange(jsonData, setJsonData);
-  const tabs: Tab[] = [
-    { key: 'info', label: '정보 입력' },
-    { key: 'option', label: '옵션 설정' },
-    { key: 'confirm', label: '최종 확인' },
-    { key: '4', label: '4444444' },
-    { key: '5', label: '55555555' },
-    { key: '6', label: '6666666666' },
-  ]
-  const [currentTab, setCurrentTab] = useState<string>("info");
+  const {handleChange} = onInputsChange(jsonData, setJsonData);
   const {showSnackbar} = useSnackbar();
 
-  const handleCancel = () => console.log('취소');
-  const handleSubmit = () => console.log('저장');
+  // 등록
+  const handleSubmit = () => createMutation.mutate(jsonData);
 
-  const myModalButtons: ButtonProps[] = [
-    // {
-    //   text: '취소',
-    //   variant: 'outlined',
-    //   color: 'grey',
-    //   onClick: handleCancel,
-    // },
-    {
-      text: '등록하기',
-      variant: 'contained',
-      color: 'primary',
-      onClick: handleSubmit,
-    }
-  ];
-
-  const createMutation = useMutation<ApiResponse<Board>, Error>({
-    mutationFn: async () => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/protected/board`, {
-        method: 'POST',
-        cache: 'no-store',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(jsonData),
-      });
-
-      if (!response.ok) {
-        throw new Error("통신 오류가 발생하였습니다.");
-      }
-
-      return await response.json();
-    },
+  // 등록 mutation
+  const createMutation = useMutation<ApiResponse<Board>, Error, BoardCreatePayload >({
+    mutationFn: (data) => createBoard(data),
     onSuccess: (res) => {
-      queryClient.setQueryData(['boardList'], (prevData?: Board[]) => {
-        return prevData ? [...prevData, {...res.data, rn: prevData.length+1}] : [res.data];
-      });
-
+      queryClient.invalidateQueries({ queryKey: ['boardList'] });
       router.back();
     },
     onError() {
@@ -102,67 +40,42 @@ export default function Page({}) {
   return (
     <CommonModal
       modalTitle="글쓰기"
-      buttons={myModalButtons}
+      buttons={[
+        {
+          text: '등록',
+          variant: 'contained',
+          color: 'primary',
+          onClick: handleSubmit,
+        }
+      ]}
+      width="900px"
+      height="500px"
       onClose={() => router.back()}
     >
-      <ul className={styles.content_box}>
+      <ul className={styles.content_container}>
         <li>
-          <label>제목</label>
-          <input/>
+          <LabelInput
+            label="제목"
+            name="title"
+            value={jsonData.title}
+            maxLength={30}
+            placeholder="제목을 입력하세요"
+            showCharCount
+            onChange={handleChange}
+          />
         </li>
         <li>
-          <label>내용</label>
-          <Editor
+          <LabelTextarea
+            label="내용"
             name="content"
             value={jsonData.content}
-            onChange={handleCustomChange}
+            maxLength={3000}
+            placeholder="내용을 입력하세요"
+            showCharCount
+            onChange={handleChange}
           />
         </li>
       </ul>
     </CommonModal>
-
-    // <MenuModal
-    //   modalTitle="설정"
-    //   onClose={() => router.back()}
-    //   tabs={tabs}
-    //   buttons={myModalButtons}
-    //   maxWidth="90%"
-    //   onTabChange={(key) => setCurrentTab(key)}
-    // >
-    //   {currentTab === 'info' && (
-    //     <>
-    //       <LabelTextarea
-    //         label="정보1"
-    //         name="data1"
-    //         value={jsonData.data1}
-    //         maxLength={3000}
-    //         placeholder="정보1을 입력하세요"
-    //         showCharCount
-    //         onChange={handleChange}
-    //       />
-    //       <LabelTextarea
-    //         label="정보2"
-    //         name="data3"
-    //         value={jsonData.data2}
-    //         maxLength={3000}
-    //         placeholder="정보2을 입력하세요"
-    //         showCharCount
-    //         onChange={handleChange}
-    //       />
-    //       <LabelTextarea
-    //         label="정보3"
-    //         name="data3"
-    //         value={jsonData.data3}
-    //         maxLength={3000}
-    //         placeholder="정보3을 입력하세요"
-    //         showCharCount
-    //         onChange={handleChange}
-    //       />
-    //     </>
-    //   )}
-    //   {currentTab === 'option' && <>option</>}
-    //   {currentTab === 'confirm' && <>confirm</>}
-    // </MenuModal>
-
   );
 }

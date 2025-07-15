@@ -9,7 +9,6 @@ import { useQuery } from '@tanstack/react-query';
 import onInputsChange from '@/utils/onInputsChange';
 import CommonModal from '@/adm/_component/common/modals/CommonModal';
 import Button from '@/adm/_component/common/buttons/Button'
-import {ButtonProps} from '@/types/components'
 import LabelInput from '@/adm/_component/common/inputs/LabelInput';
 import LabelInputSet from '@/adm/_component/common/inputs/LabelInputSet';
 import LabelTextarea from '@/adm/_component/common/inputs/LabelTextarea';
@@ -37,6 +36,13 @@ interface JsonData {
 
 export default function Page({ id }: PageProps) {
   const router = useRouter();
+  const { data } = useQuery<board>({
+    queryKey: ['board', id], // 서버에서 사용한 queryKey와 동일하게 설정
+    queryFn: () => getBoard(id), // 동일한 queryFn 사용
+    staleTime: 60 * 1000, // 1분동안 캐시 신선함 1분뒤 재요청
+    gcTime: 300 * 1000, // 5분뒤 메모리 정리
+    enabled: !!id,
+  });
   const [jsonData, setJsonData] = useState<JsonData>({
     id: 0,
     content: '',
@@ -52,36 +58,10 @@ export default function Page({ id }: PageProps) {
     data2: "",
     data3: "",
   });
-  const modalButtons: ButtonProps[] = [
-    {
-      text: '정지',
-      onClick: () => {
-        console.log('정지 버튼 클릭')
-      },
-      variant: 'outlined',
-      color: 'grey',
-    },
-    {
-      text: '탈퇴',
-      onClick: () => {
-        handleDeleteUser();
-      },
-      variant: 'contained',
-      color: 'error',
-      size: "md",
-    },
-  ];
   const openConfirm = useConfirm();
   const {handleChange} = onInputsChange(jsonData, setJsonData);
 
-  const { data } = useQuery<board>({
-    queryKey: ['board', id], // 서버에서 사용한 queryKey와 동일하게 설정
-    queryFn: () => getBoard(id), // 동일한 queryFn 사용
-    staleTime: 60 * 1000, // 1분동안 캐시 신선함 1분뒤 재요청
-    gcTime: 300 * 1000, // 5분뒤 메모리 정리
-    enabled: !!id,
-  });
-
+  // 탈퇴
   const handleDeleteUser= async () => {
     const userConfirmed = await openConfirm({
       title: "정말 탈퇴하시겠습니까?",
@@ -95,6 +75,7 @@ export default function Page({ id }: PageProps) {
     }
   }
 
+  // 동기화 effect
   useEffect(() => {
     if (data) {
       setJsonData((prevState)=>({
@@ -111,7 +92,23 @@ export default function Page({ id }: PageProps) {
     <CommonModal
       modalTitle="회원 정보"
       width="1000px"
-      buttons={modalButtons}
+      buttons={[
+        {
+          text: '정지',
+          onClick: () => {
+            console.log('정지 버튼 클릭')
+          },
+          variant: 'outlined',
+          color: 'grey',
+        },
+        {
+          text: '탈퇴',
+          onClick: handleDeleteUser,
+          variant: 'contained',
+          color: 'error',
+          size: "md",
+        },
+      ]}
       onClose={() => router.back()}
     >
         <ul className={styles.content_container}>

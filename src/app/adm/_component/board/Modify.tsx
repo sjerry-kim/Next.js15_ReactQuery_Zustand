@@ -11,9 +11,7 @@ import { Board, BoardUpdatePayload } from '@/types/board';
 import { useSnackbar } from '@/hooks/useSnackbar';
 import LabelTextarea from '@/adm/_component/common/inputs/LabelTextarea';
 import MenuModal from '@/adm/_component/common/modals/MenuModal';
-import { ButtonProps } from '@/types/components';
 import { useConfirm } from '@/hooks/useConfirm';
-import { ITEMS_PER_PAGE } from '@/_constant/pagination';
 
 type PageProps = {
   id: string;
@@ -30,18 +28,10 @@ export default function Page({ id }: PageProps) {
   const { data } = useQuery<board>({
     queryKey: ['board', id], // 서버에서 사용한 queryKey와 동일하게 설정
     queryFn: () => getBoard(id), // 동일한 queryFn 사용
-    // staleTime: 60 * 1000, // 1분동안 캐시 신선함 1분뒤 재요청
-    staleTime: 0, // 1분동안 캐시 신선함 1분뒤 재요청
+    staleTime: 60 * 1000, // 1분동안 캐시 신선함 1분뒤 재요청
     gcTime: 300 * 1000, // 5분뒤 메모리 정리
     enabled: !!id,
   });
-  const searchParams = useSearchParams();
-  const searchPageFromUrl = searchParams.get('page') || 1;
-  const searchTypeFromUrl = searchParams.get('searchType') || "";
-  const searchKeywordFromUrl = searchParams.get('searchKeyword') || "";
-  const startDateFromUrl = searchParams.get('startDate') || "";
-  const endDateFromUrl = searchParams.get('endDate') || "";
-  const sortOrderFromUrl = searchParams.get('sortOrder') || 'desc';
   const [currentTab, setCurrentTab] = useState<string>("info");
   const [jsonData, setJsonData] = useState({
     id: data?.id || 0,
@@ -59,10 +49,12 @@ export default function Page({ id }: PageProps) {
   const {showSnackbar} = useSnackbar();
   const openConfirm = useConfirm();
 
+  // 수정
   const handleSubmit = () => {
     updateMutation.mutate({ id: Number(id), data: jsonData });
   };
 
+  // 삭제
   const handleDelete = async () => {
     const userConfirmed = await openConfirm({
       title: "정말 삭제하시겠습니까?",
@@ -76,23 +68,7 @@ export default function Page({ id }: PageProps) {
     }
   };
 
-  const myModalButtons: ButtonProps[] = [
-    {
-      text: '삭제',
-      variant: 'contained',
-      color: 'error',
-      onClick: handleDelete,
-    },
-    {
-      text: '저장',
-      variant: 'contained',
-      color: 'primary',
-      onClick: handleSubmit,
-    }
-  ];
-
-  const queryKey = ['boardList', searchPageFromUrl, ITEMS_PER_PAGE, searchTypeFromUrl, searchKeywordFromUrl, startDateFromUrl, endDateFromUrl, sortOrderFromUrl];
-
+  // 수정 mutation
   const updateMutation = useMutation<ApiResponse<Board>, Error, { id: number; data: BoardUpdatePayload }>({
     mutationFn: (variables: { id: number; data: BoardUpdatePayload }) =>
       updateBoard(variables.id, variables.data),
@@ -110,10 +86,11 @@ export default function Page({ id }: PageProps) {
     },
   });
 
+  // 삭제 mutation
   const deleteMutation = useMutation<ApiResponse<Board>, Error, number>({
     mutationFn: (id: number) => deleteBoard(id),
     async onSuccess() {
-      queryClient.invalidateQueries({ queryKey: queryKey });
+      queryClient.invalidateQueries({ queryKey: ['boardList'] });
       router.back();
     },
     onError(error) {
@@ -136,7 +113,20 @@ export default function Page({ id }: PageProps) {
       modalTitle="설정"
       onClose={() => router.back()}
       tabs={tabs}
-      buttons={myModalButtons}
+      buttons={[
+        {
+          text: '삭제',
+          variant: 'contained',
+          color: 'error',
+          onClick: handleDelete,
+        },
+        {
+          text: '저장',
+          variant: 'contained',
+          color: 'primary',
+          onClick: handleSubmit,
+        }
+      ]}
       maxWidth="90%"
       onTabChange={(key) => setCurrentTab(key)}
     >

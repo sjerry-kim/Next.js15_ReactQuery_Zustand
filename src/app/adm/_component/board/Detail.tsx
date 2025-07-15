@@ -5,12 +5,10 @@ import { useRouter } from 'next/navigation';
 import { board } from '@prisma/client';
 import styles from './Detail.module.css';
 import { getBoard } from '@/services/boardService';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import onInputsChange from '@/utils/onInputsChange';
-import { useSnackbar } from '@/hooks/useSnackbar';
 import LabelTextarea from '@/adm/_component/common/inputs/LabelTextarea';
 import MenuModal from '@/adm/_component/common/modals/MenuModal';
-import { ButtonProps } from '@/types/components';
 
 type PageProps = {
   id: string;
@@ -23,7 +21,6 @@ interface Tab {
 
 export default function Page({ id }: PageProps) {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const { data } = useQuery<board>({
     queryKey: ['board', id], // 서버에서 사용한 queryKey와 동일하게 설정
     queryFn: () => getBoard(id), // 동일한 queryFn 사용
@@ -31,7 +28,6 @@ export default function Page({ id }: PageProps) {
     gcTime: 300 * 1000, // 5분뒤 메모리 정리
     enabled: !!id,
   });
-  const [currentTab, setCurrentTab] = useState<string>("info");
   const [jsonData, setJsonData] = useState({
     id: data?.id || 0,
     content: '',
@@ -39,24 +35,15 @@ export default function Page({ id }: PageProps) {
     data2: "",
     data3: "",
   });
+  const [currentTab, setCurrentTab] = useState<string>("info");
   const tabs: Tab[] = [
     { key: 'info', label: '정보 입력' },
     { key: 'option', label: '옵션 설정' },
     { key: 'confirm', label: '최종 확인' },
   ]
   const {handleChange} = onInputsChange(jsonData, setJsonData);
-  const {showSnackbar} = useSnackbar();
 
   const handleSubmit = () => router.replace(`/adm/board/${id}/modify`);
-
-  const myModalButtons: ButtonProps[] = [
-    {
-      text: '수정',
-      variant: 'contained',
-      color: 'primary',
-      onClick: handleSubmit,
-    }
-  ];
 
   useEffect(() => {
     if (data) {
@@ -72,7 +59,14 @@ export default function Page({ id }: PageProps) {
       modalTitle="설정"
       onClose={() => router.back()}
       tabs={tabs}
-      buttons={myModalButtons}
+      buttons={[
+        {
+          text: '수정',
+          variant: 'contained',
+          color: 'primary',
+          onClick: handleSubmit,
+        }
+      ]}
       maxWidth="90%"
       onTabChange={(key) => setCurrentTab(key)}
     >
