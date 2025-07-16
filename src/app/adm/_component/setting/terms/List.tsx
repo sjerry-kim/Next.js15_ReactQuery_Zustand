@@ -3,7 +3,6 @@
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useState, useEffect, useCallback, FormEvent, useRef } from 'react';
-import Pagination from '@/adm/_component/common/Pagination';
 import { ITEMS_PER_PAGE } from '@/_constant/pagination';
 import styles from "./List.module.css";
 import { MdOutlineReplay } from "react-icons/md";
@@ -23,6 +22,7 @@ import { getTermsList } from '@/services/termsServices';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { Option } from '@/types/components';
 import RadioSet from '@/adm/_component/common/custom/RadioSet';
+import Pagination from '@/adm/_component/common/Pagination';
 
 interface JsonData {
   searchType: string;
@@ -77,12 +77,6 @@ export default function List() {
   }, [searchParams]);
 
   const currentPage = getPageFromUrl();
-  const searchTypeFromUrl = searchParams.get('searchType') || "";
-  const searchKeywordFromUrl = searchParams.get('searchKeyword') || "";
-  const startDateFromUrl = searchParams.get('startDate') || "";
-  const endDateFromUrl = searchParams.get('endDate') || "";
-  const sortOrderFromUrl = searchParams.get('sortOrder') || 'desc';
-
   const queryKey = ['termList', appliedFilters];
 
   const {
@@ -130,7 +124,7 @@ export default function List() {
   // 등록 이동
   const handleAddClick = () => {
     const currentParamsString = searchParams.toString();
-    const destination = `/adm/setting/terms/add`;
+    const destination = `/adm/setting/policy/add?${currentParamsString}`;
     router.push(destination);
   };
 
@@ -158,15 +152,6 @@ export default function List() {
     router.push(`${pathname}?${newSearchParams.toString()}`);
     setIsDateModalOpen(false); // 모달 필터의 경우 모달 닫음
   };
-
-  // 8. 기간 필터 모달을 여는 핸들러
-  // const handleOpenDateModal = () => {
-  //   // 모달을 열 때, 현재 URL에 적용된 날짜를 임시 상태의 초기값으로 설정
-  //   setDraftStartDate(startDateFromUrl ? moment(startDateFromUrl) : null);
-  //   setDraftEndDate(endDateFromUrl ? moment(endDateFromUrl) : null);
-  //   setDraftSortOrder(sortOrderFromUrl);
-  //   setIsDateModalOpen(true);
-  // };
 
   // 초기화 (바깥 초기화 버튼만)
   const handleResetFilters = () => {

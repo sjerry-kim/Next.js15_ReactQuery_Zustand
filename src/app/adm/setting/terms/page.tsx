@@ -17,15 +17,16 @@ export default async function Page({ searchParams }: { searchParams: { [key:stri
   const queryClient = new QueryClient();
 
   // 2. 모든 필터 관련 파라미터를 하나의 객체로 관리
-  const pageParam = parseInt(getSearchParam(searchParams.page, '1'), 10);
+  const sp = await searchParams;
+  const pageParam = parseInt(getSearchParam(sp.page, '1'), 10);
   const filters = {
     page: isNaN(pageParam) || pageParam < 1 ? 1 : pageParam,
     pageSize: ITEMS_PER_PAGE,
-    searchType: getSearchParam(searchParams.searchType),
-    searchKeyword: getSearchParam(searchParams.searchKeyword),
-    startDate: getSearchParam(searchParams.startDate),
-    endDate: getSearchParam(searchParams.endDate),
-    sortOrder: getSearchParam(searchParams.sortOrder, 'desc'),
+    searchType: getSearchParam(sp.searchType),
+    searchKeyword: getSearchParam(sp.searchKeyword),
+    startDate: getSearchParam(sp.startDate),
+    endDate: getSearchParam(sp.endDate),
+    sortOrder: getSearchParam(sp.sortOrder, 'desc'),
   };
 
   // 3. queryKey 선언

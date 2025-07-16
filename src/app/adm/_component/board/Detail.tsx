@@ -43,8 +43,6 @@ export default function Page({ id }: PageProps) {
   ]
   const {handleChange} = onInputsChange(jsonData, setJsonData);
 
-  const handleSubmit = () => router.replace(`/adm/board/${id}/modify`);
-
   useEffect(() => {
     if (data) {
       setJsonData((prevState)=>({
@@ -64,7 +62,7 @@ export default function Page({ id }: PageProps) {
           text: '수정',
           variant: 'contained',
           color: 'primary',
-          onClick: handleSubmit,
+          onClick: () => router.replace(`/adm/board/${id}/modify`),
         }
       ]}
       maxWidth="90%"

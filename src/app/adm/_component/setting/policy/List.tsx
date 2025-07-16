@@ -23,7 +23,6 @@ import { Option } from '@/types/components';
 import RadioSet from '@/adm/_component/common/custom/RadioSet';
 import Pagination from '@/adm/_component/common/Pagination';
 import { ITEMS_PER_PAGE } from '@/_constant/pagination';
-import { getBoardList } from '@/services/boardService';
 
 interface JsonData {
   searchType: string;

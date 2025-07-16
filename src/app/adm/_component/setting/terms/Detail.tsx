@@ -1,15 +1,12 @@
 'use client'
 
-import styles from './Add.module.css';
+import styles from './Detail.module.css';
 import onInputsChange from '@/utils/onInputsChange';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import LabelInput from '@/adm/_component/common/inputs/LabelInput';
-import Button from '@/adm/_component/common/buttons/Button';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useSnackbar } from '@/hooks/useSnackbar';
-import { createTerms, getTerm, updateTerm } from '@/services/termsServices';
-import { TermsResponse } from '@/types/terms';
-import LabelEditor from '@/adm/_component/common/inputs/LabelEditor';
+import { getTerm } from '@/services/termsServices';
 import ImageUploader from '@/adm/_component/common/files/ImageUploader';
 import { ImageList } from '@/adm/_component/common/files/ImageList';
 import { useImageManager } from '@/hooks/useImageManager';
@@ -20,17 +17,8 @@ import FileUploader from '@/adm/_component/common/files/FileUploader';
 import { FileList } from '@/adm/_component/common/files/FileList';
 import PdfViewer from '@/adm/_component/common/files/PdfViewer';
 import ImageViewer from '@/adm/_component/common/files/ImageViewer';
-import { Board } from '@/types/board';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-
-// import { Swiper, SwiperSlide } from 'swiper/react';
-// import 'swiper/css';
-// import 'swiper/css/free-mode';
-// import 'swiper/css/pagination';
-// import 'swiper/swiper-bundle.css';
-// import { Pagination } from 'swiper/modules';
-// import type { SwiperRef } from 'swiper/react';
+import Button from '@/adm/_component/common/buttons/Button';
 
 type PageProps = {
   id: string;
@@ -43,12 +31,8 @@ interface JsonData {
   file_list: FileListItem[];
 }
 
-export default function Modify({ id }: PageProps) {
-  // const queryClient = useQueryClient();
+export default function Detail({ id }: PageProps) {
   const router = useRouter();
-  // const swiperRef = useRef<SwiperRef>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-
   const { data } = useQuery({
     queryKey: ['term', id], // 서버에서 사용한 queryKey와 동일하게 설정
     queryFn: () => getTerm(id), // 동일한 queryFn 사용
@@ -73,8 +57,8 @@ export default function Modify({ id }: PageProps) {
     initialFiles: jsonData.file_list,
   });
   const [fileListImage, setFileListImage] = useState<ImageListItem[]>([]);
-  const {handleChange, handleCustomChange} = onInputsChange(jsonData, setJsonData);
-  const {showSnackbar} = useSnackbar();
+  // const {showSnackbar} = useSnackbar();
+  const {handleChange} = onInputsChange(jsonData, setJsonData);
 
   // 이미지 Viewer
   const handleImageOpen = (type: string ,img: ImageListItem, index: number) => {
@@ -106,32 +90,6 @@ export default function Modify({ id }: PageProps) {
     }
   }
 
-  const updateMutation = useMutation<ApiResponse<Board>, Error>({
-    mutationFn: async () => updateTerm(Number(id), jsonData),
-    async onSuccess(res) {
-      // // boardList 갱신
-      // queryClient.setQueryData(['boardList'], (prevData?: Board[]) => {
-      //   if (!prevData) return [];
-      //
-      //   const newList = prevData.map((item) =>
-      //     item.id === res.data.id ? { ...res.data, rn: prevData.indexOf(item) + 1 } : item
-      //   );
-      //
-      //   return newList;
-      // });
-      //
-      // // board 갱신
-      // queryClient.setQueryData(['board', id], (prevData?: board) => {
-      //   return res.data;
-      // });
-
-      router.back();
-    },
-    onError() {
-      showSnackbar("통신 오류가 발생하였습니다.", "error")
-    },
-  });
-
   useEffect(() => {
     if (data) {
       setJsonData((prevState)=>({
@@ -148,7 +106,7 @@ export default function Modify({ id }: PageProps) {
       <main className={styles.main}>
         <section className={styles.page_wrapper}>
           <div className={styles.top}>
-            <h3>이용약관 등록</h3>
+            <h3>이용약관 상세</h3>
           </div>
           <div className={styles.bottom}>
             <ul className={styles.content_container}>
@@ -159,6 +117,7 @@ export default function Modify({ id }: PageProps) {
                   maxLength={30}
                   placeholder="제목"
                   required={true}
+                  disabled={true}
                   value={jsonData.title}
                   onChange={handleChange}
                 />
@@ -183,27 +142,6 @@ export default function Modify({ id }: PageProps) {
                   onDownload={downloadImage}
                   onImageOpen={handleImageOpen}
                 />
-                {/*<div className={styles.swiper_wrapper}>*/}
-                {/*  <Swiper*/}
-                {/*    ref={swiperRef}*/}
-                {/*    slidesPerView={5}*/}
-                {/*    spaceBetween={5}*/}
-                {/*    pagination={false}*/}
-                {/*    modules={[Pagination]}*/}
-                {/*    onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}*/}
-                {/*    // onSwiper={(swiper) => (swiperRef.current = swiper)}*/}
-                {/*    loop={false}*/}
-                {/*  >*/}
-                {/*    {*/}
-                {/*      images.length > 0 ?*/}
-                {/*        images.map((item, index) => (*/}
-                {/*          <SwiperSlide key={index}>*/}
-                {/*            <Image src="/images/notfound.png" alt="에러이미지" width={300} height={300}/>*/}
-                {/*          </SwiperSlide>*/}
-                {/*        )) : <></>*/}
-                {/*    }*/}
-                {/*  </Swiper>*/}
-                {/*</div>*/}
               </li>
 
               <li className={styles.file_box}>
@@ -223,17 +161,17 @@ export default function Modify({ id }: PageProps) {
                 />
               </li>
 
-              {/*<div className={styles.btn_box}>*/}
-              {/*  <Button*/}
-              {/*    text="수정"*/}
-              {/*    variant="contained"*/}
-              {/*    color="primary"*/}
-              {/*    size="md"*/}
-              {/*    width="fit-content"*/}
-              {/*    height="100%"*/}
-              {/*    onClick={()=> updateMutation.mutate()}*/}
-              {/*  />*/}
-              {/*</div>*/}
+              <div className={styles.btn_box}>
+                <Button
+                  text="수정"
+                  variant="contained"
+                  color="primary"
+                  size="md"
+                  width="fit-content"
+                  height="100%"
+                  onClick={()=> router.replace(`/adm/setting/terms/${id}/modify`)}
+                />
+              </div>
             </ul>
           </div>
         </section>

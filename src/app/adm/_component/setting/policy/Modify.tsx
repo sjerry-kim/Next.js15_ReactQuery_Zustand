@@ -10,24 +10,16 @@ import { useSnackbar } from '@/hooks/useSnackbar';
 import { deleteTerm, getTerm, updateTerm } from '@/services/termsServices';
 import CommonModal from '@/adm/_component/common/modals/CommonModal';
 import LabelInput from '@/adm/_component/common/inputs/LabelInput';
-import dynamic from 'next/dynamic';
-import Loading from '@/adm/_component/common/Loading';
 import LabelEditor from '@/adm/_component/common/inputs/LabelEditor';
-
-const Editor = dynamic(() => import('@/adm/_component/common/inputs/Editor'), {
-  ssr: false,
-  loading: () =>
-    <div style={{height: "500px"}}>
-      <Loading subTitle={"로딩이 지속되면 새로고침 해주세요."} />
-    </div>
-});
+import { useConfirm } from '@/hooks/useConfirm';
 
 type PageProps = {
   id: string;
 };
 
-export default function Page({ id }: PageProps) {
+export default function Modify({ id }: PageProps) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { data } = useQuery({
     queryKey: ['term', id], // 서버에서 사용한 queryKey와 동일하게 설정
     queryFn: () => getTerm(id), // 동일한 queryFn 사용
@@ -39,27 +31,38 @@ export default function Page({ id }: PageProps) {
     title: '',
     content: '',
   });
-  const {handleChange, handleCustomChange} = onInputsChange(jsonData, setJsonData);
   const {showSnackbar} = useSnackbar();
+  const openConfirm = useConfirm();
+  const {handleChange, handleCustomChange} = onInputsChange(jsonData, setJsonData);
 
+  // 수정
+  const handleSubmit = () => {
+    updateMutation.mutate();
+  };
+
+  // 삭제
+  const handleDelete = async () => {
+    const userConfirmed = await openConfirm({
+      title: "정말 삭제하시겠습니까?",
+      message: "삭제하시면 해당 데이터를 복구할 수 없습니다.",
+    });
+
+    if (userConfirmed) {
+      deleteMutation.mutate();
+    } else {
+      console.log("취소!");
+    }
+  };
+
+  // 수정 mutation
   const updateMutation = useMutation<ApiResponse<Board>, Error>({
     mutationFn: async () => updateTerm(Number(id), jsonData),
     async onSuccess(res) {
-      // // boardList 갱신
-      // queryClient.setQueryData(['boardList'], (prevData?: Board[]) => {
-      //   if (!prevData) return [];
-      //
-      //   const newList = prevData.map((item) =>
-      //     item.id === res.data.id ? { ...res.data, rn: prevData.indexOf(item) + 1 } : item
-      //   );
-      //
-      //   return newList;
-      // });
-      //
-      // // board 갱신
-      // queryClient.setQueryData(['board', id], (prevData?: board) => {
-      //   return res.data;
-      // });
+      // 리스트 갱신
+      queryClient.invalidateQueries({ queryKey: ['termList'] });
+
+      // 게시물 갱신
+      queryClient.setQueryData(['term', id], { data: res.data}); // response 형식 확인 필수
 
       router.back();
     },
@@ -68,16 +71,11 @@ export default function Page({ id }: PageProps) {
     },
   });
 
-
+  // 삭제 mutation
   const deleteMutation = useMutation<ApiResponse<Board>, Error>({
     mutationFn: async () => deleteTerm(Number(id)),
     async onSuccess() {
-      // queryClient.setQueryData(['boardList'], (prevData?: Board[]) => {
-      //   if (!prevData) return [];
-      //   let newList = [...prevData];
-      //   return newList.filter((item) => item.id !== jsonData.id);
-      // });
-
+      queryClient.invalidateQueries({ queryKey: ['termList'] });
       router.back();
     },
     onError() {
@@ -98,19 +96,19 @@ export default function Page({ id }: PageProps) {
 
   return (
     <CommonModal
-      modalTitle="수정하기"
+      modalTitle="수정"
       buttons={[
-        {
-          text: '수정',
-          variant: 'contained',
-          color: 'primary',
-          onClick: () => {updateMutation.mutate()}
-        },
         {
           text: '삭제',
           variant: 'outlined',
           color: 'grey',
-          onClick: () => {deleteMutation.mutate()}
+          onClick: handleDelete
+        },
+        {
+          text: '저장',
+          variant: 'contained',
+          color: 'primary',
+          onClick: handleSubmit
         },
       ]}
       width="1100px"

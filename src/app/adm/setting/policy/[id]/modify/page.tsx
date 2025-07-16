@@ -1,5 +1,5 @@
 import React from 'react';
-import Detail from '@/adm/_component/setting/policy/Detail';
+import Modify from '@/adm/_component/setting/policy/Modify';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import ReactQueryProviders from '@/providers/ReactQueryProvider';
 import { getTerm } from '@/services/termsServices';
@@ -16,7 +16,7 @@ export default async function Page({ params }: PageParams) {
   return (
     <ReactQueryProviders>
       <HydrationBoundary state={dehydratedState}>
-        <Detail id={id} />
+        <Modify id={id} />
       </HydrationBoundary>
     </ReactQueryProviders>
   );

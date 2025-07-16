@@ -1,14 +1,13 @@
 'use client'
 
-import styles from './Add.module.css';
+import styles from './Modify.module.css';
 import onInputsChange from '@/utils/onInputsChange';
 import { useEffect, useState } from 'react';
 import LabelInput from '@/adm/_component/common/inputs/LabelInput';
 import Button from '@/adm/_component/common/buttons/Button';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from '@/hooks/useSnackbar';
-import { createTerms, getTerm, updateTerm } from '@/services/termsServices';
-import { TermsResponse } from '@/types/terms';
+import { deleteTerm, getTerm, updateTerm } from '@/services/termsServices';
 import LabelEditor from '@/adm/_component/common/inputs/LabelEditor';
 import ImageUploader from '@/adm/_component/common/files/ImageUploader';
 import { ImageList } from '@/adm/_component/common/files/ImageList';
@@ -22,6 +21,7 @@ import PdfViewer from '@/adm/_component/common/files/PdfViewer';
 import ImageViewer from '@/adm/_component/common/files/ImageViewer';
 import { Board } from '@/types/board';
 import { useRouter } from 'next/navigation';
+import { useConfirm } from '@/hooks/useConfirm';
 
 type PageProps = {
   id: string;
@@ -35,7 +35,7 @@ interface JsonData {
 }
 
 export default function Modify({ id }: PageProps) {
-  // const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
   const router = useRouter();
   const { data } = useQuery({
     queryKey: ['term', id], // 서버에서 사용한 queryKey와 동일하게 설정
@@ -61,8 +61,9 @@ export default function Modify({ id }: PageProps) {
     initialFiles: jsonData.file_list,
   });
   const [fileListImage, setFileListImage] = useState<ImageListItem[]>([]);
-  const {handleChange, handleCustomChange} = onInputsChange(jsonData, setJsonData);
   const {showSnackbar} = useSnackbar();
+  const openConfirm = useConfirm();
+  const {handleChange, handleCustomChange} = onInputsChange(jsonData, setJsonData);
 
   // 이미지 Viewer
   const handleImageOpen = (type: string ,img: ImageListItem, index: number) => {
@@ -94,25 +95,47 @@ export default function Modify({ id }: PageProps) {
     }
   }
 
+  // 수정
+  const handleSubmit = () => {
+    updateMutation.mutate();
+  };
+
+  // 삭제
+  const handleDelete = async () => {
+    const userConfirmed = await openConfirm({
+      title: "정말 삭제하시겠습니까?",
+      message: "삭제하시면 해당 데이터를 복구할 수 없습니다.",
+    });
+
+    if (userConfirmed) {
+      deleteMutation.mutate();
+    } else {
+      console.log("취소!");
+    }
+  };
+
+  // 수정 mutation
   const updateMutation = useMutation<ApiResponse<Board>, Error>({
     mutationFn: async () => updateTerm(Number(id), jsonData),
     async onSuccess(res) {
-      // // boardList 갱신
-      // queryClient.setQueryData(['boardList'], (prevData?: Board[]) => {
-      //   if (!prevData) return [];
-      //
-      //   const newList = prevData.map((item) =>
-      //     item.id === res.data.id ? { ...res.data, rn: prevData.indexOf(item) + 1 } : item
-      //   );
-      //
-      //   return newList;
-      // });
-      //
-      // // board 갱신
-      // queryClient.setQueryData(['board', id], (prevData?: board) => {
-      //   return res.data;
-      // });
+      // 리스트 갱신
+      queryClient.invalidateQueries({ queryKey: ['termList'] });
 
+      // 게시물 갱신
+      queryClient.setQueryData(['term', id], { data: res.data}); // response 형식 확인 필수
+
+      router.back();
+    },
+    onError() {
+      showSnackbar("통신 오류가 발생하였습니다.", "error")
+    },
+  });
+
+  // 삭제 mutation
+  const deleteMutation = useMutation<ApiResponse<Board>, Error>({
+    mutationFn: async () => deleteTerm(Number(id)),
+    async onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ['termList'] });
       router.back();
     },
     onError() {
@@ -198,13 +221,31 @@ export default function Modify({ id }: PageProps) {
 
               <div className={styles.btn_box}>
                 <Button
-                  text="수정"
+                  text="취소"
+                  variant="outlined"
+                  color="grey"
+                  size="md"
+                  width="fit-content"
+                  height="100%"
+                  onClick={()=> router.replace(`/adm/setting/terms/${id}`)}
+                />
+                <Button
+                  text="삭제"
+                  variant="contained"
+                  color="error"
+                  size="md"
+                  width="fit-content"
+                  height="100%"
+                  onClick={handleDelete}
+                />
+                <Button
+                  text="저장"
                   variant="contained"
                   color="primary"
                   size="md"
                   width="fit-content"
                   height="100%"
-                  onClick={()=> updateMutation.mutate()}
+                  onClick={handleSubmit}
                 />
               </div>
             </ul>

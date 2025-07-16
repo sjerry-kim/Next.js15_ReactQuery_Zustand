@@ -20,6 +20,7 @@ import FileUploader from '@/adm/_component/common/files/FileUploader';
 import { FileList } from '@/adm/_component/common/files/FileList';
 import PdfViewer from '@/adm/_component/common/files/PdfViewer';
 import ImageViewer from '@/adm/_component/common/files/ImageViewer';
+import { useRouter } from 'next/navigation';
 
 interface JsonData {
   title: string;
@@ -29,7 +30,8 @@ interface JsonData {
 }
 
 export default function Add() {
-  // const queryClient = useQueryClient();
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const [jsonData, setJsonData] = useState<JsonData>({
     title: "",
     content: "",
@@ -47,8 +49,8 @@ export default function Add() {
     initialFiles: jsonData.file_list,
   });
   const [fileListImage, setFileListImage] = useState<ImageListItem[]>([]);
-  const {handleChange, handleCustomChange} = onInputsChange(jsonData, setJsonData);
   const {showSnackbar} = useSnackbar();
+  const {handleChange, handleCustomChange} = onInputsChange(jsonData, setJsonData);
 
   // 이미지 Viewer
   const handleImageOpen = (type: string ,img: ImageListItem, index: number) => {
@@ -80,13 +82,12 @@ export default function Add() {
     }
   }
 
+  // 등록 mutation
   const createMutation = useMutation<ApiResponse<TermsResponse>, Error>({
     mutationFn: () => createTerms(jsonData),
     onSuccess: (res) => {
-      // queryClient.setQueryData(['Term'], (prevData: any) => {
-      //   return prevData ? [...prevData, {...res.data, rn: prevData.length+1}] : [res.data];
-      // });
-      // console.log(res);
+      queryClient.invalidateQueries({ queryKey: ['termList'] });
+      router.back();
     },
     onError() {
       showSnackbar("통신 오류가 발생하였습니다.", "error")
