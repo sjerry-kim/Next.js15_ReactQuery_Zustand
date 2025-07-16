@@ -1,0 +1,116 @@
+/* main 영역 스크롤 */
+.main {
+  overflow: auto;
+  height: calc(100dvh - 64px);
+}
+
+.page_wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  /*height: fit-content;*/
+  height: 100%; /* 임시 */
+  border: 1px solid;
+  /*overflow: auto;*/
+  box-sizing: border-box;
+  @apply border-neutral-250 rounded-xl
+}
+
+.top {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 19px;
+  height: 55px;
+  border-bottom: 1px solid;
+  @apply border-neutral-250
+}
+
+.top h3 {
+  @apply text-neutral-700 text-base;
+}
+
+.bottom {
+  display: flex;
+  flex-direction: column;
+  padding: 19px;
+}
+
+/* table */
+.table_wrapper {
+  border: 1px solid;
+  overflow: hidden;
+  @apply border-neutral-250 rounded-xl
+}
+
+.table {
+  text-align: center;
+  @apply text-md text-neutral-700;
+}
+
+.table thead {
+  border-bottom: 1px solid;
+  @apply border-neutral-250;
+}
+
+.table thead th {
+  padding: 13px 15px;
+  position: relative;
+  @apply text-neutral-700;
+}
+
+.table thead th:after {
+  position: absolute;
+  content: "";
+  width: 1px;
+  height: calc(100% - 30px);
+  right: 0;
+  top: 16px;
+  @apply bg-neutral-250
+}
+
+.table thead th:last-child:after {
+  display: none;
+}
+
+.table tbody {
+  @apply bg-background;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid;
+  @apply border-neutral-250 cursor-pointer;
+}
+
+.table tbody tr:last-child {
+  border-bottom: 0;
+}
+
+.table tbody td {
+  padding: 11px 15px;
+  /*transition: background 0.3s ease-in-out;*/
+  min-width: 50px;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  @apply transition duration-300;
+}
+
+.table tbody tr:hover td {
+  @apply bg-neutral-150;
+}
+
+.table .need_left {
+  text-align: left;
+}
+
+.table .need_right {
+  text-align: right;
+}
+
+.table_loading {
+  padding: 45px !important;
+  text-align: center;
+}

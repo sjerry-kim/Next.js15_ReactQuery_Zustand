@@ -101,8 +101,8 @@ export const ADMIN_MENUS: Menu[] = [
     children: [
       {
         idx: 1,
-        title: "역할 권한",
-        path: "/adm/setting/auth",
+        title: "카테고리",
+        path: "/adm/setting/ctgry",
         roles: [ROLES.SUPER_ADMIN],
       },
       {
@@ -116,6 +116,12 @@ export const ADMIN_MENUS: Menu[] = [
         title: "이용약관",
         path: "/adm/setting/terms",
         roles: [ROLES.MANAGER, ROLES.SUPER_ADMIN],
+      },
+      {
+        idx: 4,
+        title: "아코디언",
+        path: "/adm/setting/accordion",
+        roles: [ROLES.SUPER_ADMIN],
       },
     ]
   },

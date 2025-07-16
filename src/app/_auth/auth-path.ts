@@ -32,6 +32,8 @@ export const PATH_RULES: PathRule[] = [
   { path: '/adm/my',                            roles: [ROLES.EDITOR, ROLES.MANAGER, ROLES.SUPER_ADMIN]},
 
   // 기본설정
+  { path: '/adm/setting/accordion',                 roles: [ROLES.SUPER_ADMIN] },
+  { path: '/adm/setting/ctgry',                 roles: [ROLES.SUPER_ADMIN] },
   { path: '/adm/setting/policy',                roles: [ROLES.MANAGER, ROLES.SUPER_ADMIN] },
   { path: '/adm/setting/policy/add',            roles: [ROLES.MANAGER, ROLES.SUPER_ADMIN] },
   { path: '/adm/setting/policy/[id]',           roles: [ROLES.SUPER_ADMIN] },
