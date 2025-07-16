@@ -8,6 +8,8 @@ import onInputsChange from '@/utils/onInputsChange';
 import { useState } from 'react';
 import LabelTextarea from '@/adm/_component/common/inputs/LabelTextarea';
 import LabelInputSet from '../common/inputs/LabelInputSet';
+import { useQuery } from '@tanstack/react-query';
+import { getUser } from '@/services/myService';
 
 interface JsonData {
   userName: string;
@@ -34,7 +36,10 @@ export default function MyPage() {
     data3: "",
   });
   const {handleChange} = onInputsChange(jsonData, setJsonData);
-
+  // const { data } = useQuery({
+  //   queryKey: ['user', ], // 쿼리키 통일 필요
+  //   queryFn: () => getUser(userId), // 매개변수 확인
+  // })
 
   return (
     <main className={styles.main}>
@@ -73,16 +78,6 @@ export default function MyPage() {
             {/* todo 비밀번호 변경은 모달로 빼기 */}
             <li className={styles.one_row_box}>
               <LabelInputSet label="비밀번호 변경">
-                {/*<LabelInput*/}
-                {/*  type="password"*/}
-                {/*  name="currentPswd"*/}
-                {/*  placeholder="현재 비밀번호"*/}
-                {/*  value={jsonData.currentPswd}*/}
-                {/*  maxLength={15}*/}
-                {/*  showCharCount*/}
-                {/*  showLabel={false}*/}
-                {/*  onChange={handleChange}*/}
-                {/*/>*/}
                 <input
                   type="password"
                   name="currentPswd"
@@ -91,16 +86,6 @@ export default function MyPage() {
                   maxLength={15}
                   onChange={handleChange}
                 />
-                {/*<LabelInput*/}
-                {/*  type="password"*/}
-                {/*  name="newPswd"*/}
-                {/*  placeholder="새 비밀번호"*/}
-                {/*  value={jsonData.newPswd}*/}
-                {/*  maxLength={15}*/}
-                {/*  showCharCount*/}
-                {/*  showLabel={false}*/}
-                {/*  onChange={handleChange}*/}
-                {/*/>*/}
                 <input
                   type="password"
                   name="newPswd"
@@ -109,16 +94,6 @@ export default function MyPage() {
                   maxLength={15}
                   onChange={handleChange}
                 />
-                {/*<LabelInput*/}
-                {/*  type="password"*/}
-                {/*  name="confirmPswd"*/}
-                {/*  placeholder="비밀번호 확인"*/}
-                {/*  value={jsonData.confirmPswd}*/}
-                {/*  maxLength={15}*/}
-                {/*  showCharCount*/}
-                {/*  showLabel={false}*/}
-                {/*  onChange={handleChange}*/}
-                {/*/>*/}
                 <input
                   type="password"
                   name="confirmPswd"
@@ -175,9 +150,6 @@ export default function MyPage() {
             </li>
 
             <li className={styles.input_box}>
-              {/*<label className={styles.label}>특이사항 (관리자 메모)</label>*/}
-              {/*<textarea placeholder="특이사항" rows={4} className={styles.textarea} />*/}
-              
               <LabelTextarea
                 label="회원정보3"
                 name="data3"
@@ -188,6 +160,7 @@ export default function MyPage() {
                 onChange={handleChange}
               />
             </li>
+
             <li className={styles.one_row_box}>
               <div className={styles.input_box}>
                 <label className={styles.label_text}>웹 푸시 알림 설정</label>
