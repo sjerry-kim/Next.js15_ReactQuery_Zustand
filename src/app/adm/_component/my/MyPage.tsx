@@ -5,11 +5,12 @@ import NotificationButton from '@/adm/_component/common/NotificationButton';
 import Button from '@/adm/_component/common/buttons/Button';
 import LabelInput from '@/adm/_component/common/inputs/LabelInput';
 import onInputsChange from '@/utils/onInputsChange';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import LabelTextarea from '@/adm/_component/common/inputs/LabelTextarea';
 import LabelInputSet from '../common/inputs/LabelInputSet';
 import { useQuery } from '@tanstack/react-query';
 import { getUser } from '@/services/myService';
+import { useUserStore } from '@/zustand/userStore';
 
 interface JsonData {
   userName: string;
@@ -24,6 +25,15 @@ interface JsonData {
 }
 
 export default function MyPage() {
+  const { user } = useUserStore();
+  const userId = user?.id;
+  const { data: userData } = useQuery({
+    queryKey: ['user', userId],
+    // 서버에서 prefetch에 실패했거나, 데이터가 stale 상태일 경우 이 함수가 실행됨
+    queryFn: () => getUser(userId!),
+    // userId가 있을 때만 쿼리를 실행
+    enabled: !!userId,
+  });
   const [jsonData, setJsonData] = useState<JsonData>({
     userName: "",
     email: "user@example.com",
@@ -36,10 +46,16 @@ export default function MyPage() {
     data3: "",
   });
   const {handleChange} = onInputsChange(jsonData, setJsonData);
-  // const { data } = useQuery({
-  //   queryKey: ['user', ], // 쿼리키 통일 필요
-  //   queryFn: () => getUser(userId), // 매개변수 확인
-  // })
+
+  useEffect(() => {
+    // if (userData) {
+    //   setJsonData(prev => ({
+    //     ...prev,
+    //     userName: userData?.name || '',
+    //     email: userData?.email || '',
+    //   }));
+    // }
+  }, [userData]);
 
   return (
     <main className={styles.main}>
