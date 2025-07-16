@@ -1,0 +1,47 @@
+.accordion_wrapper {
+  width: 100%;
+  border: 1px solid;
+  overflow: hidden; /* 내부 콘텐츠가 둥근 모서리를 넘어가지 않도록 */
+  @apply border-neutral-200;
+}
+
+.accordion_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 15px;
+  text-align: left;
+  @apply bg-neutral-150 rounded-none text-base cursor-pointer;
+}
+
+.accordion_title {
+  @apply font-bold text-neutral-700;
+}
+
+/* 화살표 아이콘 */
+.accordion_wrapper svg {
+  @apply fill-neutral-400;
+}
+
+/* ✅ 애니메이션의 핵심: 콘텐츠 영역 */
+.accordion_content {
+  max-height: 0; /* 기본적으로 높이를 0으로 만들어 숨김 */
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0, 1, 0, 1); /* 부드러운 애니메이션 효과 */
+  @apply bg-background;
+}
+
+/* 열렸을 때의 스타일 */
+.accordion_content.open {
+  /* 내용물이 충분히 들어갈 만큼의 최대 높이를 지정 */
+  max-height: 1000px; /* 실제 콘텐츠 높이보다 충분히 큰 값 */
+  transition: max-height 0.8s ease-in-out;
+}
+
+/* 콘텐츠 내부의 실제 여백 */
+.content_padding {
+  padding: 1rem;
+  border-top: 1px solid;
+  @apply border-neutral-200;
+}

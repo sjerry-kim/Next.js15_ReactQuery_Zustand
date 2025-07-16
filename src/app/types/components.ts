@@ -117,6 +117,22 @@ export interface CustomTabsProps extends Omit<TabsProps, 'value' | 'onChange'> {
   onTabChange: (key: string) => void;
 }
 
+/* Accordion */
+export interface AccordionProps {
+  id: string;                 // ✅ 어떤 아코디언인지 식별하기 위한 고유 ID
+  title: string;
+  children: React.ReactNode;
+  isOpen?: boolean;            // ✅ 부모로부터 열림 상태를 전달받음
+  onToggle?: () => void;       // ✅ 헤더 클릭 시 부모에게 알릴 함수
+}
+
+export interface AccordionGroupProps {
+  children: React.ReactNode;
+  allowMultiple?: boolean; // 여러 개를 열 수 있는지 여부
+  defaultOpenId?: string | string[]; // 처음부터 열려있을 아코디언 ID
+}
+
+
 /* Loading */
 export interface LoadingProps {
   type?: 'line' | 'circle';
