@@ -39,6 +39,7 @@ export interface LabelInputProps extends ComponentProps<'input'> {
   required?: boolean;
   showCharCount?: boolean;
   showLabel?: boolean;
+  errorMessage?: string;
 }
 
 export interface LabelInputSetProps {
@@ -85,6 +86,7 @@ export interface LabelTextareaProps extends ComponentProps<'textarea'> {
   label: string;
   required?: boolean;
   showCharCount?: boolean;
+  errorMessage?: string;
 }
 
 /* DatePicker*/

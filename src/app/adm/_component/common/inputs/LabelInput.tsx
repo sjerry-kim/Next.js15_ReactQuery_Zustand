@@ -11,14 +11,15 @@ export default function LabelInput({
   className,
   maxLength,
   value,
+  errorMessage,
   ...props
 }: LabelInputProps) {
 
   const charCount = String(value || '').length;
-  const inputClassName = props.disabled ? styles.inputDisabled : styles.input;
+  const inputClassName = `${props.disabled ? styles.inputDisabled : styles.input} ${errorMessage ? styles.input_error : ''}`;
 
   return (
-    <div className={styles.wrapper}>
+    <div className={`${styles.wrapper} ${errorMessage ? styles.error_state : ''}`}>
       <label className={styles.label_box}>
         <div className={styles.label_text}>
           {label}
@@ -37,6 +38,7 @@ export default function LabelInput({
         className={`${inputClassName} ${className || ''}`}
         {...props}
       />
+      {errorMessage && <p className={styles.error_message}>{errorMessage}</p>}
     </div>
   );
 }
