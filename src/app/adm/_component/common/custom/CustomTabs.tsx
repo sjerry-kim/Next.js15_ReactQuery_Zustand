@@ -9,6 +9,7 @@ export default function CustomTabs({
   tabs,
   activeTabKey,
   onTabChange,
+  variant = 'scrollable',
   ...props
 }: CustomTabsProps) {
 
@@ -65,7 +66,7 @@ export default function CustomTabs({
     <Tabs
       value={activeTabKey}
       onChange={(_event, newValue) => onTabChange?.(newValue)}
-      variant="scrollable"
+      variant={variant}
       scrollButtons="auto"
       allowScrollButtonsMobile
       sx={tabsContainerSx}

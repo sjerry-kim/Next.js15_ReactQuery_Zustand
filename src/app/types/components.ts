@@ -117,6 +117,7 @@ export interface CustomTabsProps extends Omit<TabsProps, 'value' | 'onChange'> {
   tabs: TabItem[];
   activeTabKey: string;
   onTabChange: (key: string) => void;
+  variant?: 'fullWidth' | 'scrollable'
 }
 
 /* Accordion */
